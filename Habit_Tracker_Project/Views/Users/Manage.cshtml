@@ -1,0 +1,80 @@
+﻿@model List<HabitTracker.Models.User>
+@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<div class="ht-admin-page">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">Administration</span>
+            <h1>User management</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="ht-alert ht-alert-success" role="alert">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="ht-alert ht-alert-error" role="alert">@TempData["Error"]</div>
+    }
+
+    <section class="ht-admin-table-card ht-card">
+        <div class="ht-table-wrapper">
+            <table class="ht-admin-table">
+                <thead>
+                    <tr>
+                        <th>Full name</th>
+                        <th>Email</th>
+                        <th>Points</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var user in Model)
+                        {
+                            <tr>
+                                <td data-label="Full name">@user.FullName</td>
+                                <td data-label="Email">@user.Email</td>
+                                <td data-label="Points">@user.TotalPoints</td>
+                                <td data-label="Status">
+                                    @if (user.IsBlocked)
+                                    {
+                                        <span class="ht-status-badge ht-status-blocked">Blocked</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="ht-status-badge ht-status-active">Active</span>
+                                    }
+                                </td>
+                                <td data-label="Actions">
+                                    <form method="post" asp-controller="Users" asp-action="ToggleBlock" asp-route-userId="@user.Id" class="ht-inline-form">
+                                        @if (user.IsBlocked)
+                                        {
+                                            <button type="submit" class="btn ht-btn-primary btn-sm">Unblock</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn ht-btn-danger btn-sm">Block</button>
+                                        }
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="ht-table-empty">No users found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

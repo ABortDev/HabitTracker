@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Statistics - Habit Tracker</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+    <div class="ht-page">
+        <header>
+            <nav class="navbar navbar-expand-md ht-navbar">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">Habit Tracker</a>
+                    <div class="navbar-nav flex-row flex-wrap gap-2">
+                        <a class="nav-link" href="/Dashboard">Dashboard</a>
+                        <a class="nav-link" href="/Achievements">Achievements</a>
+                        <a class="nav-link active" href="/statistics.html?view=statistics" onclick="window.location.href='/statistics.html?refresh=' + Date.now(); return false;">Statistics</a>
+                        <a class="nav-link" href="/Users/Profile">Profile</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="ht-main">
+            <div class="ht-statistics-page">
+                <div class="ht-page-heading">
+                    <div>
+                        <span class="ht-eyebrow">Your progress</span>
+                        <h1>Statistics</h1>
+                    </div>
+                    <a href="/Dashboard" class="btn ht-btn-secondary">Back to dashboard</a>
+                </div>
+
+                <div class="ht-period-switcher" role="group" aria-label="Statistics period">
+                    <button type="button" class="ht-period-button is-active" data-period="week">Week</button>
+                    <button type="button" class="ht-period-button" data-period="month">Month</button>
+                    <button type="button" class="ht-period-button" data-period="year">Year</button>
+                </div>
+
+                <section class="ht-stat-summary-grid" aria-label="Summary">
+                    <article class="ht-stat-summary-card ht-card"><span>Earned points</span><strong data-stat-points>0</strong><small data-stat-period-label>This week</small></article>
+                    <article class="ht-stat-summary-card ht-card"><span>Completed tasks</span><strong data-stat-completions>0</strong><small>Successful check-ins</small></article>
+                    <article class="ht-stat-summary-card ht-card"><span>Current streak</span><strong><span data-stat-streak>0</span> days</strong><small>Keep the momentum going</small></article>
+                </section>
+
+                <section class="ht-chart-card ht-card">
+                    <div class="ht-chart-heading"><div><span class="ht-eyebrow">Points over time</span><h2>Consistency brings progress</h2></div><span class="ht-chart-legend"><i></i> Points</span></div>
+                    <div class="ht-chart" data-points-chart aria-label="Points earned over selected period"></div>
+                </section>
+
+                <section class="ht-streak-card ht-card">
+                    <div class="ht-streak-icon" aria-hidden="true">↗</div>
+                    <div><span class="ht-eyebrow">Your streak</span><h2><span data-stat-streak>0</span> days in a row</h2><p>Complete at least one habit every day to grow your streak.</p></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const statisticsData = {
+            week: { points: 70, completions: 7, streak: 4, label: 'This week', chart: [10, 20, 0, 10, 10, 0, 20], labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] },
+            month: { points: 260, completions: 26, streak: 9, label: 'This month', chart: [20, 45, 30, 55, 40, 70, 60, 80, 50, 75, 65, 90], labels: ['1', '4', '7', '10', '13', '16', '19', '22', '25', '28', '30', '31'] },
+            year: { points: 1860, completions: 186, streak: 21, label: 'This year', chart: [50, 72, 45, 80, 60, 92, 70, 86, 58, 76, 90, 100], labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] }
+        };
+        const chart = document.querySelector('[data-points-chart]');
+        const buttons = document.querySelectorAll('[data-period]');
+        function renderStatistics(period) {
+            const data = statisticsData[period];
+            document.querySelector('[data-stat-points]').textContent = data.points;
+            document.querySelector('[data-stat-completions]').textContent = data.completions;
+            document.querySelector('[data-stat-period-label]').textContent = data.label;
+            document.querySelectorAll('[data-stat-streak]').forEach(element => element.textContent = data.streak);
+            chart.innerHTML = data.chart.map((value, index) => `<div class="ht-chart-column"><div class="ht-chart-value">${value}</div><div class="ht-chart-bar" style="height:${Math.max(value, 4)}%" title="${value} points"></div><span>${data.labels[index]}</span></div>`).join('');
+        }
+        buttons.forEach(button => button.addEventListener('click', () => {
+            buttons.forEach(item => item.classList.remove('is-active'));
+            button.classList.add('is-active');
+            renderStatistics(button.dataset.period);
+        }));
+        renderStatistics('week');
+    </script>
+</body>
+</html>

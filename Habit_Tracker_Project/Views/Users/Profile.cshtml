@@ -1,0 +1,41 @@
+﻿@model HabitTracker.Models.User
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="ht-content-narrow">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">Account settings</span>
+            <h1>My profile</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+    </div>
+
+    <section class="ht-profile-card ht-card">
+        <form method="post" asp-controller="Users" asp-action="UpdateProfile" class="ht-profile-form">
+            <div class="ht-form-group">
+                <label class="ht-form-label">Email</label>
+                <input type="email" class="form-control ht-form-control ht-readonly-field" value="@Model.Email" disabled />
+                <small class="ht-help-text">Your email address cannot be changed.</small>
+            </div>
+
+            <div class="ht-form-group">
+                <label for="fullName" class="ht-form-label">Full name</label>
+                <input id="fullName" type="text" name="fullName" class="form-control ht-form-control" value="@Model.FullName" required />
+            </div>
+
+            <div class="ht-form-group">
+                <label for="newPassword" class="ht-form-label">New password</label>
+                <input id="newPassword" type="password" name="newPassword" class="form-control ht-form-control" placeholder="Leave empty to keep your current password" />
+            </div>
+
+            <div class="ht-profile-stat">
+                <span>Total points</span>
+                <strong>@Model.TotalPoints</strong>
+            </div>
+
+            <button type="submit" class="btn ht-btn-primary ht-profile-submit">Save changes</button>
+        </form>
+    </section>
+</div>

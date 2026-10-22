@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Welcome to Habit Tracker";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="ht-home-page">
+    <header class="ht-home-header">
+        <a asp-controller="Home" asp-action="Index" class="ht-home-logo">Habit Tracker</a>
+
+        <nav class="ht-home-nav" aria-label="Main navigation">
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <span class="ht-home-greeting">Hello, @User.Identity.Name!</span>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-primary">Dashboard</a>
+            }
+            else
+            {
+                <a asp-controller="Auth" asp-action="Login" class="ht-home-link">Log in</a>
+                <a asp-controller="Auth" asp-action="Register" class="btn ht-btn-primary">Sign up</a>
+            }
+        </nav>
+    </header>
+
+    <main class="ht-home-main">
+        <section class="ht-hero">
+            <span class="ht-eyebrow">Small steps. Real progress.</span>
+            <h1>Build better habits, one day at a time.</h1>
+            <p>
+                Track your routines, stay motivated, and turn consistent actions into lasting progress.
+            </p>
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-primary ht-hero-button">Go to dashboard</a>
+            }
+            else
+            {
+                <a asp-controller="Auth" asp-action="Login" class="btn ht-btn-primary ht-hero-button">Start your journey</a>
+            }
+        </section>
+
+        <section class="ht-home-info ht-card">
+            <div>
+                <span class="ht-eyebrow">About Habit Tracker</span>
+                <h2>Make progress visible.</h2>
+                <p>
+                    Create personal routines, check in every day, and celebrate improvements that add up over time.
+                    Habit Tracker helps you stay accountable without making your goals feel overwhelming.
+                </p>
+            </div>
+            <div class="ht-home-highlights">
+                <div class="ht-highlight ht-highlight-primary">
+                    <strong>01</strong>
+                    <span>Plan routines that fit your life.</span>
+                </div>
+                <div class="ht-highlight ht-highlight-muted">
+                    <strong>02</strong>
+                    <span>Track consistency and celebrate wins.</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="privacy" class="ht-privacy-section ht-card">
+            <span class="ht-eyebrow">Privacy</span>
+            <h2>Privacy policy</h2>
+            <p>
+                Habit Tracker uses your account information and habit data only to provide the features of this application.
+                Your personal information is not displayed to other users, except where an administrator view explicitly requires it.
+            </p>
+        </section>
+    </main>
+</body>
+</html>

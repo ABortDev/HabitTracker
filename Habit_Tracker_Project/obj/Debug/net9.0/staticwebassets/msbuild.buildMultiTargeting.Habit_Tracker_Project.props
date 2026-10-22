@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Habit_Tracker_Project.props" />
+</Project>

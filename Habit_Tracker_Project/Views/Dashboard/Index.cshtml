@@ -1,0 +1,323 @@
+﻿@model List<HabitTracker.Models.Habit>
+@using HabitTracker.Models.Enums
+@using System.Globalization
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+    var today = DateOnly.FromDateTime(DateTime.Today);
+
+    var regularHabits = Model?.Where(h => h.Frequency != HabitFrequency.Onetime).ToList() ?? new List<HabitTracker.Models.Habit>();
+    var oneTimeTodos = Model?.Where(h => h.Frequency == HabitFrequency.Onetime).ToList() ?? new List<HabitTracker.Models.Habit>();
+
+    string DifficultyLabel(DifficultyLevel difficulty) => difficulty switch
+    {
+        DifficultyLevel.Easy => "Easy",
+        DifficultyLevel.Hard => "Hard",
+        _ => "Medium"
+    };
+
+    int DifficultyPoints(DifficultyLevel difficulty) => difficulty switch
+    {
+        DifficultyLevel.Easy => 10,
+        DifficultyLevel.Hard => 30,
+        _ => 20
+    };
+
+    string DifficultyClass(DifficultyLevel difficulty) => difficulty switch
+    {
+        DifficultyLevel.Easy => "ht-difficulty-easy",
+        DifficultyLevel.Hard => "ht-difficulty-hard",
+        _ => "ht-difficulty-medium"
+    };
+}
+
+<main class="ht-dashboard-container ht-dashboard-page">
+        <div class="ht-dashboard-header">
+            <div>
+                <span class="ht-eyebrow">Your daily progress</span>
+                <h1 class="ht-dashboard-title">My Dashboard</h1>
+            </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="ht-dashboard-alert ht-dashboard-alert-success" role="status">✓ @TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="ht-dashboard-alert ht-dashboard-alert-error" role="alert">@TempData["Error"]</div>
+        }
+            <button type="button" class="btn ht-btn-primary ht-add-button" onclick="openAddModal()">+ Add habit</button>
+        </div>
+
+        <div class="ht-dashboard-grid">
+            <section class="ht-dashboard-card ht-card">
+                <div class="ht-section-heading">
+                    <div>
+                        <h2>Habits</h2>
+                        <p>Keep your routines moving forward.</p>
+                    </div>
+                    <span class="ht-count-badge">@regularHabits.Count</span>
+                </div>
+
+                @if (regularHabits.Any())
+                {
+                    foreach (var habit in regularHabits)
+                    {
+                        <div class="ht-habit-item">
+                            <div class="ht-habit-info">
+                                <h3>@habit.Title</h3>
+                                <p>@(string.IsNullOrEmpty(habit.Description) ? "No description" : habit.Description)</p>
+                                <div class="ht-habit-meta">
+                                    <span>@(habit.Category?.Name ?? "General")</span>
+                                    <span>@habit.Frequency</span>
+                                    <span class="ht-difficulty-badge @DifficultyClass(habit.Difficulty)">@DifficultyLabel(habit.Difficulty) · @DifficultyPoints(habit.Difficulty) pts</span>
+                                    @if (habit.Reminders != null && habit.Reminders.Any())
+                                    {
+                                        <span>@habit.Reminders.First().ReminderTime.ToString("HH:mm")</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="ht-habit-actions">
+                                <button type="button" class="ht-action-button ht-action-edit"
+                                        onclick="openEditModal(@habit.Id, '@Html.Raw(habit.Title.Replace("'", "\\'"))', '@Html.Raw((habit.Description ?? "").Replace("'", "\\'"))', @habit.CategoryId, '@habit.Frequency', '@(habit.EndDate?.ToString("yyyy-MM-dd") ?? "")', '@habit.Difficulty')">
+                                    Edit
+                                </button>
+                                <form method="post" asp-controller="Dashboard" asp-action="DeleteHabit" asp-route-id="@habit.Id" class="ht-inline-form" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="ht-action-button ht-action-delete">Delete</button>
+                                </form>
+                                <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@habit.Id" class="ht-inline-form">
+                                    <div class="ht-complete-stack">
+                                        <button type="submit" class="ht-complete-button" title="Mark as done" aria-label="Mark @habit.Title as done">✓</button>
+                                        <span class="ht-completion-count">@(habit.Logs?.Count ?? 0) @(habit.Logs?.Count == 1 ? "completion" : "completions")</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="ht-empty-state">No habits yet. Click “+ Add habit” to start.</div>
+                }
+            </section>
+
+            <section class="ht-dashboard-card ht-card">
+                <div class="ht-section-heading">
+                    <div>
+                        <h2>To-do list</h2>
+                        <p>One-time tasks you want to finish.</p>
+                    </div>
+                    <span class="ht-count-badge">@oneTimeTodos.Count</span>
+                </div>
+
+                @if (oneTimeTodos.Any())
+                {
+                    foreach (var todo in oneTimeTodos)
+                    {
+                        var todoClass = todo.EndDate.HasValue && todo.EndDate.Value < today
+                            ? "ht-todo-overdue"
+                            : todo.EndDate.HasValue && todo.EndDate.Value == today
+                                ? "ht-todo-due-today"
+                                : string.Empty;
+                        var todoDeadlineText = todo.EndDate.HasValue && todo.EndDate.Value < today
+                            ? "Overdue"
+                            : todo.EndDate.HasValue && todo.EndDate.Value == today
+                                ? "Due today"
+                                : string.Empty;
+
+                        <div class="ht-habit-item @todoClass">
+                            <div class="ht-habit-info">
+                                <h3>@todo.Title</h3>
+                                <p>@(string.IsNullOrEmpty(todo.Description) ? "No description" : todo.Description)</p>
+                                <div class="ht-habit-meta">
+                                    <span>@(todo.Category?.Name ?? "General")</span>
+                                    <span class="ht-difficulty-badge @DifficultyClass(todo.Difficulty)">@DifficultyLabel(todo.Difficulty) · @DifficultyPoints(todo.Difficulty) pts</span>
+                                    @if (todo.EndDate.HasValue)
+                                    {
+                                        <span class="ht-deadline-badge">@todoDeadlineText · @todo.EndDate.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    @if (todo.Reminders != null && todo.Reminders.Any())
+                                    {
+                                        <span>@todo.Reminders.First().ReminderTime.ToString("HH:mm")</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="ht-habit-actions">
+                                <button type="button" class="ht-action-button ht-action-edit"
+                                        onclick="openEditModal(@todo.Id, '@Html.Raw(todo.Title.Replace("'", "\\'"))', '@Html.Raw((todo.Description ?? "").Replace("'", "\\'"))', @todo.CategoryId, '@todo.Frequency', '@(todo.EndDate?.ToString("yyyy-MM-dd") ?? "")', '@todo.Difficulty')">
+                                    Edit
+                                </button>
+                                <form method="post" asp-controller="Dashboard" asp-action="DeleteHabit" asp-route-id="@todo.Id" class="ht-inline-form" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="ht-action-button ht-action-delete">Delete</button>
+                                </form>
+                                <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@todo.Id" class="ht-inline-form">
+                                    <button type="submit" class="ht-complete-button" title="Mark as done" aria-label="Mark @todo.Title as done">✓</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="ht-empty-state">No tasks yet.</div>
+                }
+            </section>
+        </div>
+    <div id="addModal" class="ht-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
+        <div class="ht-modal-content ht-card">
+            <h2 id="addModalTitle" class="ht-modal-title">Add new habit</h2>
+            <form method="post" asp-controller="Dashboard" asp-action="AddHabit">
+                <div class="ht-form-group">
+                    <label class="ht-form-label">Habit title</label>
+                    <input type="text" name="title" class="form-control ht-form-control" placeholder="e.g., Read 20 pages" required />
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">Description</label>
+                    <textarea name="description" class="form-control ht-form-control" placeholder="Why do you want to build this habit?"></textarea>
+                </div>
+                    <div class="ht-form-group">
+                        <label for="addDifficulty" class="ht-form-label">Difficulty</label>
+                        <select name="difficulty" id="addDifficulty" class="form-select ht-form-control" onchange="updateDifficultyPoints('add')">
+                            <option value="0" data-points="10">Easy · 10 points</option>
+                            <option value="1" data-points="20" selected>Medium · 20 points</option>
+                            <option value="2" data-points="30">Hard · 30 points</option>
+                        </select>
+                        <small class="ht-field-hint" id="addDifficultyHint">Completing this habit will earn 20 points.</small>
+                    </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">Category</label>
+                    <select name="categoryId" class="form-select ht-form-control" required>
+                        <option value="">-- Select a category --</option>
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var category in ViewBag.Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="ht-form-grid">
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">Frequency</label>
+                        <select name="frequency" id="addFrequency" class="form-select ht-form-control" asp-items="Html.GetEnumSelectList<HabitFrequency>()" onchange="toggleEndDate('add', this.value)" required></select>
+                    </div>
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">Reminder time</label>
+                        <input type="time" name="reminderTime" class="form-control ht-form-control" />
+                    </div>
+                </div>
+                <div class="ht-form-group ht-hidden-field" id="addEndDateContainer">
+                    <label class="ht-form-label">Target date</label>
+                    <input type="date" lang="en-US" name="endDate" id="addEndDate" class="form-control ht-form-control" />
+                </div>
+                <div class="ht-modal-actions">
+                    <button type="button" class="btn ht-btn-secondary" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn ht-btn-primary">Save habit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="ht-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="ht-modal-content ht-card">
+            <h2 id="editModalTitle" class="ht-modal-title">Edit habit</h2>
+            <form method="post" asp-controller="Dashboard" asp-action="EditHabit">
+                <input type="hidden" name="id" id="editId" />
+                <div class="ht-form-group">
+                    <label class="ht-form-label">Habit title</label>
+                    <input type="text" name="title" id="editTitle" class="form-control ht-form-control" required />
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">Description</label>
+                    <textarea name="description" id="editDescription" class="form-control ht-form-control"></textarea>
+                </div>
+                <div class="ht-form-group">
+                    <label for="editDifficulty" class="ht-form-label">Difficulty</label>
+                    <select name="difficulty" id="editDifficulty" class="form-select ht-form-control" onchange="updateDifficultyPoints('edit')">
+                        <option value="0" data-points="10">Easy · 10 points</option>
+                        <option value="1" data-points="20">Medium · 20 points</option>
+                        <option value="2" data-points="30">Hard · 30 points</option>
+                    </select>
+                    <small class="ht-field-hint" id="editDifficultyHint">Completing this habit will earn 20 points.</small>
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">Category</label>
+                    <select name="categoryId" id="editCategoryId" class="form-select ht-form-control" required>
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var category in ViewBag.Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">Frequency</label>
+                    <select name="frequency" id="editFrequency" class="form-select ht-form-control" asp-items="Html.GetEnumSelectList<HabitFrequency>()" onchange="toggleEndDate('edit', this.value)" required></select>
+                </div>
+                <div class="ht-form-group ht-hidden-field" id="editEndDateContainer">
+                    <label class="ht-form-label">Target date</label>
+                    <input type="date" lang="en-US" name="endDate" id="editEndDate" class="form-control ht-form-control" />
+                </div>
+                <div class="ht-modal-actions">
+                    <button type="button" class="btn ht-btn-secondary" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn ht-btn-primary">Update habit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+@section Scripts {
+    <script>
+        function toggleEndDate(prefix, frequencyValue) {
+            var container = document.getElementById(prefix + 'EndDateContainer');
+            var input = document.getElementById(prefix + 'EndDate');
+
+            if (frequencyValue === '0') {
+                container.style.display = 'block';
+                input.required = true;
+            } else {
+                container.style.display = 'none';
+                input.required = false;
+                input.value = '';
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'flex';
+        }
+
+        function openEditModal(id, title, description, categoryId, frequency, endDate, difficulty) {
+            document.getElementById('editId').value = id;
+            document.getElementById('editTitle').value = title;
+            document.getElementById('editDescription').value = description;
+            document.getElementById('editCategoryId').value = categoryId;
+            document.getElementById('editFrequency').value = frequency;
+            document.getElementById('editEndDate').value = endDate;
+            document.getElementById('editDifficulty').value = difficulty === 'Easy' ? '0' : difficulty === 'Hard' ? '2' : '1';
+
+            toggleEndDate('edit', frequency);
+            updateDifficultyPoints('edit');
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function updateDifficultyPoints(prefix) {
+            var select = document.getElementById(prefix + 'Difficulty');
+            var points = select.options[select.selectedIndex].dataset.points;
+            document.getElementById(prefix + 'DifficultyHint').textContent = 'Completing this habit will earn ' + points + ' points.';
+        }
+
+        function closeModals() {
+            document.getElementById('addModal').style.display = 'none';
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('ht-modal-overlay')) {
+                closeModals();
+            }
+        }
+    </script>
+}
