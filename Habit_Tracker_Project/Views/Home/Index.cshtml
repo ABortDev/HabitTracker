@@ -1,8 +1,183 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to Habit Tracker";
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fce7f3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 120px;
+        }
+
+        .btn-start {
+            margin-top: 32px;
+            background-color: #16a34a;
+            color: white;
+            padding: 14px 40px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .btn-start:hover {
+                background-color: #15803d;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(22, 163, 74, 0.3);
+                color: white;
+            }
+
+            .btn-start:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+            }
+
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #1f2937;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+            .nav-link:hover {
+                background-color: rgba(0,0,0,0.05);
+            }
+
+        .btn-green {
+            text-decoration: none;
+            background-color: #16a34a;
+            color: white;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+            .btn-green:hover {
+                background-color: #15803d;
+                color: white;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">
+            Habit Tracker
+        </div>
+
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <div class="nav-links">
+                <span style="color: #4b5563; font-weight: 600;">Hello, @User.Identity.Name!</span>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn-green">
+                    Go to Dashboard
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="nav-links">
+                <a asp-controller="Auth" asp-action="Login" class="nav-link">
+                    Log In
+                </a>
+                <a asp-controller="Auth" asp-action="Register" class="btn-green">
+                    Sign Up
+                </a>
+            </div>
+        }
+    </div>
+
+    <h1 style="font-size: 48px; font-weight: 800; color: #1f2937; margin-bottom: 16px; text-align: center;">
+        Welcome to Habit Tracker
+    </h1>
+
+    <p style="color: #4b5563; max-width: 600px; text-align: center; margin-top: 0; font-size: 18px; line-height: 1.6;">
+        Your personal companion for building better routines. Track your daily habits,
+        monitor your progress, and stay motivated on your journey to self-improvement.
+    </p>
+
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Dashboard" asp-action="Index" class="btn-start">
+            Go to Dashboard
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Auth" asp-action="Login" class="btn-start">
+            Start Your Journey
+        </a>
+    }
+
+    <div style="background: white; border-radius: 24px; padding: 40px; width: 800px; margin-top: 80px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 40px;">
+        <h2 style="text-align: center; font-weight: 800; margin-bottom: 24px; font-size: 28px; color: #1f2937;">About Us</h2>
+
+        <p style="color: #4b5563; line-height: 1.8; font-size: 16px; text-align: justify; margin-bottom: 24px;">
+            Habit Tracker was created with a simple idea in mind: building good habits shouldn't feel like a chore.
+            We believe that small, consistent actions lead to remarkable results. Our platform is designed to help
+            you stay accountable, visualize your progress, and celebrate your wins—no matter how small they are.
+        </p>
+
+        <p style="color: #4b5563; line-height: 1.8; font-size: 16px; text-align: justify; margin-bottom: 32px;">
+            Whether you want to read more, exercise regularly, or simply drink more water, our intuitive dashboard
+            and insightful statistics will guide you every step of the way. Join our community and start transforming
+            your daily routines into lifelong habits today.
+        </p>
+
+        <div style="display: flex; gap: 24px;">
+            <div style="background-color: #fbcfe8; width: 50%; height: 200px; border-radius: 16px; display: flex; justify-content: center; align-items: center; color: #9d174d; font-weight: 600; font-size: 18px;">
+                Our Mission
+            </div>
+            <div style="background-color: #e5e7eb; width: 50%; height: 200px; border-radius: 16px; display: flex; justify-content: center; align-items: center; color: #4b5563; font-weight: 600; font-size: 18px;">
+                Our Community
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
