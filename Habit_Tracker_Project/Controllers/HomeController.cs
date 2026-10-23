@@ -9,6 +9,9 @@ namespace Habit_Tracker_Project.Controllers
             return View();
         }
 
-
+        public IActionResult Privacy()
+        {
+            return View();
+        }
     }
 }

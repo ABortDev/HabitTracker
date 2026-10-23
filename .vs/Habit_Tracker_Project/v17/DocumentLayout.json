@@ -1,7 +1,28 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "K:\\Habit Tracker\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\views\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\views\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\views\\dashboard\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\views\\dashboard\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +30,75 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Dashboard\\Index.cshtml",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Dashboard\\Index.cshtml",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Dashboard\\Index.cshtml",
+              "RelativeToolTip": "Habit_Tracker_Project\\Views\\Dashboard\\Index.cshtml",
+              "ViewState": "AgIAAIMBAAAAAAAAAAAAAJgBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-10-23T10:05:56.291Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "site.css",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\wwwroot\\css\\site.css",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "Habit_Tracker_Project\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAAIQFAAAAAAAAAAAIwJwFAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-10-23T09:46:56.148Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Dashboard\\Details.cshtml",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Dashboard\\Details.cshtml",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Dashboard\\Details.cshtml",
+              "RelativeToolTip": "Habit_Tracker_Project\\Views\\Dashboard\\Details.cshtml",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAAAFcAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-10-23T09:45:49.069Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\DashboardController.cs",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\DashboardController.cs",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAcwLkAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T08:53:21.828Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\UsersController.cs",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-23T07:45:29.241Z"
             }
           ]
         }

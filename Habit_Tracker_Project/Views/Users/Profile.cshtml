@@ -3,212 +3,39 @@
     ViewData["Title"] = "My Profile";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Habit Tracker</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9fafb;
-            min-height: 100vh;
-        }
-
-        .navbar {
-            background: white;
-            padding: 16px 48px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .navbar-logo {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1f2937;
-            text-decoration: none;
-        }
-
-        .navbar-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-item {
-            text-decoration: none;
-            color: #4b5563;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-
-            .nav-item:hover {
-                color: #16a34a;
-            }
-
-        .btn-logout {
-            background: none;
-            border: 1px solid #dc2626;
-            color: #dc2626;
-            padding: 6px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-            .btn-logout:hover {
-                background: #dc2626;
-                color: white;
-            }
-
-        .container {
-            max-width: 600px;
-            margin: 48px auto;
-            padding: 0 24px;
-        }
-
-        .profile-card {
-            background: white;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .profile-title {
-            font-size: 32px;
-            font-weight: 800;
-            color: #1f2937;
-            margin-top: 0;
-            margin-bottom: 32px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-            .form-input:focus {
-                outline: none;
-                border-color: #16a34a;
-                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-            }
-
-        .btn-save {
-            background: #16a34a;
-            color: white;
-            padding: 12px 32px;
-            border-radius: 8px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s;
-            width: 100%;
-            font-size: 16px;
-        }
-
-            .btn-save:hover {
-                background: #15803d;
-            }
-
-        .alert {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .alert-success {
-            background-color: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
-
-        .alert-error {
-            background-color: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-    </style>
-</head>
-<body>
-
-    <nav class="navbar">
-        <a asp-controller="Dashboard" asp-action="Index" class="navbar-logo">Habit Tracker</a>
-        <div class="navbar-links">
-            <a asp-controller="Dashboard" asp-action="Index" class="nav-item">Dashboard</a>
-            <a asp-controller="Users" asp-action="Profile" class="nav-item">Profile</a>
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-controller="Users" asp-action="Manage" class="nav-item" style="color: #dc2626;">Admin Panel</a>
-            }
-            <form method="post" asp-controller="Auth" asp-action="Logout" style="margin: 0;">
-                <button type="submit" class="btn-logout">Logout</button>
-            </form>
+<div class="ht-content-narrow">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">Account settings</span>
+            <h1>My profile</h1>
         </div>
-    </nav>
-
-    <div class="container">
-        <div class="profile-card">
-            <h2 class="profile-title">My Profile</h2>
-
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success">@TempData["Success"]</div>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-error">@TempData["Error"]</div>
-            }
-
-            <form method="post" asp-controller="Users" asp-action="UpdateProfile">
-
-                <div class="form-group">
-                    <label class="form-label">Email (Cannot be changed)</label>
-                    <input type="email" class="form-input" value="@Model.Email" disabled style="background-color: #f3f4f6; color: #6b7280;" />
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="fullName" class="form-input" value="@Model.FullName" required />
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">New Password</label>
-                    <input type="password" name="newPassword" class="form-input" placeholder="Leave empty to keep current password" />
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Total Points</label>
-                    <input type="text" class="form-input" value="@Model.TotalPoints" disabled style="background-color: #f3f4f6; color: #6b7280;" />
-                </div>
-
-                <button type="submit" class="btn-save">Save Changes</button>
-            </form>
-        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
     </div>
 
-</body>
-</html>
+    <section class="ht-profile-card ht-card">
+        <form method="post" asp-controller="Users" asp-action="UpdateProfile" class="ht-profile-form">
+            <div class="ht-form-group">
+                <label class="ht-form-label">Email</label>
+                <input type="email" class="form-control ht-form-control ht-readonly-field" value="@Model.Email" disabled />
+                <small class="ht-help-text">Your email address cannot be changed.</small>
+            </div>
+
+            <div class="ht-form-group">
+                <label for="fullName" class="ht-form-label">Full name</label>
+                <input id="fullName" type="text" name="fullName" class="form-control ht-form-control" value="@Model.FullName" required />
+            </div>
+
+            <div class="ht-form-group">
+                <label for="newPassword" class="ht-form-label">New password</label>
+                <input id="newPassword" type="password" name="newPassword" class="form-control ht-form-control" placeholder="Leave empty to keep your current password" />
+            </div>
+
+            <div class="ht-profile-stat">
+                <span>Total points</span>
+                <strong>@Model.TotalPoints</strong>
+            </div>
+
+            <button type="submit" class="btn ht-btn-primary ht-profile-submit">Save changes</button>
+        </form>
+    </section>
+</div>

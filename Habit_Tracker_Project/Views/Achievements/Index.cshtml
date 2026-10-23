@@ -1,0 +1,43 @@
+@model List<Habit_Tracker_Project.Models.Achievement>
+@{
+    ViewData["Title"] = "Achievements";
+    var userAchievementIds = ViewBag.UserAchievements as List<int> ?? new List<int>();
+}
+
+<div class="ht-achievements-page">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">Keep going</span>
+            <h1>Achievements</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+    </div>
+
+    <p class="ht-page-intro">Celebrate the progress you make while building consistent routines.</p>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="ht-achievement-grid">
+            @foreach (var achievement in Model)
+            {
+                var isUnlocked = userAchievementIds.Contains(achievement.Id);
+                <article class="ht-achievement-card ht-card @(isUnlocked ? "ht-achievement-unlocked" : "ht-achievement-locked")">
+                    <div class="ht-achievement-icon" aria-hidden="true">@(isUnlocked ? "★" : "☆")</div>
+                    <div class="ht-achievement-content">
+                        <div class="ht-achievement-status">@(isUnlocked ? "Unlocked" : "Keep practicing")</div>
+                        <h2>@achievement.Title</h2>
+                        <p>@achievement.Description</p>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <section class="ht-empty-achievements ht-card">
+            <div class="ht-achievement-icon" aria-hidden="true">☆</div>
+            <h2>Your achievements will appear here</h2>
+            <p>Keep completing habits and your progress will be celebrated here.</p>
+        </section>
+    }
+</div>

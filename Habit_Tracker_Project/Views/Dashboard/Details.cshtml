@@ -1,0 +1,89 @@
+﻿@model HabitTracker.Models.Habit
+@using HabitTracker.Models.Enums
+@using System.Globalization
+@{
+    ViewData["Title"] = Model.Title;
+
+    var reminder = Model.Reminders?.FirstOrDefault();
+    var completedToday = (bool)ViewBag.CompletedToday;
+    DateOnly? lastCompleted = ViewBag.LastCompleted as DateOnly?;
+
+    int points = Model.Difficulty switch
+    {
+        DifficultyLevel.Easy => 10,
+        DifficultyLevel.Hard => 30,
+        _ => 20
+    };
+
+    string schedule = Model.Frequency switch
+    {
+        HabitFrequency.Onetime => "One-time task",
+        HabitFrequency.Daily => "Every day",
+        HabitFrequency.Weekly => $"Every week on {Model.CreatedAt.DayOfWeek}",
+        HabitFrequency.Monthly => $"Every month on day {Model.CreatedAt.Day}",
+        HabitFrequency.Yearly => $"Every year on {Model.CreatedAt.ToString("MMMM d", CultureInfo.InvariantCulture)}",
+        _ => Model.Frequency.ToString()
+    };
+}
+
+<main class="ht-dashboard-container">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">@(Model.Category?.Name ?? "General")</span>
+            <h1>@Model.Title</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="ht-dashboard-alert ht-dashboard-alert-success" role="status">✓ @TempData["Success"]</div>
+    }
+
+    <div class="ht-dashboard-grid">
+        <section class="ht-dashboard-card ht-card">
+            <div class="ht-section-heading">
+                <div>
+                    <h2>Schedule</h2>
+                    <p>@(string.IsNullOrEmpty(Model.Description) ? "No description" : Model.Description)</p>
+                </div>
+            </div>
+
+            <div class="ht-habit-meta">
+                <span>@schedule</span>
+                <span>@Model.Difficulty · @points pts</span>
+            </div>
+
+            <ul class="list-unstyled mt-3">
+                <li><strong>Created:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                <li><strong>Reminder:</strong> @(reminder != null ? reminder.ReminderTime.ToString("HH:mm") : "not set")</li>
+                @if (Model.EndDate.HasValue)
+                {
+                    <li><strong>@(Model.Frequency == HabitFrequency.Onetime ? "Due date" : "Ends"):</strong> @Model.EndDate.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                }
+                <li><strong>Completions:</strong> @ViewBag.TotalCompletions</li>
+                @if (lastCompleted.HasValue)
+                {
+                    <li><strong>Last completed:</strong> @lastCompleted.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                }
+                @if (Model.Frequency == HabitFrequency.Daily)
+                {
+                    <li><strong>Current streak:</strong> @ViewBag.Streak days</li>
+                }
+            </ul>
+
+            @if (!completedToday)
+            {
+                <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@Model.Id">
+                    <button type="submit" class="btn ht-btn-primary">Mark as done (+@points pts)</button>
+                </form>
+            }
+            else
+            {
+                <div class="ht-empty-state">Completed today ✓</div>
+            }
+        </section>
+
+        
+    </div>
+</main>
