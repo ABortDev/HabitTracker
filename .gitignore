@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Habit_Tracker_Project/FileContentIndex
+/Habit_Tracker_Project/obj
+/Habit_Tracker_Project/Views
+/.gitignore
