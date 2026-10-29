@@ -29,7 +29,6 @@ namespace HabitTracker.Controllers
 
             var allAchievements = await _context.Achievements.ToListAsync();
 
-            // Отримуємо ID досягнень, які вже є у користувача
             var userAchievementIds = await _context.UserAchievements
                 .Where(ua => ua.UserId == userId)
                 .Select(ua => ua.AchievementId)

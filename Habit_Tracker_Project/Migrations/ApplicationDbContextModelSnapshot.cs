@@ -22,6 +22,28 @@ namespace Habit_Tracker_Project.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("HabitTracker.Models.Achievement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Achievements", (string)null);
+                });
+
             modelBuilder.Entity("HabitTracker.Models.Habit", b =>
                 {
                     b.Property<int>("Id")
@@ -42,20 +64,23 @@ namespace Habit_Tracker_Project.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<int>("Difficulty")
-                        .HasColumnType("integer");
+                    b.Property<string>("Difficulty")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateOnly?>("EndDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("Frequency")
-                        .HasColumnType("integer");
+                    b.Property<string>("Frequency")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<decimal?>("TargetValue")
                         .HasPrecision(10, 2)
@@ -127,8 +152,9 @@ namespace Habit_Tracker_Project.Migrations
                     b.Property<int>("HabitId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -165,6 +191,52 @@ namespace Habit_Tracker_Project.Migrations
                     b.ToTable("HabitReminders", (string)null);
                 });
 
+            modelBuilder.Entity("HabitTracker.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("HabitId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HabitId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications", (string)null);
+                });
+
             modelBuilder.Entity("HabitTracker.Models.PointTransaction", b =>
                 {
                     b.Property<int>("Id")
@@ -185,8 +257,9 @@ namespace Habit_Tracker_Project.Migrations
                     b.Property<int>("Points")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -280,74 +353,7 @@ namespace Habit_Tracker_Project.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Habit_Tracker_Project.Models.Achievement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Achievements", (string)null);
-                });
-
-            modelBuilder.Entity("Habit_Tracker_Project.Models.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("HabitId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ReadAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HabitId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Notifications", (string)null);
-                });
-
-            modelBuilder.Entity("Habit_Tracker_Project.Models.UserAchievement", b =>
+            modelBuilder.Entity("HabitTracker.Models.UserAchievement", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -538,6 +544,24 @@ namespace Habit_Tracker_Project.Migrations
                     b.Navigation("Habit");
                 });
 
+            modelBuilder.Entity("HabitTracker.Models.Notification", b =>
+                {
+                    b.HasOne("HabitTracker.Models.Habit", "Habit")
+                        .WithMany("Notifications")
+                        .HasForeignKey("HabitId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("HabitTracker.Models.User", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Habit");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("HabitTracker.Models.PointTransaction", b =>
                 {
                     b.HasOne("HabitTracker.Models.Habit", "Habit")
@@ -556,27 +580,9 @@ namespace Habit_Tracker_Project.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Habit_Tracker_Project.Models.Notification", b =>
+            modelBuilder.Entity("HabitTracker.Models.UserAchievement", b =>
                 {
-                    b.HasOne("HabitTracker.Models.Habit", "Habit")
-                        .WithMany("Notifications")
-                        .HasForeignKey("HabitId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("HabitTracker.Models.User", "User")
-                        .WithMany("Notifications")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Habit");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Habit_Tracker_Project.Models.UserAchievement", b =>
-                {
-                    b.HasOne("Habit_Tracker_Project.Models.Achievement", "Achievement")
+                    b.HasOne("HabitTracker.Models.Achievement", "Achievement")
                         .WithMany("UserAchievements")
                         .HasForeignKey("AchievementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -644,6 +650,11 @@ namespace Habit_Tracker_Project.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HabitTracker.Models.Achievement", b =>
+                {
+                    b.Navigation("UserAchievements");
+                });
+
             modelBuilder.Entity("HabitTracker.Models.Habit", b =>
                 {
                     b.Navigation("Logs");
@@ -665,11 +676,6 @@ namespace Habit_Tracker_Project.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("PointTransactions");
-                });
-
-            modelBuilder.Entity("Habit_Tracker_Project.Models.Achievement", b =>
-                {
-                    b.Navigation("UserAchievements");
                 });
 #pragma warning restore 612, 618
         }

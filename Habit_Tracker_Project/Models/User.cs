@@ -1,4 +1,4 @@
-﻿using Habit_Tracker_Project.Models;
+﻿using HabitTracker.Models;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 

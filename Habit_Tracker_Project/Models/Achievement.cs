@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Habit_Tracker_Project.Models
+namespace HabitTracker.Models
 {
     public class Achievement
     {

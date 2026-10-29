@@ -1,6 +1,4 @@
-﻿
-using HabitTracker.Models;
-using Habit_Tracker_Project.Models;
+﻿using HabitTracker.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -131,6 +129,11 @@ namespace HabitTracker.Data
                 .Property(n => n.Title)
                 .IsRequired()
                 .HasMaxLength(150);
+        }
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            configurationBuilder.Properties<Enum>()
+                .HaveConversion<string>();
         }
     }
 }

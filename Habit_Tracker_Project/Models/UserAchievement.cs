@@ -1,7 +1,7 @@
 ﻿using HabitTracker.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Habit_Tracker_Project.Models
+namespace HabitTracker.Models
 {
     public class UserAchievement
     {

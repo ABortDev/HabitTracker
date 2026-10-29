@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Habit_Tracker_Project.Enums;
 
-namespace Habit_Tracker_Project.Models
+namespace HabitTracker.Models
 {
     public class Notification
     {

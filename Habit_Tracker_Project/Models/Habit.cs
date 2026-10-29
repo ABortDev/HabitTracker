@@ -1,4 +1,4 @@
-﻿using Habit_Tracker_Project.Models;
+﻿using HabitTracker.Models;
 using HabitTracker.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
