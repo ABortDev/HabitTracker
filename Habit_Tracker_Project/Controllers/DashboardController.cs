@@ -6,6 +6,8 @@ using HabitTracker.Data;
 using HabitTracker.Models;
 using HabitTracker.Models.Enums;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Habit_Tracker_Project.Enums;
 
 namespace HabitTracker.Controllers
 {
@@ -32,21 +34,30 @@ namespace HabitTracker.Controllers
         };
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchString, int? categoryId)
         {
             var userId = GetCurrentUserId();
 
-            var habits = await _context.Habits
+            var habits = _context.Habits
                 .Include(h => h.Category)
                 .Include(h => h.Reminders)
                 .Include(h => h.Logs)
-                .Where(h => h.UserId == userId && !h.IsDeleted)
-                .OrderByDescending(h => h.CreatedAt)
+                .Where(h => h.UserId == userId && !h.IsDeleted);
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                habits = habits.Where(h => EF.Functions.ILike(h.Title, $"%{searchString}%"));
+            }
+            if (categoryId.HasValue && categoryId.Value > 0)
+            {
+                habits = habits.Where(h => h.CategoryId == categoryId.Value);
+            }
+            ViewBag.Categories = await _context.HabitCategories
+                .OrderBy(c => c.Name)
                 .ToListAsync();
-
-            ViewBag.Categories = await _context.HabitCategories.ToListAsync();
-
-            return View(habits);
+            ViewBag.SearchString = searchString;
+            ViewBag.CategoryId = categoryId;
+            return View(await habits.OrderByDescending(h => h.CreatedAt).ToListAsync());
         }
 
         [HttpPost]
@@ -193,7 +204,7 @@ namespace HabitTracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CompleteHabit(int id, decimal? actualValue)
+        public async Task<IActionResult> CompleteHabit(int id, decimal? actualValue, DateOnly? date)
         {
             var userId = GetCurrentUserId();
             var habit = await _context.Habits
@@ -203,14 +214,31 @@ namespace HabitTracker.Controllers
 
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             var now = DateTime.UtcNow;
+            var targetDate = date ?? today;
+
+            IActionResult Back() => date.HasValue
+                ? RedirectToAction(nameof(Details), new { id })
+                : RedirectToAction(nameof(Index));
+
+            if (targetDate > today)
+            {
+                TempData["Error"] = "You can complete only today or a past date.";
+                return Back();
+            }
+
+            if (habit.EndDate.HasValue && targetDate > habit.EndDate.Value)
+            {
+                TempData["Error"] = "This date is after the habit's end date.";
+                return Back();
+            }
 
             var log = await _context.HabitLogs
-                .FirstOrDefaultAsync(l => l.HabitId == id && l.Date == today);
+                .FirstOrDefaultAsync(l => l.HabitId == id && l.Date == targetDate);
 
             if (log != null && log.CompletedAt != null)
             {
-                TempData["Error"] = "This habit is already completed today.";
-                return RedirectToAction(nameof(Index));
+                TempData["Error"] = "This day is already completed.";
+                return Back();
             }
 
             var hasTarget = habit.TargetValue.HasValue && habit.TargetValue.Value > 0;
@@ -222,7 +250,7 @@ namespace HabitTracker.Controllers
                 if (amount <= 0)
                 {
                     TempData["Error"] = "Enter a value greater than 0.";
-                    return RedirectToAction(nameof(Index));
+                    return Back();
                 }
             }
             else
@@ -235,7 +263,7 @@ namespace HabitTracker.Controllers
                 log = new HabitLog
                 {
                     HabitId = id,
-                    Date = today,
+                    Date = targetDate,
                     ActualValue = 0,
                     Status = HabitLogStatus.NotCompleted
                 };
@@ -254,7 +282,7 @@ namespace HabitTracker.Controllers
 
                 TempData["Success"] =
                     $"Progress saved: {log.ActualValue:0.##} / {habit.TargetValue:0.##} {habit.Unit}";
-                return RedirectToAction(nameof(Index));
+                return Back();
             }
 
             log.Status = HabitLogStatus.Completed;
@@ -278,19 +306,25 @@ namespace HabitTracker.Controllers
                 user.TotalPoints += points;
             }
 
-            if (habit.Frequency == HabitFrequency.Onetime)
+            if (habit.Frequency == HabitFrequency.Onetime && targetDate == today)
             {
                 habit.IsDeleted = true;
                 habit.DeletedAt = now;
                 TempData["Success"] = $"Task completed (+{points} pts) and removed from your list!";
             }
-            else
+            else if (targetDate == today)
             {
                 TempData["Success"] = $"Habit completed for today! +{points} pts";
             }
+            else
+            {
+                TempData["Success"] = $"Habit completed for {targetDate:yyyy-MM-dd}! +{points} pts";
+            }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            await AwardAchievements(userId, user);
+            await _context.SaveChangesAsync();
+            return Back();
         }
 
         [HttpPost]
@@ -411,5 +445,48 @@ namespace HabitTracker.Controllers
         }
         private static string? CleanUnit(string? unit) =>
             string.IsNullOrWhiteSpace(unit) ? null : unit.Trim();
+
+        private async Task AwardAchievements(string userId, User? user)
+        {
+            var catalog = await _context.Achievements.ToListAsync();
+            if (catalog.Count == 0) return;
+
+            var owned = await _context.UserAchievements
+                .Where(ua => ua.UserId == userId)
+                .Select(ua => ua.AchievementId)
+                .ToListAsync();
+
+            var completedCount = await _context.HabitLogs
+                .CountAsync(l => l.Habit.UserId == userId && l.CompletedAt != null);
+
+            var points = user?.TotalPoints ?? 0;
+
+            void Give(string title)
+            {
+                var achievement = catalog.FirstOrDefault(a => a.Title == title);
+                if (achievement == null || owned.Contains(achievement.Id)) return;
+
+                _context.UserAchievements.Add(new UserAchievement
+                {
+                    UserId = userId,
+                    AchievementId = achievement.Id,
+                    AwardedAt = DateTime.UtcNow
+                });
+
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = userId,
+                    Title = "New achievement",
+                    Message = achievement.Title,
+                    Type = NotificationType.Achievement,
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            if (completedCount >= 1) Give("First Step");
+            if (completedCount >= 10) Give("10 Completions");
+            if (points >= 100) Give("100 Points");
+        }
     }
 }

@@ -14,7 +14,15 @@ namespace HabitTracker.Data
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
-                
+                if (!context.Achievements.Any())
+                {
+                    context.Achievements.AddRange(
+                        new Achievement { Title = "First Step", Description = "Complete your first habit." },
+                        new Achievement { Title = "10 Completions", Description = "Complete habits 10 times." },
+                        new Achievement { Title = "100 Points", Description = "Earn 100 points." }
+                    );
+                    context.SaveChanges();
+                }
                 if (!context.HabitCategories.Any())
                 {
                     context.HabitCategories.AddRange(

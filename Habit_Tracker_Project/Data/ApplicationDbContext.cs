@@ -21,6 +21,7 @@ namespace HabitTracker.Data
         public DbSet<PointTransaction> PointTransactions { get; set; }
         public DbSet<Achievement> Achievements { get; set; }
         public DbSet<UserAchievement> UserAchievements { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
