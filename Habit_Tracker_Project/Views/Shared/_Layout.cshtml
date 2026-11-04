@@ -38,25 +38,25 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Users" asp-action="Profile">Profile</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Notifications" asp-action="Index">Notifications</a>
+                            </li>
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-danger-ht" asp-controller="Users" asp-action="Manage">Admin Panel</a>
                                 </li>
                             }
-                            else if (User.IsInRole("Moderator"))
+                            @if (User.IsInRole("Moderator"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Chat" asp-action="Inbox">Moderator inbox</a>
                                 </li>
                             }
-                            else
+                            else if (User.IsInRole("User") && !User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Chat" asp-action="Index">Chat</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Notifications" asp-action="Index">Notifications</a>
+                                    <a class="nav-link" asp-controller="Chat" asp-action="Index">Help</a>
                                 </li>
                             }
                         }

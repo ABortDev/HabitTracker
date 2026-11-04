@@ -39,6 +39,10 @@
     {
         <div class="ht-dashboard-alert ht-dashboard-alert-success" role="status">✓ @TempData["Success"]</div>
     }
+    @if (TempData["Error"] != null)
+    {
+        <div class="ht-dashboard-alert ht-dashboard-alert-error" role="alert">@TempData["Error"]</div>
+    }
 
     <div class="ht-dashboard-grid">
         <section class="ht-dashboard-card ht-card">
@@ -75,6 +79,17 @@
             @if (!completedToday)
             {
                 <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@Model.Id">
+                    @if (Model.TargetValue is > 0)
+                    {
+                        var todayLog = Model.Logs?.FirstOrDefault(log => log.Date == DateOnly.FromDateTime(DateTime.UtcNow));
+                        <div class="ht-form-group mb-3">
+                            <label for="habitActualValue" class="ht-form-label">
+                                Progress: @(todayLog?.ActualValue ?? 0) / @Model.TargetValue @(Model.Unit ?? "")
+                            </label>
+                            <input id="habitActualValue" type="number" name="actualValue" min="0.01" step="any"
+                                   class="form-control ht-form-control" placeholder="Amount completed" required />
+                        </div>
+                    }
                     <button type="submit" class="btn ht-btn-primary">Mark as done (+@points pts)</button>
                 </form>
             }
@@ -112,6 +127,7 @@
             </div>
             <form id="completeDateForm" method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@Model.Id" class="ht-hidden-field">
                 <input type="hidden" name="date" />
+                <input type="hidden" name="actualValue" />
                 @Html.AntiForgeryToken()
             </form>
             <form id="toggleScheduleForm" method="post" asp-controller="Dashboard" asp-action="ToggleScheduleDate" asp-route-id="@Model.Id" class="ht-hidden-field">
@@ -139,6 +155,7 @@
             const daysElement = document.getElementById("calendarDays");
             const completeForm = document.getElementById("completeDateForm");
             const toggleForm = document.getElementById("toggleScheduleForm");
+            const requiresActualValue = @((Model.TargetValue is > 0).ToString().ToLowerInvariant());
             let displayedMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
             const dateString = date => [
@@ -171,6 +188,7 @@
                     const isCompleted = completedDates.has(value);
                     const isPartial = partialDates.has(value);
                     const isPlanned = plannedDates.has(value);
+                    const isAfterEndDate = endDate !== "" && value > endDate;
                     const statusClass = isCompleted
                         ? "ht-cal-completed"
                         : isPartial ? "ht-cal-partial" : isPlanned ? "ht-cal-planned" : "";
@@ -183,7 +201,16 @@
                     button.appendChild(number);
                     button.dataset.date = value;
                     button.setAttribute("aria-label", `${value}${isCompleted ? ", completed" : isPartial ? ", partial progress" : isPlanned ? ", planned" : ""}`);
-                    button.disabled = isCompleted || (endDate !== "" && value > endDate);
+                    button.disabled = isCompleted || isAfterEndDate;
+                    if (isCompleted) {
+                        button.title = "Already completed";
+                    } else if (isAfterEndDate) {
+                        button.title = "This date is after the habit end date";
+                    } else if (isPlanned) {
+                        button.title = "Click to unplan this date";
+                    } else {
+                        button.title = value <= todayString ? "Click to record progress" : "Click to plan this date";
+                    }
                     daysElement.appendChild(button);
                 }
 
@@ -209,10 +236,24 @@
 
                 if (button.dataset.date <= todayString) {
                     completeForm.elements.date.value = button.dataset.date;
+                    if (requiresActualValue) {
+                        const amount = window.prompt("How much did you complete?");
+                        if (amount === null || amount.trim() === "") return;
+
+                        const normalizedAmount = amount.trim().replace(",", ".");
+                        if (!/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(normalizedAmount) || Number(normalizedAmount) <= 0) {
+                            window.alert("Enter a number greater than 0.");
+                            return;
+                        }
+                        completeForm.elements.actualValue.value = normalizedAmount;
+                    } else {
+                        completeForm.elements.actualValue.value = "";
+                    }
                     completeForm.submit();
                     return;
                 }
 
+                button.disabled = true;
                 toggleForm.elements.date.value = button.dataset.date;
                 fetch(toggleForm.action, {
                     method: "POST",
@@ -220,11 +261,13 @@
                 }).then(async response => {
                     const result = await response.json();
                     if (!response.ok) {
+                        button.disabled = false;
                         window.alert(result.error || "The schedule could not be updated.");
                         return;
                     }
                     window.location.reload();
                 }).catch(() => {
+                    button.disabled = false;
                     window.alert("The schedule could not be updated. Please try again.");
                 });
             });

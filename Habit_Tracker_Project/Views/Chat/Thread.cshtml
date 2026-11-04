@@ -2,10 +2,9 @@
 @{
     ViewData["Title"] = "Chat thread";
     var threadUserId = (string)ViewBag.ThreadUserId;
-    var userMessage = Model.FirstOrDefault(message => message.SenderId == threadUserId);
-    var threadUserName = string.IsNullOrWhiteSpace(userMessage?.User?.FullName)
-        ? userMessage?.User?.Email ?? "User"
-        : userMessage.User.FullName;
+    var threadUserName = string.IsNullOrWhiteSpace((string?)ViewBag.ThreadUserName)
+        ? (string?)ViewBag.ThreadUserEmail ?? "User"
+        : (string)ViewBag.ThreadUserName;
 }
 
 <div class="ht-content-narrow">
@@ -16,6 +15,15 @@
         </div>
         <a asp-controller="Chat" asp-action="Inbox" class="btn ht-btn-secondary">Back to inbox</a>
     </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="ht-alert ht-alert-success" role="status">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="ht-alert ht-alert-error" role="alert">@TempData["Error"]</div>
+    }
 
     <section class="ht-card ht-chat-card">
         <div class="ht-chat-messages" aria-live="polite">

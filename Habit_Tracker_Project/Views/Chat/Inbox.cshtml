@@ -1,6 +1,7 @@
 ﻿@model List<HabitTracker.Models.ChatMessage>
 @{
     ViewData["Title"] = "Moderator inbox";
+    var unreadCounts = ViewBag.UnreadCounts as Dictionary<string, int> ?? new Dictionary<string, int>();
 }
 
 <div class="ht-admin-page">
@@ -16,17 +17,30 @@
         <div class="ht-table-wrapper">
             <table class="ht-admin-table">
                 <thead>
-                    <tr><th>User</th><th>Latest message</th><th>Date</th><th></th></tr>
+                        <tr><th>User</th><th>Latest message</th><th>Date</th><th>Unread</th><th></th></tr>
                 </thead>
                 <tbody>
                     @if (Model.Any())
                     {
-                        foreach (var message in Model.OrderByDescending(item => item.CreatedAt))
+                        foreach (var message in Model)
                         {
+                            var unreadCount = unreadCounts.TryGetValue(message.UserId, out var count) ? count : 0;
                             <tr>
                                 <td data-label="User">@(string.IsNullOrWhiteSpace(message.User?.FullName) ? message.User?.Email : message.User.FullName)</td>
-                                <td data-label="Latest message">@message.Text</td>
+                                <td data-label="Latest message">
+                                    <strong>@(message.SenderId == message.UserId ? "User:" : "You:")</strong> @message.Text
+                                </td>
                                 <td data-label="Date">@message.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</td>
+                                <td data-label="Unread">
+                                    @if (unreadCount > 0)
+                                    {
+                                        <span class="ht-status-badge ht-status-blocked">@unreadCount</span>
+                                    }
+                                    else
+                                    {
+                                        <span>—</span>
+                                    }
+                                </td>
                                 <td>
                                     <a asp-controller="Chat" asp-action="Thread" asp-route-userId="@message.UserId"
                                        class="btn ht-btn-primary btn-sm">Open conversation</a>
@@ -36,7 +50,7 @@
                     }
                     else
                     {
-                        <tr><td colspan="4" class="ht-table-empty">There are no conversations yet.</td></tr>
+                        <tr><td colspan="5" class="ht-table-empty">There are no conversations yet. User messages will appear here.</td></tr>
                     }
                 </tbody>
             </table>

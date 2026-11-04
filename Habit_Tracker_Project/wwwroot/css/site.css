@@ -1369,6 +1369,10 @@ a:hover {
         cursor: default;
     }
 
+    .ht-cal-day:disabled .ht-cal-num {
+        opacity: 0.55;
+    }
+
     .ht-cal-past {
         color: #aab0aa;
     }
@@ -1458,6 +1462,33 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+.ht-complete-stack {
+  justify-items: center;
+}
+
+.ht-progress-label {
+  color: var(--ht-muted-text);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.ht-complete-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ht-complete-controls .ht-amount-input {
+  width: 5rem;
+}
+
+.ht-user-habits-email {
+  margin: 0.85rem 0 0;
+  color: var(--ht-muted-text);
 }
 
 .ht-profile-heading {

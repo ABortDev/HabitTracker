@@ -218,7 +218,9 @@ namespace HabitTracker.Controllers
             var targetDate = date ?? today;
 
             IActionResult Back() => date.HasValue
-                ? RedirectToAction(nameof(Details), new { id })
+                ? (habit.IsDeleted
+                    ? RedirectToAction(nameof(Index))
+                    : RedirectToAction(nameof(Details), new { id }))
                 : RedirectToAction(nameof(Index));
 
             if (targetDate > today)

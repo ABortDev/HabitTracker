@@ -291,7 +291,6 @@ K:\HABIT TRACKER\Habit_Tracker_Project\bin\Debug\net9.0\Microsoft.AspNetCore.Cry
 K:\HABIT TRACKER\Habit_Tracker_Project\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 K:\HABIT TRACKER\Habit_Tracker_Project\bin\Debug\net9.0\Microsoft.Extensions.Identity.Core.dll
 K:\HABIT TRACKER\Habit_Tracker_Project\bin\Debug\net9.0\Microsoft.Extensions.Identity.Stores.dll
-K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\ebtjsby6d5-42ipego5wc.gz
 K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\vw5c0rpk8x-xtxxf3hu2r.gz
 K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\49q74ppcnx-t1cqhe9u97.gz
 K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\cu93xn8ils-sejl45xvog.gz
@@ -328,3 +327,4 @@ K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\b8wn5kie8d-m9
 K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\16l0xm49hb-jjsuc0puko.gz
 K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\c41w9w673m-9vr69e8ynj.gz
 K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\fosoewgv1l-mlv21k5csn.gz
+K:\HABIT TRACKER\Habit_Tracker_Project\obj\Debug\net9.0\compressed\ebtjsby6d5-ut4bw81jpe.gz
