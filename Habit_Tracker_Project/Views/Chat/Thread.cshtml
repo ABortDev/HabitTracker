@@ -1,0 +1,49 @@
+﻿@model List<HabitTracker.Models.ChatMessage>
+@{
+    ViewData["Title"] = "Chat thread";
+    var threadUserId = (string)ViewBag.ThreadUserId;
+    var userMessage = Model.FirstOrDefault(message => message.SenderId == threadUserId);
+    var threadUserName = string.IsNullOrWhiteSpace(userMessage?.User?.FullName)
+        ? userMessage?.User?.Email ?? "User"
+        : userMessage.User.FullName;
+}
+
+<div class="ht-content-narrow">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">Conversation</span>
+            <h1>@threadUserName</h1>
+        </div>
+        <a asp-controller="Chat" asp-action="Inbox" class="btn ht-btn-secondary">Back to inbox</a>
+    </div>
+
+    <section class="ht-card ht-chat-card">
+        <div class="ht-chat-messages" aria-live="polite">
+            @if (Model.Any())
+            {
+                foreach (var message in Model)
+                {
+                    var isUserMessage = message.SenderId == threadUserId;
+                    <article class="ht-chat-message @(isUserMessage ? "" : "ht-chat-message-own")">
+                        <div class="ht-chat-message-meta">
+                            <strong>@(isUserMessage ? threadUserName : "You (moderator)")</strong>
+                            <time datetime="@message.CreatedAt.ToString("O")">@message.CreatedAt.ToLocalTime().ToString("MMM dd, HH:mm")</time>
+                        </div>
+                        <p>@message.Text</p>
+                    </article>
+                }
+            }
+            else
+            {
+                <p class="ht-empty-state">There are no messages in this conversation yet.</p>
+            }
+        </div>
+
+        <form method="post" asp-controller="Chat" asp-action="Reply" class="ht-chat-compose">
+            <input type="hidden" name="userId" value="@threadUserId" />
+            <label for="replyText" class="ht-form-label">Reply</label>
+            <textarea id="replyText" name="text" rows="3" maxlength="4000" class="form-control ht-form-control" required></textarea>
+            <button type="submit" class="btn ht-btn-primary">Send reply</button>
+        </form>
+    </section>
+</div>

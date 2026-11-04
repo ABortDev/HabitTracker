@@ -1,0 +1,45 @@
+﻿@model List<HabitTracker.Models.ChatMessage>
+@{
+    ViewData["Title"] = "Moderator inbox";
+}
+
+<div class="ht-admin-page">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">Moderator</span>
+            <h1>Chat inbox</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+    </div>
+
+    <section class="ht-admin-table-card ht-card">
+        <div class="ht-table-wrapper">
+            <table class="ht-admin-table">
+                <thead>
+                    <tr><th>User</th><th>Latest message</th><th>Date</th><th></th></tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var message in Model.OrderByDescending(item => item.CreatedAt))
+                        {
+                            <tr>
+                                <td data-label="User">@(string.IsNullOrWhiteSpace(message.User?.FullName) ? message.User?.Email : message.User.FullName)</td>
+                                <td data-label="Latest message">@message.Text</td>
+                                <td data-label="Date">@message.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</td>
+                                <td>
+                                    <a asp-controller="Chat" asp-action="Thread" asp-route-userId="@message.UserId"
+                                       class="btn ht-btn-primary btn-sm">Open conversation</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="4" class="ht-table-empty">There are no conversations yet.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

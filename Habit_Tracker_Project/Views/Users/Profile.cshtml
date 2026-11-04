@@ -1,6 +1,12 @@
 ﻿@model HabitTracker.Models.User
+@using System.Linq
 @{
     ViewData["Title"] = "My Profile";
+    var nameForInitials = string.IsNullOrWhiteSpace(Model.FullName) ? Model.Email ?? "?" : Model.FullName;
+    var initials = string.Join("", nameForInitials
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .Take(2)
+        .Select(part => char.ToUpperInvariant(part[0])));
 }
 
 <div class="ht-content-narrow">
@@ -12,30 +18,41 @@
         <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
     </div>
 
+    @if (TempData["Success"] != null)
+    {
+        <div class="ht-alert ht-alert-success" role="status">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="ht-alert ht-alert-error" role="alert">@TempData["Error"]</div>
+    }
+
     <section class="ht-profile-card ht-card">
+        <div class="ht-profile-heading">
+            <div class="ht-profile-avatar" aria-hidden="true">@initials</div>
+            <div>
+                <h2>@(string.IsNullOrWhiteSpace(Model.FullName) ? "Your profile" : Model.FullName)</h2>
+                <p>@Model.Email</p>
+            </div>
+        </div>
+
         <form method="post" asp-controller="Users" asp-action="UpdateProfile" class="ht-profile-form">
             <div class="ht-form-group">
-                <label class="ht-form-label">Email</label>
-                <input type="email" class="form-control ht-form-control ht-readonly-field" value="@Model.Email" disabled />
-                <small class="ht-help-text">Your email address cannot be changed.</small>
-            </div>
-
-            <div class="ht-form-group">
                 <label for="fullName" class="ht-form-label">Full name</label>
-                <input id="fullName" type="text" name="fullName" class="form-control ht-form-control" value="@Model.FullName" required />
+                <input id="fullName" type="text" name="fullName" class="form-control ht-form-control"
+                       value="@Model.FullName" maxlength="100" required />
             </div>
-
-            <div class="ht-form-group">
-                <label for="newPassword" class="ht-form-label">New password</label>
-                <input id="newPassword" type="password" name="newPassword" class="form-control ht-form-control" placeholder="Leave empty to keep your current password" />
-            </div>
-
-            <div class="ht-profile-stat">
-                <span>Total points</span>
-                <strong>@Model.TotalPoints</strong>
-            </div>
-
             <button type="submit" class="btn ht-btn-primary ht-profile-submit">Save changes</button>
         </form>
+
+        <dl class="ht-profile-details">
+            <div><dt>Registered</dt><dd>@Model.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</dd></div>
+            <div><dt>Role</dt><dd>@ViewBag.Role</dd></div>
+            <div><dt>Total points</dt><dd>@Model.TotalPoints</dd></div>
+            <div>
+                <dt>Account status</dt>
+                <dd>@(Model.IsBlocked ? "Blocked" : "Active")</dd>
+            </div>
+        </dl>
     </section>
 </div>

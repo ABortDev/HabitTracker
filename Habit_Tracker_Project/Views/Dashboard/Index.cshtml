@@ -32,6 +32,7 @@
         _ => "ht-difficulty-medium"
     };
 
+    var selectedCategoryId = ViewBag.CategoryId is int categoryId ? categoryId : 0;
 }
 
 <main class="ht-dashboard-container ht-dashboard-page">
@@ -51,6 +52,35 @@
         }
             <button type="button" class="btn ht-btn-primary ht-add-button" onclick="openAddModal()">+ Add habit</button>
         </div>
+
+        <form method="get" asp-controller="Dashboard" asp-action="Index" class="ht-filter-bar">
+            <div class="ht-form-group">
+                <label for="habitSearch" class="ht-form-label">Search habits</label>
+                <input id="habitSearch" type="search" name="searchString" value="@ViewBag.SearchString"
+                       class="form-control ht-form-control" placeholder="Habit name" />
+            </div>
+            <div class="ht-form-group">
+                <label for="habitCategory" class="ht-form-label">Category</label>
+                <select id="habitCategory" name="categoryId" class="form-select ht-form-control">
+                    <option value="">All</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        if (selectedCategoryId == category.Id)
+                        {
+                            <option value="@category.Id" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="ht-filter-actions">
+                <button type="submit" class="btn ht-btn-primary">Search</button>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Reset</a>
+            </div>
+        </form>
 
         <div class="ht-dashboard-grid">
             <section class="ht-dashboard-card ht-card">

@@ -1,0 +1,48 @@
+﻿@model List<HabitTracker.Models.Notification>
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="ht-content-narrow">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">Stay up to date</span>
+            <h1>Notifications</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+    </div>
+
+    <section class="ht-notification-list">
+        @if (Model.Any())
+        {
+            foreach (var notification in Model)
+            {
+                <article class="ht-card ht-notification-card @(notification.IsRead ? "ht-notification-read" : "")">
+                    <div class="ht-notification-content">
+                        <div class="ht-notification-heading">
+                            <h2>@notification.Title</h2>
+                            <span class="ht-status-badge @(notification.IsRead ? "ht-status-active" : "ht-status-blocked")">
+                                @(notification.IsRead ? "Read" : "Unread")
+                            </span>
+                        </div>
+                        <p>@notification.Message</p>
+                        <time datetime="@notification.CreatedAt.ToString("O")">
+                            @notification.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")
+                        </time>
+                    </div>
+                    @if (!notification.IsRead)
+                    {
+                        <form method="post" asp-controller="Notifications" asp-action="MarkRead">
+                            <input type="hidden" name="id" value="@notification.Id" />
+                            <button type="submit" class="btn ht-btn-secondary">Mark as read</button>
+                        </form>
+                    }
+                </article>
+            }
+        }
+        else
+        {
+            <div class="ht-card ht-empty-state">You have no notifications.</div>
+        }
+    </section>
+</div>

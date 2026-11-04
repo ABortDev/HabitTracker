@@ -1,0 +1,44 @@
+﻿@model List<HabitTracker.Models.ChatMessage>
+@{
+    ViewData["Title"] = "Chat with a moderator";
+    var currentUserId = (string)ViewBag.CurrentUserId;
+}
+
+<div class="ht-content-narrow">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">Support</span>
+            <h1>Chat with a moderator</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+    </div>
+
+    <section class="ht-card ht-chat-card">
+        <div class="ht-chat-messages" aria-live="polite">
+            @if (Model.Any())
+            {
+                foreach (var message in Model)
+                {
+                    var isOwnMessage = message.SenderId == currentUserId;
+                    <article class="ht-chat-message @(isOwnMessage ? "ht-chat-message-own" : "")">
+                        <div class="ht-chat-message-meta">
+                            <strong>@(isOwnMessage ? "You" : "Moderator")</strong>
+                            <time datetime="@message.CreatedAt.ToString("O")">@message.CreatedAt.ToLocalTime().ToString("MMM dd, HH:mm")</time>
+                        </div>
+                        <p>@message.Text</p>
+                    </article>
+                }
+            }
+            else
+            {
+                <p class="ht-empty-state">Start a conversation by sending a message.</p>
+            }
+        </div>
+
+        <form method="post" asp-controller="Chat" asp-action="Send" class="ht-chat-compose">
+            <label for="chatText" class="ht-form-label">Message</label>
+            <textarea id="chatText" name="text" rows="3" maxlength="4000" class="form-control ht-form-control" required></textarea>
+            <button type="submit" class="btn ht-btn-primary">Send message</button>
+        </form>
+    </section>
+</div>

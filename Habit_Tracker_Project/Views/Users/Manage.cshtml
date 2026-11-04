@@ -1,6 +1,7 @@
 ﻿@model List<HabitTracker.Models.User>
 @{
     ViewData["Title"] = "Admin Panel";
+    var moderatorIds = ViewBag.ModeratorIds as HashSet<string> ?? new HashSet<string>();
 }
 
 <div class="ht-admin-page">
@@ -22,6 +23,40 @@
     }
 
     <section class="ht-admin-table-card ht-card">
+        <form method="get" asp-controller="Users" asp-action="Manage" class="ht-filter-bar">
+            <div class="ht-form-group">
+                <label for="userSearch" class="ht-form-label">Search users</label>
+                <input id="userSearch" type="search" name="searchString" value="@ViewBag.SearchString"
+                       class="form-control ht-form-control" placeholder="Name or email" />
+            </div>
+            <div class="ht-form-group">
+                <label for="userStatus" class="ht-form-label">Status</label>
+                <select id="userStatus" name="status" class="form-select ht-form-control">
+                    @if (ViewBag.Status == "active")
+                    {
+                        <option value="">All</option>
+                        <option value="active" selected>Active</option>
+                        <option value="blocked">Blocked</option>
+                    }
+                    else if (ViewBag.Status == "blocked")
+                    {
+                        <option value="">All</option>
+                        <option value="active">Active</option>
+                        <option value="blocked" selected>Blocked</option>
+                    }
+                    else
+                    {
+                        <option value="" selected>All</option>
+                        <option value="active">Active</option>
+                        <option value="blocked">Blocked</option>
+                    }
+                </select>
+            </div>
+            <div class="ht-filter-actions">
+                <button type="submit" class="btn ht-btn-primary">Search</button>
+                <a asp-controller="Users" asp-action="Manage" class="btn ht-btn-secondary">Reset</a>
+            </div>
+        </form>
         <div class="ht-table-wrapper">
             <table class="ht-admin-table">
                 <thead>
@@ -30,6 +65,7 @@
                         <th>Email</th>
                         <th>Points</th>
                         <th>Status</th>
+                        <th>Role</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -39,7 +75,11 @@
                         foreach (var user in Model)
                         {
                             <tr>
-                                <td data-label="Full name">@user.FullName</td>
+                                <td data-label="Full name">
+                                    <a asp-controller="Users" asp-action="Habits" asp-route-id="@user.Id">
+                                        @(string.IsNullOrWhiteSpace(user.FullName) ? user.Email : user.FullName)
+                                    </a>
+                                </td>
                                 <td data-label="Email">@user.Email</td>
                                 <td data-label="Points">@user.TotalPoints</td>
                                 <td data-label="Status">
@@ -52,7 +92,14 @@
                                         <span class="ht-status-badge ht-status-active">Active</span>
                                     }
                                 </td>
+                                <td data-label="Role">@(moderatorIds.Contains(user.Id) ? "Moderator" : "User")</td>
                                 <td data-label="Actions">
+                                    <form method="post" asp-controller="Users" asp-action="SetModerator" class="ht-inline-form">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit" class="btn ht-btn-secondary btn-sm">
+                                            @(moderatorIds.Contains(user.Id) ? "Remove moderator" : "Make moderator")
+                                        </button>
+                                    </form>
                                     <form method="post" asp-controller="Users" asp-action="ToggleBlock" asp-route-userId="@user.Id" class="ht-inline-form">
                                         @if (user.IsBlocked)
                                         {
@@ -70,7 +117,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="5" class="ht-table-empty">No users found.</td>
+                            <td colspan="6" class="ht-table-empty">No users found.</td>
                         </tr>
                     }
                 </tbody>

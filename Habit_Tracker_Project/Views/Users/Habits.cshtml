@@ -1,0 +1,51 @@
+﻿@model List<HabitTracker.Models.Habit>
+@using HabitTracker.Models.Enums
+@{
+    ViewData["Title"] = "User habits";
+}
+
+<div class="ht-admin-page">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">User habits</span>
+            <h1>@ViewBag.FullName</h1>
+            <p class="ht-page-intro">@ViewBag.Email</p>
+        </div>
+        <a asp-controller="Users" asp-action="Manage" class="btn ht-btn-secondary">Back to users</a>
+    </div>
+
+    <section class="ht-admin-table-card ht-card">
+        <div class="ht-table-wrapper">
+            <table class="ht-admin-table">
+                <thead>
+                    <tr>
+                        <th>Habit</th>
+                        <th>Category</th>
+                        <th>Frequency</th>
+                        <th>Difficulty</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var habit in Model)
+                        {
+                            <tr>
+                                <td data-label="Habit">@habit.Title</td>
+                                <td data-label="Category">@(habit.Category?.Name ?? "General")</td>
+                                <td data-label="Frequency">@habit.Frequency</td>
+                                <td data-label="Difficulty">@habit.Difficulty</td>
+                                <td data-label="Status">@habit.Status</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="5" class="ht-table-empty">This user has no habits.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

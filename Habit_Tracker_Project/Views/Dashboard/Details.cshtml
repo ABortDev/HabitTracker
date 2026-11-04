@@ -84,6 +84,148 @@
             }
         </section>
 
-        
+        <section class="ht-dashboard-card ht-card">
+            <div class="ht-section-heading">
+                <div>
+                    <h2>Monthly calendar</h2>
+                    <p>Mark past days complete or plan upcoming days.</p>
+                </div>
+            </div>
+            <div class="ht-cal" id="habitCalendar">
+                <div class="ht-cal-head">
+                    <strong id="calendarMonth"></strong>
+                    <div class="ht-cal-nav">
+                        <button type="button" id="calendarPrevious" aria-label="Previous month">‹</button>
+                        <button type="button" id="calendarNext" aria-label="Next month">›</button>
+                    </div>
+                </div>
+                <div class="ht-cal-weekdays" aria-hidden="true">
+                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
+                    <span>Thu</span><span>Fri</span><span>Sat</span>
+                </div>
+                <div class="ht-cal-days" id="calendarDays"></div>
+                <div class="ht-cal-legend">
+                    <span><i class="ht-cal-key ht-cal-key-completed"></i>Completed</span>
+                    <span><i class="ht-cal-key ht-cal-key-partial"></i>Partial</span>
+                    <span><i class="ht-cal-key ht-cal-key-planned"></i>Planned</span>
+                </div>
+            </div>
+            <form id="completeDateForm" method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@Model.Id" class="ht-hidden-field">
+                <input type="hidden" name="date" />
+                @Html.AntiForgeryToken()
+            </form>
+            <form id="toggleScheduleForm" method="post" asp-controller="Dashboard" asp-action="ToggleScheduleDate" asp-route-id="@Model.Id" class="ht-hidden-field">
+                <input type="hidden" name="date" />
+                @Html.AntiForgeryToken()
+            </form>
+        </section>
     </div>
 </main>
+
+@section Scripts {
+    <script>
+        (() => {
+            const completedDates = new Set(@Html.Raw(ViewBag.CompletedJson ?? "[]"));
+            const partialDates = new Set(@Html.Raw(ViewBag.PartialJson ?? "[]"));
+            const plannedDates = new Set(@Html.Raw(ViewBag.PlannedJson ?? "[]"));
+            const today = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00");
+            const todayString = today.toISOString().slice(0, 10);
+            const endDate = "@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")";
+            const monthLabel = document.getElementById("calendarMonth");
+            const daysElement = document.getElementById("calendarDays");
+            const completeForm = document.getElementById("completeDateForm");
+            const toggleForm = document.getElementById("toggleScheduleForm");
+            let displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+            const dateString = date => [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, "0"),
+                String(date.getDate()).padStart(2, "0")
+            ].join("-");
+
+            function renderCalendar() {
+                const year = displayedMonth.getFullYear();
+                const month = displayedMonth.getMonth();
+                const firstWeekday = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                monthLabel.textContent = displayedMonth.toLocaleDateString(undefined, {
+                    month: "long",
+                    year: "numeric"
+                });
+                daysElement.replaceChildren();
+
+                for (let blank = 0; blank < firstWeekday; blank++) {
+                    const spacer = document.createElement("span");
+                    spacer.setAttribute("aria-hidden", "true");
+                    daysElement.appendChild(spacer);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(year, month, day);
+                    const value = dateString(date);
+                    const isCompleted = completedDates.has(value);
+                    const isPartial = partialDates.has(value);
+                    const isPlanned = plannedDates.has(value);
+                    const statusClass = isCompleted
+                        ? "ht-cal-completed"
+                        : isPartial ? "ht-cal-partial" : isPlanned ? "ht-cal-planned" : "";
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = `ht-cal-day ${statusClass} ${statusClass ? "ht-cal-sel" : ""} ${value === todayString ? "ht-cal-today" : ""} ${value < todayString ? "ht-cal-past" : ""}`.trim();
+                    const number = document.createElement("span");
+                    number.className = "ht-cal-num";
+                    number.textContent = day;
+                    button.appendChild(number);
+                    button.dataset.date = value;
+                    button.setAttribute("aria-label", `${value}${isCompleted ? ", completed" : isPartial ? ", partial progress" : isPlanned ? ", planned" : ""}`);
+                    button.disabled = isCompleted || (endDate !== "" && value > endDate);
+                    daysElement.appendChild(button);
+                }
+
+                while (daysElement.children.length % 7 !== 0) {
+                    const spacer = document.createElement("span");
+                    spacer.setAttribute("aria-hidden", "true");
+                    daysElement.appendChild(spacer);
+                }
+            }
+
+            document.getElementById("calendarPrevious").addEventListener("click", () => {
+                displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() - 1, 1);
+                renderCalendar();
+            });
+            document.getElementById("calendarNext").addEventListener("click", () => {
+                displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + 1, 1);
+                renderCalendar();
+            });
+
+            daysElement.addEventListener("click", event => {
+                const button = event.target.closest("button[data-date]");
+                if (!button || button.disabled) return;
+
+                if (button.dataset.date <= todayString) {
+                    completeForm.elements.date.value = button.dataset.date;
+                    completeForm.submit();
+                    return;
+                }
+
+                toggleForm.elements.date.value = button.dataset.date;
+                fetch(toggleForm.action, {
+                    method: "POST",
+                    body: new URLSearchParams(new FormData(toggleForm))
+                }).then(async response => {
+                    const result = await response.json();
+                    if (!response.ok) {
+                        window.alert(result.error || "The schedule could not be updated.");
+                        return;
+                    }
+                    window.location.reload();
+                }).catch(() => {
+                    window.alert("The schedule could not be updated. Please try again.");
+                });
+            });
+
+            renderCalendar();
+        })();
+    </script>
+}

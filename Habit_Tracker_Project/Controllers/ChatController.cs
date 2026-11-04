@@ -33,6 +33,7 @@ namespace HabitTracker.Controllers
                 .OrderBy(m => m.CreatedAt)
                 .ToListAsync();
 
+            ViewBag.CurrentUserId = userId;
             return View(messages);
         }
 
@@ -84,7 +85,7 @@ namespace HabitTracker.Controllers
         }
 
         [Authorize(Roles = "Moderator")]
-        [HttpGet]
+        [HttpGet("Chat/Thread/{userId}")]
         public async Task<IActionResult> Thread(string userId)
         {
             var messages = await _context.ChatMessages

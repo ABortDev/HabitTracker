@@ -31,6 +31,11 @@ namespace HabitTracker.Controllers
             var user = await _userManager.FindByIdAsync(GetCurrentUserId());
             if (user == null) return NotFound();
 
+            var roles = await _userManager.GetRolesAsync(user);
+            ViewBag.Role = roles.Contains("Admin")
+                ? "Admin"
+                : roles.Contains("Moderator") ? "Moderator" : "User";
+
             return View(user);
         }
 
@@ -78,12 +83,15 @@ namespace HabitTracker.Controllers
 
             ViewBag.SearchString = searchString;
             ViewBag.Status = status;
+            ViewBag.ModeratorIds = (await _userManager.GetUsersInRoleAsync("Moderator"))
+                .Select(user => user.Id)
+                .ToHashSet();
 
             return View(await users.OrderBy(u => u.Email).ToListAsync());
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet]
+        [HttpGet("Users/Habits/{id}")]
         public async Task<IActionResult> Habits(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
