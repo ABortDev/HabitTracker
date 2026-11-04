@@ -120,8 +120,23 @@
                                 </form>
                                 <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@habit.Id" class="ht-inline-form">
                                     <div class="ht-complete-stack">
-                                        <button type="submit" class="ht-complete-button" title="Mark as done" aria-label="Mark @habit.Title as done">✓</button>
-                                        <span class="ht-completion-count">@(habit.Logs?.Count ?? 0) @(habit.Logs?.Count == 1 ? "completion" : "completions")</span>
+                                        @if (habit.TargetValue is > 0)
+                                        {
+                                            var todayLog = habit.Logs?.FirstOrDefault(log => log.Date == todayUtc);
+                                            var currentProgress = todayLog?.ActualValue ?? 0;
+                                            <span class="ht-progress-label">@Num(currentProgress) / @Num(habit.TargetValue) @(habit.Unit ?? "")</span>
+                                            <div class="ht-complete-controls">
+                                                <input type="number" name="actualValue" min="0.01" step="any"
+                                                       class="form-control ht-form-control ht-amount-input"
+                                                       placeholder="@(habit.Unit ?? "Amount")" aria-label="Amount completed for @habit.Title" required />
+                                                <button type="submit" class="ht-complete-button" title="Add progress" aria-label="Add progress for @habit.Title">✓</button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="ht-complete-button" title="Mark as done" aria-label="Mark @habit.Title as done">✓</button>
+                                        }
+                                        <span class="ht-completion-count">@(habit.Logs?.Count(log => log.CompletedAt.HasValue) ?? 0) completions</span>
                                     </div>
                                 </form>
                             </div>
@@ -184,7 +199,24 @@
                                     <button type="submit" class="ht-action-button ht-action-delete">Delete</button>
                                 </form>
                                 <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@todo.Id" class="ht-inline-form">
+                                    @if (todo.TargetValue is > 0)
+                                    {
+                                        var todayLog = todo.Logs?.FirstOrDefault(log => log.Date == todayUtc);
+                                        var currentProgress = todayLog?.ActualValue ?? 0;
+                                        <div class="ht-complete-stack">
+                                            <span class="ht-progress-label">@Num(currentProgress) / @Num(todo.TargetValue) @(todo.Unit ?? "")</span>
+                                            <div class="ht-complete-controls">
+                                                <input type="number" name="actualValue" min="0.01" step="any"
+                                                       class="form-control ht-form-control ht-amount-input"
+                                                       placeholder="@(todo.Unit ?? "Amount")" aria-label="Amount completed for @todo.Title" required />
+                                                <button type="submit" class="ht-complete-button" title="Add progress" aria-label="Add progress for @todo.Title">✓</button>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
                                     <button type="submit" class="ht-complete-button" title="Mark as done" aria-label="Mark @todo.Title as done">✓</button>
+                                    }
                                 </form>
                             </div>
                         </div>

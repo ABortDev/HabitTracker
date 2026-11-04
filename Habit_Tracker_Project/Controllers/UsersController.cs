@@ -5,6 +5,7 @@ using HabitTracker.Models;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using HabitTracker.Data;
+using Habit_Tracker_Project.Enums;
 
 namespace HabitTracker.Controllers
 {
@@ -127,6 +128,20 @@ namespace HabitTracker.Controllers
             user.BlockedAt = user.IsBlocked ? DateTime.UtcNow : null;
 
             await _userManager.UpdateAsync(user);
+
+            if (user.IsBlocked)
+            {
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = user.Id,
+                    Title = "Account blocked",
+                    Message = "Your account has been blocked by an administrator.",
+                    Type = NotificationType.System,
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
+            }
 
             TempData["Success"] = user.IsBlocked ? "User blocked." : "User unblocked.";
             return RedirectToAction(nameof(Manage));

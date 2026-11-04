@@ -8,6 +8,7 @@ using HabitTracker.Models.Enums;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Habit_Tracker_Project.Enums;
+using System.Globalization;
 
 namespace HabitTracker.Controllers
 {
@@ -217,7 +218,9 @@ namespace HabitTracker.Controllers
             var targetDate = date ?? today;
 
             IActionResult Back() => date.HasValue
-                ? RedirectToAction(nameof(Details), new { id })
+                ? (habit.IsDeleted
+                    ? RedirectToAction(nameof(Index))
+                    : RedirectToAction(nameof(Details), new { id }))
                 : RedirectToAction(nameof(Index));
 
             if (targetDate > today)
@@ -229,6 +232,28 @@ namespace HabitTracker.Controllers
             if (habit.EndDate.HasValue && targetDate > habit.EndDate.Value)
             {
                 TempData["Error"] = "This date is after the habit's end date.";
+                return Back();
+            }
+
+            var completedDates = await _context.HabitLogs
+                .Where(l => l.HabitId == id && l.CompletedAt != null && l.Date != targetDate)
+                .Select(l => l.Date)
+                .ToListAsync();
+
+            bool alreadyInPeriod = habit.Frequency switch
+            {
+                HabitFrequency.Weekly => completedDates.Any(d =>
+                    ISOWeek.GetYear(d.ToDateTime(TimeOnly.MinValue)) == ISOWeek.GetYear(targetDate.ToDateTime(TimeOnly.MinValue)) &&
+                    ISOWeek.GetWeekOfYear(d.ToDateTime(TimeOnly.MinValue)) == ISOWeek.GetWeekOfYear(targetDate.ToDateTime(TimeOnly.MinValue))),
+                HabitFrequency.Monthly => completedDates.Any(d => d.Year == targetDate.Year && d.Month == targetDate.Month),
+                HabitFrequency.Yearly => completedDates.Any(d => d.Year == targetDate.Year),
+                HabitFrequency.Onetime => completedDates.Count > 0,
+                _ => false
+            };
+
+            if (alreadyInPeriod)
+            {
+                TempData["Error"] = "This habit is already completed for this period.";
                 return Back();
             }
 
@@ -246,12 +271,13 @@ namespace HabitTracker.Controllers
             decimal amount;
             if (hasTarget)
             {
-                amount = actualValue ?? habit.TargetValue!.Value;
-                if (amount <= 0)
+                if (!actualValue.HasValue || actualValue.Value <= 0)
                 {
-                    TempData["Error"] = "Enter a value greater than 0.";
+                    TempData["Error"] = "Enter how much you completed.";
                     return Back();
                 }
+
+                amount = actualValue.Value;
             }
             else
             {
@@ -306,7 +332,18 @@ namespace HabitTracker.Controllers
                 user.TotalPoints += points;
             }
 
-            if (habit.Frequency == HabitFrequency.Onetime && targetDate == today)
+            _context.Notifications.Add(new Notification
+            {
+                UserId = userId,
+                HabitId = id,
+                Title = "Habit completed",
+                Message = $"You completed {habit.Title}.",
+                Type = NotificationType.System,
+                IsRead = false,
+                CreatedAt = now
+            });
+
+            if (habit.Frequency == HabitFrequency.Onetime)
             {
                 habit.IsDeleted = true;
                 habit.DeletedAt = now;

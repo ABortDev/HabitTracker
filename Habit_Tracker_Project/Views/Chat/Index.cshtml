@@ -13,6 +13,15 @@
         <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
     </div>
 
+    @if (TempData["Success"] != null)
+    {
+        <div class="ht-alert ht-alert-success" role="status">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="ht-alert ht-alert-error" role="alert">@TempData["Error"]</div>
+    }
+
     <section class="ht-card ht-chat-card">
         <div class="ht-chat-messages" aria-live="polite">
             @if (Model.Any())
