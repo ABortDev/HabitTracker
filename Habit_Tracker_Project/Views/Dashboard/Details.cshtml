@@ -128,14 +128,18 @@
             const completedDates = new Set(@Html.Raw(ViewBag.CompletedJson ?? "[]"));
             const partialDates = new Set(@Html.Raw(ViewBag.PartialJson ?? "[]"));
             const plannedDates = new Set(@Html.Raw(ViewBag.PlannedJson ?? "[]"));
-            const today = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00");
-            const todayString = today.toISOString().slice(0, 10);
+            const now = new Date();
+            const todayString = [
+                now.getFullYear(),
+                String(now.getMonth() + 1).padStart(2, "0"),
+                String(now.getDate()).padStart(2, "0")
+            ].join("-");
             const endDate = "@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")";
             const monthLabel = document.getElementById("calendarMonth");
             const daysElement = document.getElementById("calendarDays");
             const completeForm = document.getElementById("completeDateForm");
             const toggleForm = document.getElementById("toggleScheduleForm");
-            let displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            let displayedMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
             const dateString = date => [
                 date.getFullYear(),

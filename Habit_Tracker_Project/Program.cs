@@ -33,7 +33,10 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
 });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<HabitTracker.Filters.BlockedUserFilter>();
+});
 
 var app = builder.Build();
 

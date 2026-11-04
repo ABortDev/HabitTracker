@@ -40,6 +40,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[K:/HABIT TRACKER/Habit_Tracker_Project/Views/Chat/Inbox.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxJbmJveC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[K:/HABIT TRACKER/Habit_Tracker_Project/Views/Chat/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[K:/HABIT TRACKER/Habit_Tracker_Project/Views/Chat/Thread.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxUaHJlYWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [K:/HABIT TRACKER/Habit_Tracker_Project/Views/Dashboard/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -56,6 +68,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[K:/HABIT TRACKER/Habit_Tracker_Project/Views/Notifications/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTm90aWZpY2F0aW9uc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [K:/HABIT TRACKER/Habit_Tracker_Project/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -66,6 +82,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [K:/HABIT TRACKER/Habit_Tracker_Project/Views/Statistics/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdGlzdGljc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[K:/HABIT TRACKER/Habit_Tracker_Project/Views/Users/Habits.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcSGFiaXRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [K:/HABIT TRACKER/Habit_Tracker_Project/Views/Users/Manage.cshtml]
