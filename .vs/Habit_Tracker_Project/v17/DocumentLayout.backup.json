@@ -3,20 +3,36 @@
   "WorkspaceRootPath": "K:\\Habit Tracker\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\services\\reminderdispatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\services\\reminderdispatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\habit_tracker_project.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\habit_tracker_project.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\views\\chat\\thread.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\views\\chat\\thread.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\views\\chat\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\views\\chat\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\views\\users\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\views\\users\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\services\\telegrambotservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\services\\telegrambotservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\models\\viewmodels\\profileviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\models\\viewmodels\\profileviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|k:\\habit tracker\\habit_tracker_project\\views\\notifications\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\views\\notifications\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,54 +50,106 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Habit_Tracker_Project.csproj",
-              "DocumentMoniker": "K:\\HABIT TRACKER\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
-              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
-              "ToolTip": "K:\\HABIT TRACKER\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
-              "RelativeToolTip": "Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-11-18T08:55:08.886Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ReminderDispatcher.cs",
-              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Services\\ReminderDispatcher.cs",
-              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Services\\ReminderDispatcher.cs",
-              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Services\\ReminderDispatcher.cs",
-              "RelativeToolTip": "Habit_Tracker_Project\\Services\\ReminderDispatcher.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAwwHEAAAAAAAAAAAAAAA==",
+              "Title": "NotificationsController.cs",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
+              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAE4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-17T21:12:39.185Z",
+              "WhenOpened": "2026-11-18T23:43:55.476Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\UsersController.cs",
-              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\UsersController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMEAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-17T21:07:58.178Z",
+              "Title": "Thread.cshtml",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Chat\\Thread.cshtml",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Chat\\Thread.cshtml",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Chat\\Thread.cshtml",
+              "RelativeToolTip": "Habit_Tracker_Project\\Views\\Chat\\Thread.cshtml",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAAEAAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-18T23:38:33.319Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "TelegramBotService.cs",
-              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Services\\TelegramBotService.cs",
-              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Services\\TelegramBotService.cs",
-              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Services\\TelegramBotService.cs",
-              "RelativeToolTip": "Habit_Tracker_Project\\Services\\TelegramBotService.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAwIgAAAABAAAAAAAAAA==",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Chat\\Index.cshtml",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Chat\\Index.cshtml",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Chat\\Index.cshtml",
+              "RelativeToolTip": "Habit_Tracker_Project\\Views\\Chat\\Index.cshtml",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAD4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-18T23:37:41.804Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ChatController.cs",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\ChatController.cs",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\ChatController.cs",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\ChatController.cs",
+              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\ChatController.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAkwF8AAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-17T21:05:01.749Z",
+              "WhenOpened": "2026-11-18T23:00:17.982Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\UsersController.cs",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAgwEMAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-18T21:55:49.103Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProfileViewModel.cs",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Models\\ViewModels\\ProfileViewModel.cs",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Models\\ViewModels\\ProfileViewModel.cs",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Models\\ViewModels\\ProfileViewModel.cs",
+              "RelativeToolTip": "Habit_Tracker_Project\\Models\\ViewModels\\ProfileViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-18T21:54:04.162Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Profile.cshtml",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Users\\Profile.cshtml",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Users\\Profile.cshtml",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Users\\Profile.cshtml",
+              "RelativeToolTip": "Habit_Tracker_Project\\Views\\Users\\Profile.cshtml",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAD8AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-18T21:49:24.633Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Notifications\\Index.cshtml",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Notifications\\Index.cshtml",
+              "ToolTip": "K:\\Habit Tracker\\Habit_Tracker_Project\\Views\\Notifications\\Index.cshtml",
+              "RelativeToolTip": "Habit_Tracker_Project\\Views\\Notifications\\Index.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-18T21:42:41.592Z",
               "EditorCaption": ""
             }
           ]

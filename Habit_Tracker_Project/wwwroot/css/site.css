@@ -476,10 +476,11 @@
   background: transparent;
   color: var(--ht-danger);
   font-weight: 700;
+  line-height: 1.5;
 }
 
 .ht-logout-button:hover {
-  background: var(--ht-danger);
+  background: var(--ht-primary-dark);
   color: #fff;
 }
 
@@ -1167,6 +1168,157 @@ a:hover {
   color: var(--ht-primary);
 }
 
+.ht-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ht-notification-menu {
+  position: relative;
+}
+
+.ht-notification-button {
+  position: relative;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ht-surface);
+  color: var(--ht-muted-text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ht-notification-button:hover,
+.ht-notification-button:focus-visible {
+  border-color: transparent;
+  background: var(--ht-primary-light);
+  color: var(--ht-primary);
+}
+
+.ht-notification-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.ht-notification-badge {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.35rem;
+  min-width: 1.2rem;
+  border-radius: 999px;
+  padding: 0.1rem 0.3rem;
+  background: var(--ht-primary-dark);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.ht-notification-panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  width: min(24rem, calc(100vw - 2rem));
+  overflow: hidden;
+  border: 1px solid var(--ht-border);
+  border-radius: 14px;
+  background: var(--ht-surface);
+  box-shadow: var(--ht-shadow);
+}
+
+.ht-notification-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--ht-border);
+  color: var(--ht-text);
+}
+
+.ht-notification-panel-heading span {
+  color: var(--ht-muted-text);
+  font-size: 0.8rem;
+}
+
+.ht-notification-feed {
+  max-height: 25rem;
+  overflow-y: auto;
+}
+
+.ht-notification-feed-item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #edf0ee;
+}
+
+.ht-notification-feed-item.is-unread {
+  border-left: 3px solid var(--ht-primary);
+  background: var(--ht-primary-light);
+}
+
+.ht-notification-feed-item strong {
+  color: var(--ht-text);
+}
+
+.ht-notification-feed-item p {
+  margin: 0;
+  color: var(--ht-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ht-notification-feed-item time,
+.ht-notification-empty {
+  color: var(--ht-muted-text);
+  font-size: 0.8rem;
+}
+
+.ht-notification-empty {
+  margin: 0;
+  padding: 1rem;
+}
+
+.ht-notification-all {
+  display: block;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid var(--ht-border);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.ht-notification-toast {
+  position: fixed;
+  z-index: 30;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: grid;
+  gap: 0.3rem;
+  width: min(22rem, calc(100vw - 2rem));
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--ht-border);
+  border-left: 4px solid var(--ht-primary);
+  border-radius: 14px;
+  background: var(--ht-surface);
+  box-shadow: var(--ht-shadow);
+  color: var(--ht-text);
+}
+
+.ht-notification-toast span {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .ht-main {
   width: min(1200px, calc(100% - 2rem));
   margin: 0 auto;
@@ -1546,6 +1698,46 @@ a:hover {
   font-weight: 700;
 }
 
+.ht-telegram-card {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--ht-border);
+  padding-top: 1.5rem;
+}
+
+.ht-telegram-card h2 {
+  margin: 0.35rem 0 0;
+  color: var(--ht-text);
+  font-size: 1.25rem;
+}
+
+.ht-telegram-card .ht-help-text {
+  max-width: 42rem;
+  margin: 0.5rem 0 0;
+  line-height: 1.6;
+}
+
+.ht-telegram-status {
+  margin: 0;
+  color: var(--ht-primary-dark);
+  font-weight: 800;
+}
+
+.ht-telegram-result {
+  display: grid;
+  gap: 0.35rem;
+  width: fit-content;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  background: var(--ht-primary-light);
+}
+
+.ht-telegram-result p {
+  margin: 0;
+  color: var(--ht-text);
+}
+
 .ht-notification-list {
   display: grid;
   gap: 0.85rem;
@@ -1563,6 +1755,11 @@ a:hover {
   background: var(--ht-muted-surface);
 }
 
+.ht-notification-unread {
+  border-left: 4px solid var(--ht-primary);
+  background: var(--ht-primary-light);
+}
+
 .ht-notification-heading {
   display: flex;
   align-items: center;
@@ -1577,6 +1774,11 @@ a:hover {
 
 .ht-notification-content p {
   margin: 0.45rem 0;
+}
+
+.ht-notification-message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .ht-notification-content time {
@@ -1637,6 +1839,17 @@ a:hover {
 }
 
 @media (max-width: 575.98px) {
+  .ht-navbar-actions {
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  .ht-notification-panel {
+    position: fixed;
+    top: 4.5rem;
+    right: 1rem;
+  }
+
   .ht-profile-details {
     grid-template-columns: 1fr;
   }

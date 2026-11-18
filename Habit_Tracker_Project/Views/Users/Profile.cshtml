@@ -1,4 +1,4 @@
-﻿@model HabitTracker.Models.User
+﻿@model Habit_Tracker_Project.Models.ViewModels.ProfileViewModel
 @using System.Linq
 @{
     ViewData["Title"] = "My Profile";
@@ -45,9 +45,27 @@
             <button type="submit" class="btn ht-btn-primary ht-profile-submit">Save changes</button>
         </form>
 
+        <section class="ht-telegram-card" aria-labelledby="telegram-heading">
+            <div>
+                <span class="ht-eyebrow">Telegram reminders</span>
+                <h2 id="telegram-heading">Telegram reminders</h2>
+                <p class="ht-help-text">Open the bot using the link below or send <strong>/start</strong> and this code in Telegram. The code is valid for 10 minutes.</p>
+            </div>
+            <p class="ht-telegram-status" data-telegram-status role="status">
+                @(Model.TelegramChatId.HasValue ? "Connected" : "Not connected")
+            </p>
+            <button type="button" class="btn ht-btn-primary" data-connect-telegram>
+                @(Model.TelegramChatId.HasValue ? "Reconnect" : "Connect Telegram")
+            </button>
+            <div class="ht-telegram-result" data-telegram-result hidden>
+                <p>Code: <strong data-telegram-code></strong></p>
+                <a data-telegram-link href="#" target="_blank" rel="noopener noreferrer">Open Telegram bot</a>
+            </div>
+        </section>
+
         <dl class="ht-profile-details">
             <div><dt>Registered</dt><dd>@Model.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</dd></div>
-            <div><dt>Role</dt><dd>@ViewBag.Role</dd></div>
+            <div><dt>Role</dt><dd>@Model.Role</dd></div>
             <div><dt>Total points</dt><dd>@Model.TotalPoints</dd></div>
             <div>
                 <dt>Account status</dt>

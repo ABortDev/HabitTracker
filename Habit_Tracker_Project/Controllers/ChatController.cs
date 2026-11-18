@@ -76,6 +76,9 @@ namespace HabitTracker.Controllers
                 Text = text.Trim(),
                 CreatedAt = now
             });
+            await SendAutoModeratorMessageAsync(
+                    userId,
+                    "Thank you for your message. A moderator will reply as soon as possible.");
 
             var moderators = await _userManager.GetUsersInRoleAsync("Moderator");
             foreach (var moderator in moderators)
@@ -91,9 +94,6 @@ namespace HabitTracker.Controllers
             }
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = moderators.Count == 0
-                ? "Message saved. No moderators are currently assigned."
-                : "Message sent.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -201,6 +201,33 @@ namespace HabitTracker.Controllers
             await _context.SaveChangesAsync();
             TempData["Success"] = "Reply sent.";
             return RedirectToAction(nameof(Thread), new { userId });
+        }
+        private async Task SendAutoModeratorMessageAsync(string userId, string text)
+        {
+            var moderators = await _userManager.GetUsersInRoleAsync("Moderator");
+            var senderId = moderators.FirstOrDefault()?.Id;
+            if (string.IsNullOrEmpty(senderId))
+                return;
+
+            var now = DateTime.UtcNow;
+
+            _context.ChatMessages.Add(new ChatMessage
+            {
+                UserId = userId,
+                SenderId = senderId,
+                Text = text,
+                CreatedAt = now,
+                IsRead = false
+            });
+
+            _context.Notifications.Add(new Notification
+            {
+                UserId = userId,
+                Title = "New message",
+                Message = "A moderator sent you a message.",
+                Type = NotificationType.System,
+                CreatedAt = now
+            });
         }
     }
 }
