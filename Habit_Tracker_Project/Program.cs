@@ -3,6 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HabitTracker.Data;
+using HabitTracker.Services;
 using HabitTracker.Models; 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,7 +38,10 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<HabitTracker.Filters.BlockedUserFilter>();
 });
-
+builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
+builder.Services.AddHostedService<TelegramBotService>();
+builder.Services.AddHostedService<ReminderDispatcher>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

@@ -8,6 +8,8 @@ namespace HabitTracker.Models
     {
         public string? FullName { get; set; }
         public bool IsBlocked { get; set; } = false;
+        public long? TelegramChatId { get; set; }
+        public string? PushSubscriptionJson { get; set; }
         public DateTime? BlockedAt { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public int TotalPoints { get; set; } = 0;

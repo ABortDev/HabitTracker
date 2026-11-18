@@ -6,19 +6,25 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using HabitTracker.Data;
 using Habit_Tracker_Project.Enums;
+using Microsoft.Extensions.Caching.Memory;
+using HabitTracker.Services;
 
 namespace HabitTracker.Controllers
 {
     [Authorize]
     public class UsersController : Controller
     {
+        private readonly IMemoryCache _cache;
+        private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public UsersController(UserManager<User> userManager, ApplicationDbContext context)
+        public UsersController(UserManager<User> userManager, ApplicationDbContext context, IMemoryCache cache, IConfiguration config)
         {
             _userManager = userManager;
             _context = context;
+            _cache = cache;
+            _config = config;
         }
 
         private string GetCurrentUserId()
@@ -167,6 +173,24 @@ namespace HabitTracker.Controllers
             }
 
             return RedirectToAction(nameof(Manage));
+        }
+        [HttpGet]
+        public IActionResult ConnectTelegram()
+        {
+            var userId = GetCurrentUserId();
+            var code = "HT-" + Guid.NewGuid().ToString("N")[..4].ToUpperInvariant();
+
+            _cache.Set(
+                TelegramBotService.LinkCachePrefix + code,
+                userId,
+                TimeSpan.FromMinutes(10));
+
+            var bot = _config["Telegram:BotUsername"];
+            return Json(new
+            {
+                code,
+                botUrl = $"https://t.me/{bot}?start={code}"
+            });
         }
     }
 }
