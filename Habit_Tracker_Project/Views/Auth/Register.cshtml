@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Sign Up";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Habit Tracker</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="ht-auth-page">
+    <main class="ht-auth-shell">
+        <section class="ht-auth-card ht-card">
+            <a asp-controller="Home" asp-action="Index" class="ht-auth-brand">Habit Tracker</a>
+            <h1 class="ht-auth-title">Create your account</h1>
+            <p class="ht-auth-subtitle">Start building routines that work for you.</p>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="ht-alert ht-alert-error" role="alert">@ViewBag.Error</div>
+            }
+
+            <form method="post" asp-controller="Auth" asp-action="Register" class="ht-auth-form">
+                <div class="ht-form-group">
+                    <label for="fullName" class="ht-form-label">Full name</label>
+                    <input id="fullName" type="text" name="fullName" class="form-control ht-form-control" placeholder="Your name" required />
+                </div>
+
+                <div class="ht-form-group">
+                    <label for="email" class="ht-form-label">Email</label>
+                    <input id="email" type="email" name="email" class="form-control ht-form-control" placeholder="you@example.com" required />
+                </div>
+
+                <div class="ht-form-group">
+                    <label for="password" class="ht-form-label">Password</label>
+                    <input id="password" type="password" name="password" class="form-control ht-form-control" placeholder="••••••••" required />
+                </div>
+
+                <div class="ht-form-group">
+                    <label for="confirmPassword" class="ht-form-label">Confirm password</label>
+                    <input id="confirmPassword" type="password" name="confirmPassword" class="form-control ht-form-control" placeholder="••••••••" required />
+                </div>
+
+                <button type="submit" class="btn ht-btn-primary ht-auth-submit">Create account</button>
+            </form>
+
+            <p class="ht-auth-footer">
+                Already have an account?
+                <a asp-controller="Auth" asp-action="Login">Log in</a>
+            </p>
+        </section>
+    </main>
+</body>
+</html>
