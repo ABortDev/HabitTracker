@@ -8,6 +8,7 @@ using HabitTracker.Data;
 using Habit_Tracker_Project.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using HabitTracker.Services;
+using Habit_Tracker_Project.Models.ViewModels;
 
 namespace HabitTracker.Controllers
 {
@@ -39,27 +40,38 @@ namespace HabitTracker.Controllers
             if (user == null) return NotFound();
 
             var roles = await _userManager.GetRolesAsync(user);
-            ViewBag.Role = roles.Contains("Admin")
-                ? "Admin"
-                : roles.Contains("Moderator") ? "Moderator" : "User";
-
-            return View(user);
+            var model = new ProfileViewModel
+            {
+                FullName = user.FullName ?? "",
+                PhoneNumber = user.PhoneNumber ?? "",
+                Email = user.Email,
+                Role = roles.Contains("Admin") ? "Admin" : roles.Contains("Moderator") ? "Moderator" : "User",
+                TotalPoints = user.TotalPoints,
+                CreatedAt = user.CreatedAt,
+                IsBlocked = user.IsBlocked
+            };
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile(string fullName)
+        public async Task<IActionResult> UpdateProfile(ProfileViewModel model)
         {
             var user = await _userManager.FindByIdAsync(GetCurrentUserId());
             if (user == null) return NotFound();
 
-            if (string.IsNullOrWhiteSpace(fullName))
-            {
-                TempData["Error"] = "Full name is required.";
-                return RedirectToAction(nameof(Profile));
-            }
+            model.Email = user.Email;
+            model.TotalPoints = user.TotalPoints;
+            model.CreatedAt = user.CreatedAt;
+            model.IsBlocked = user.IsBlocked;
+            var roles = await _userManager.GetRolesAsync(user);
+            model.Role = roles.Contains("Admin") ? "Admin" : roles.Contains("Moderator") ? "Moderator" : "User";
 
-            user.FullName = fullName.Trim();
+            if (!ModelState.IsValid)
+                return View("Profile", model);
+
+            user.FullName = model.FullName.Trim();
+            user.PhoneNumber = model.PhoneNumber.Trim();
             await _userManager.UpdateAsync(user);
 
             TempData["Success"] = "Profile updated successfully!";
@@ -174,7 +186,7 @@ namespace HabitTracker.Controllers
 
             return RedirectToAction(nameof(Manage));
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult ConnectTelegram()
         {
             var userId = GetCurrentUserId();

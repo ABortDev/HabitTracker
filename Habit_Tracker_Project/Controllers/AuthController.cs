@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using HabitTracker.Models;
+using Habit_Tracker_Project.Models.ViewModels;
 
 namespace HabitTracker.Controllers
 {
@@ -19,105 +20,87 @@ namespace HabitTracker.Controllers
         public IActionResult Login()
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
                 return RedirectToAction("Index", "Dashboard");
-            }
-            return View();
+            return View(new LoginViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string email, string password, bool rememberMe = false)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                ViewBag.Error = "Please enter both email and password.";
-                return View();
-            }
+            if (!ModelState.IsValid)
+                return View(model);
 
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                ViewBag.Error = "Invalid email or password.";
-                return View();
+                ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                return View(model);
             }
 
             if (user.IsBlocked)
             {
-                ViewBag.Error = "Your account has been blocked by an administrator.";
-                return View();
+                ModelState.AddModelError(string.Empty, "Your account has been blocked by an administrator.");
+                return View(model);
             }
 
             var result = await _signInManager.PasswordSignInAsync(
                 user.UserName!,
-                password,
-                rememberMe,
+                model.Password,
+                model.RememberMe,
                 lockoutOnFailure: false);
 
             if (result.Succeeded)
-            {
                 return RedirectToAction("Index", "Dashboard");
-            }
 
-            ViewBag.Error = "Invalid email or password.";
-            return View();
+            ModelState.AddModelError(string.Empty, "Invalid email or password.");
+            return View(model);
         }
 
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return View(new RegisterViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(string fullName, string email, string password, string confirmPassword)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (!ModelState.IsValid)
+                return View(model);
+
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
-                ViewBag.Error = "All fields are required.";
-                return View();
+                ModelState.AddModelError(nameof(model.Email), "This email is already registered.");
+                return View(model);
             }
 
-            if (password != confirmPassword)
-            {
-                ViewBag.Error = "Passwords do not match.";
-                return View();
-            }
-
-            var existingUser = await _userManager.FindByEmailAsync(email);
-            if (existingUser != null)
-            {
-                ViewBag.Error = "This email is already registered.";
-                return View();
-            }
-            string firstName = fullName.Split(' ')[0];
-
+            string firstName = model.FullName.Split(' ')[0];
             var newUser = new User
             {
-                UserName = firstName + "_" + Guid.NewGuid().ToString().Substring(0, 3),
-                Email = email,
-                FullName = fullName,
+                UserName = firstName + "_" + Guid.NewGuid().ToString()[..3],
+                Email = model.Email,
+                FullName = model.FullName,
+                PhoneNumber = model.PhoneNumber,
                 CreatedAt = DateTime.UtcNow,
                 TotalPoints = 0,
                 IsBlocked = false
             };
 
-            var result = await _userManager.CreateAsync(newUser, password);
-
-            if (result.Succeeded)
+            var result = await _userManager.CreateAsync(newUser, model.Password);
+            if (!result.Succeeded)
             {
-                if (await _userManager.IsInRoleAsync(newUser, "User") == false)
-                {
-                    await _userManager.AddToRoleAsync(newUser, "User");
-                }
-                await _signInManager.SignInAsync(newUser, isPersistent: false);
-
-                return RedirectToAction("Index", "Dashboard");
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                return View(model);
             }
 
-            ViewBag.Error = string.Join(" ", result.Errors.Select(e => e.Description));
-            return View();
+            if (!await _userManager.IsInRoleAsync(newUser, "User"))
+                await _userManager.AddToRoleAsync(newUser, "User");
+
+            await _signInManager.SignInAsync(newUser, isPersistent: false);
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpPost]

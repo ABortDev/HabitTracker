@@ -6,9 +6,9 @@ using HabitTracker.Data;
 using HabitTracker.Models;
 using HabitTracker.Models.Enums;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Habit_Tracker_Project.Enums;
 using System.Globalization;
+using Habit_Tracker_Project.Models.ViewModels;
 
 namespace HabitTracker.Controllers
 {
@@ -63,64 +63,45 @@ namespace HabitTracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddHabit(
-                string title,
-                string? description,
-                int categoryId,
-                HabitFrequency frequency,
-                DifficultyLevel difficulty,
-                decimal? targetValue,
-                string? unit,
-                TimeOnly? reminderTime,
-                DateOnly? endDate)
+        public async Task<IActionResult> AddHabit(HabitFormViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(title))
+            if (!ModelState.IsValid)
             {
-                TempData["Error"] = "Habit title is required.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            if (frequency == HabitFrequency.Onetime && !endDate.HasValue)
-            {
-                TempData["Error"] = "Target date is required for one-time tasks.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            if (targetValue.HasValue && (targetValue.Value <= 0 || targetValue.Value > 99999999))
-            {
-                TempData["Error"] = "Target value must be greater than 0.";
+                TempData["Error"] = string.Join(" ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
                 return RedirectToAction(nameof(Index));
             }
 
             var userId = GetCurrentUserId();
             var defaultCategory = await _context.HabitCategories.FirstOrDefaultAsync();
-            var finalCategoryId = categoryId > 0 ? categoryId : (defaultCategory?.Id ?? 1);
+            var finalCategoryId = model.CategoryId > 0 ? model.CategoryId : (defaultCategory?.Id ?? 1);
 
             var newHabit = new Habit
             {
                 UserId = userId,
                 CategoryId = finalCategoryId,
-                Title = title.Trim(),
-                Description = description,
-                Difficulty = difficulty,
-                Frequency = frequency,
-                TargetValue = targetValue,
-                Unit = targetValue.HasValue ? CleanUnit(unit) : null,
+                Title = model.Title.Trim(),
+                Description = model.Description,
+                Difficulty = model.Difficulty,
+                Frequency = model.Frequency,
+                TargetValue = model.TargetValue,
+                Unit = model.TargetValue.HasValue ? CleanUnit(model.Unit) : null,
                 Status = HabitStatus.Active,
                 CreatedAt = DateTime.UtcNow,
-                EndDate = endDate,
+                EndDate = model.EndDate,
                 IsDeleted = false
             };
 
             _context.Habits.Add(newHabit);
             await _context.SaveChangesAsync();
 
-            if (reminderTime.HasValue)
+            if (model.ReminderTime.HasValue)
             {
                 _context.HabitReminders.Add(new HabitReminder
                 {
                     HabitId = newHabit.Id,
-                    ReminderTime = reminderTime.Value,
+                    ReminderTime = model.ReminderTime.Value,
                     IsEnabled = true
                 });
                 await _context.SaveChangesAsync();
@@ -132,63 +113,47 @@ namespace HabitTracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditHabit(
-            int id,
-            string title,
-            string? description,
-            int categoryId,
-            HabitFrequency frequency,
-            DifficultyLevel difficulty,
-            decimal? targetValue,
-            string? unit,
-            DateOnly? endDate,
-            TimeOnly? reminderTime,
-            bool reminderEnabled)
+        public async Task<IActionResult> EditHabit(HabitFormViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = string.Join(" ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                return RedirectToAction(nameof(Index));
+            }
+
             var userId = GetCurrentUserId();
             var habit = await _context.Habits
                 .Include(h => h.Reminders)
-                .FirstOrDefaultAsync(h => h.Id == id && h.UserId == userId && !h.IsDeleted);
+                .FirstOrDefaultAsync(h => h.Id == model.Id && h.UserId == userId && !h.IsDeleted);
 
             if (habit == null) return NotFound();
 
-            if (frequency == HabitFrequency.Onetime && !endDate.HasValue)
-            {
-                TempData["Error"] = "Target date is required for one-time tasks.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            if (targetValue.HasValue && (targetValue.Value <= 0 || targetValue.Value > 99999999))
-            {
-                TempData["Error"] = "Target value must be greater than 0.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            if (!string.IsNullOrWhiteSpace(title)) habit.Title = title.Trim();
-            if (description != null) habit.Description = description;
-            if (categoryId > 0) habit.CategoryId = categoryId;
-
-            habit.Frequency = frequency;
-            habit.Difficulty = difficulty;
-            habit.TargetValue = targetValue;
-            habit.Unit = targetValue.HasValue ? CleanUnit(unit) : null;
-            habit.EndDate = endDate;
+            habit.Title = model.Title.Trim();
+            habit.Description = model.Description;
+            if (model.CategoryId > 0) habit.CategoryId = model.CategoryId;
+            habit.Frequency = model.Frequency;
+            habit.Difficulty = model.Difficulty;
+            habit.TargetValue = model.TargetValue;
+            habit.Unit = model.TargetValue.HasValue ? CleanUnit(model.Unit) : null;
+            habit.EndDate = model.EndDate;
 
             var existingReminder = habit.Reminders.FirstOrDefault();
-            if (reminderTime.HasValue)
+            if (model.ReminderTime.HasValue)
             {
                 if (existingReminder != null)
                 {
-                    existingReminder.ReminderTime = reminderTime.Value;
-                    existingReminder.IsEnabled = reminderEnabled;
+                    existingReminder.ReminderTime = model.ReminderTime.Value;
+                    existingReminder.IsEnabled = model.ReminderEnabled;
                 }
                 else
                 {
                     _context.HabitReminders.Add(new HabitReminder
                     {
                         HabitId = habit.Id,
-                        ReminderTime = reminderTime.Value,
-                        IsEnabled = reminderEnabled
+                        ReminderTime = model.ReminderTime.Value,
+                        IsEnabled = model.ReminderEnabled
                     });
                 }
             }
@@ -199,7 +164,6 @@ namespace HabitTracker.Controllers
 
             await _context.SaveChangesAsync();
             TempData["Success"] = "Habit updated!";
-
             return RedirectToAction(nameof(Index));
         }
 

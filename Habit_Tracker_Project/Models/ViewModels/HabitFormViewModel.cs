@@ -1,0 +1,58 @@
+﻿using System.ComponentModel.DataAnnotations;
+using HabitTracker.Models.Enums;
+
+namespace Habit_Tracker_Project.Models.ViewModels
+{
+    public class HabitFormViewModel : IValidatableObject
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(150, MinimumLength = 3)]
+        [Display(Name = "Habit title")]
+        public string Title { get; set; } = string.Empty;
+
+        [StringLength(500)]
+        [Display(Name = "Description")]
+        public string? Description { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Select a category.")]
+        [Display(Name = "Category")]
+        public int CategoryId { get; set; }
+
+        [Display(Name = "Frequency")]
+        public HabitFrequency Frequency { get; set; } = HabitFrequency.Daily;
+
+        [Display(Name = "Difficulty")]
+        public DifficultyLevel Difficulty { get; set; } = DifficultyLevel.Medium;
+
+        [Range(0.01, 99999999)]
+        [Display(Name = "Target value")]
+        public decimal? TargetValue { get; set; }
+
+        [StringLength(20)]
+        [Display(Name = "Unit")]
+        public string? Unit { get; set; }
+
+        [DataType(DataType.Date)]
+        [Display(Name = "Target date")]
+        public DateOnly? EndDate { get; set; }
+
+        [DataType(DataType.Time)]
+        [Display(Name = "Reminder time")]
+        public TimeOnly? ReminderTime { get; set; }
+
+        public bool ReminderEnabled { get; set; } = true;
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Frequency == HabitFrequency.Onetime && !EndDate.HasValue)
+            {
+                yield return new ValidationResult(
+                    "Target date is required for one-time tasks.",
+                    new[] { nameof(EndDate) });
+            }
+        }
+    }
+}
