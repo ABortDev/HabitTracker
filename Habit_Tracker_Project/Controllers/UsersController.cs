@@ -3,17 +3,28 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using HabitTracker.Models;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using HabitTracker.Data;
+using Habit_Tracker_Project.Enums;
+using Microsoft.Extensions.Caching.Memory;
+using HabitTracker.Services;
 
 namespace HabitTracker.Controllers
 {
     [Authorize]
     public class UsersController : Controller
     {
+        private readonly IMemoryCache _cache;
+        private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public UsersController(UserManager<User> userManager)
+        public UsersController(UserManager<User> userManager, ApplicationDbContext context, IMemoryCache cache, IConfiguration config)
         {
             _userManager = userManager;
+            _context = context;
+            _cache = cache;
+            _config = config;
         }
 
         private string GetCurrentUserId()
@@ -27,33 +38,29 @@ namespace HabitTracker.Controllers
             var user = await _userManager.FindByIdAsync(GetCurrentUserId());
             if (user == null) return NotFound();
 
+            var roles = await _userManager.GetRolesAsync(user);
+            ViewBag.Role = roles.Contains("Admin")
+                ? "Admin"
+                : roles.Contains("Moderator") ? "Moderator" : "User";
+
             return View(user);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile(string fullName, string newPassword)
+        public async Task<IActionResult> UpdateProfile(string fullName)
         {
             var user = await _userManager.FindByIdAsync(GetCurrentUserId());
             if (user == null) return NotFound();
 
-            if (!string.IsNullOrWhiteSpace(fullName) && fullName != user.FullName)
+            if (string.IsNullOrWhiteSpace(fullName))
             {
-                user.FullName = fullName;
-                await _userManager.UpdateAsync(user);
+                TempData["Error"] = "Full name is required.";
+                return RedirectToAction(nameof(Profile));
             }
 
-            if (!string.IsNullOrWhiteSpace(newPassword))
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
-
-                if (!result.Succeeded)
-                {
-                    TempData["Error"] = string.Join(" ", result.Errors.Select(e => e.Description));
-                    return RedirectToAction(nameof(Profile));
-                }
-            }
+            user.FullName = fullName.Trim();
+            await _userManager.UpdateAsync(user);
 
             TempData["Success"] = "Profile updated successfully!";
             return RedirectToAction(nameof(Profile));
@@ -61,10 +68,52 @@ namespace HabitTracker.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> Manage()
+        public async Task<IActionResult> Manage(string? searchString, string? status)
         {
-            var users = _userManager.Users.ToList();
-            return View(users);
+            var users = _userManager.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                users = users.Where(u =>
+                    (u.Email != null && EF.Functions.ILike(u.Email, $"%{searchString}%")) ||
+                    (u.FullName != null && EF.Functions.ILike(u.FullName, $"%{searchString}%")));
+            }
+
+            if (status == "active")
+            {
+                users = users.Where(u => !u.IsBlocked);
+            }
+            else if (status == "blocked")
+            {
+                users = users.Where(u => u.IsBlocked);
+            }
+
+            ViewBag.SearchString = searchString;
+            ViewBag.Status = status;
+            ViewBag.ModeratorIds = (await _userManager.GetUsersInRoleAsync("Moderator"))
+                .Select(user => user.Id)
+                .ToHashSet();
+
+            return View(await users.OrderBy(u => u.Email).ToListAsync());
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("Users/Habits/{id}")]
+        public async Task<IActionResult> Habits(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+
+            var habits = await _context.Habits
+                .Include(h => h.Category)
+                .Where(h => h.UserId == id && !h.IsDeleted)
+                .OrderByDescending(h => h.CreatedAt)
+                .ToListAsync();
+
+            ViewBag.FullName = user.FullName;
+            ViewBag.Email = user.Email;
+
+            return View(habits);
         }
 
         [Authorize(Roles = "Admin")]
@@ -86,8 +135,62 @@ namespace HabitTracker.Controllers
 
             await _userManager.UpdateAsync(user);
 
+            if (user.IsBlocked)
+            {
+                _context.Notifications.Add(new Notification
+                {
+                    UserId = user.Id,
+                    Title = "Account blocked",
+                    Message = "Your account has been blocked by an administrator.",
+                    Type = NotificationType.System,
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
+            }
+
             TempData["Success"] = user.IsBlocked ? "User blocked." : "User unblocked.";
             return RedirectToAction(nameof(Manage));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetModerator(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return NotFound();
+
+            if (await _userManager.IsInRoleAsync(user, "Moderator"))
+            {
+                await _userManager.RemoveFromRoleAsync(user, "Moderator");
+                TempData["Success"] = "Moderator role removed.";
+            }
+            else
+            {
+                await _userManager.AddToRoleAsync(user, "Moderator");
+                TempData["Success"] = "User is now a moderator.";
+            }
+
+            return RedirectToAction(nameof(Manage));
+        }
+        [HttpPost]
+        public IActionResult ConnectTelegram()
+        {
+            var userId = GetCurrentUserId();
+            var code = "HT-" + Guid.NewGuid().ToString("N")[..4].ToUpperInvariant();
+
+            _cache.Set(
+                TelegramBotService.LinkCachePrefix + code,
+                userId,
+                TimeSpan.FromMinutes(10));
+
+            var bot = _config["Telegram:BotUsername"];
+            return Json(new
+            {
+                code,
+                botUrl = $"https://t.me/{bot}?start={code}"
+            });
         }
     }
 }
