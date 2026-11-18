@@ -17,7 +17,7 @@
         {
             foreach (var notification in Model)
             {
-                <article class="ht-card ht-notification-card @(notification.IsRead ? "ht-notification-read" : "")">
+                <article class="ht-card ht-notification-card @(notification.IsRead ? "ht-notification-read" : "ht-notification-unread")">
                     <div class="ht-notification-content">
                         <div class="ht-notification-heading">
                             <h2>@notification.Title</h2>
@@ -25,7 +25,7 @@
                                 @(notification.IsRead ? "Read" : "Unread")
                             </span>
                         </div>
-                        <p>@notification.Message</p>
+                        <p class="ht-notification-message">@notification.Message</p>
                         <time datetime="@notification.CreatedAt.ToString("O")">
                             @notification.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")
                         </time>
