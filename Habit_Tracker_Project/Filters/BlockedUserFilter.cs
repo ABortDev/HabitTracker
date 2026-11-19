@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using HabitTracker.Models;
 
 namespace HabitTracker.Filters
@@ -18,6 +19,12 @@ namespace HabitTracker.Filters
                 if (current == null || current.IsBlocked)
                 {
                     await signInManager.SignOutAsync();
+
+                    var tempData = context.HttpContext.RequestServices
+                        .GetRequiredService<ITempDataDictionaryFactory>()
+                        .GetTempData(context.HttpContext);
+                    tempData["Error"] = "Your account has been blocked by an administrator.";
+
                     context.Result = new RedirectToActionResult("Login", "Auth", null);
                     return;
                 }

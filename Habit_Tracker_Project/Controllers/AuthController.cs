@@ -19,8 +19,12 @@ namespace HabitTracker.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (TempData["Error"] != null)
+                ViewBag.Error = TempData["Error"];
+
             if (User.Identity != null && User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Dashboard");
+
             return View(new LoginViewModel());
         }
 
@@ -29,18 +33,21 @@ namespace HabitTracker.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
+            {
+                ViewBag.Error = "Please enter a valid email and password.";
                 return View(model);
+            }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                ViewBag.Error = "Invalid email or password.";
                 return View(model);
             }
 
             if (user.IsBlocked)
             {
-                ModelState.AddModelError(string.Empty, "Your account has been blocked by an administrator.");
+                ViewBag.Error = "Your account has been blocked by an administrator.";
                 return View(model);
             }
 
@@ -53,7 +60,7 @@ namespace HabitTracker.Controllers
             if (result.Succeeded)
                 return RedirectToAction("Index", "Dashboard");
 
-            ModelState.AddModelError(string.Empty, "Invalid email or password.");
+            ViewBag.Error = "Invalid email or password.";
             return View(model);
         }
 
