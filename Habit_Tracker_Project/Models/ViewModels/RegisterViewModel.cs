@@ -13,6 +13,7 @@ namespace Habit_Tracker_Project.Models.ViewModels
 
         [Required]
         [EmailAddress]
+        [DataType(DataType.EmailAddress)]
         [Display(Name = "Email")]
         public string Email { get; set; } = string.Empty;
 

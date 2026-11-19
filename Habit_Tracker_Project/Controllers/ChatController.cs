@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HabitTracker.Data;
-using HabitTracker.Models;
+using Habit_Tracker_Project.Data;
+using Habit_Tracker_Project.Models;
 using Habit_Tracker_Project.Enums;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 
-namespace HabitTracker.Controllers
+namespace Habit_Tracker_Project.Controllers
 {
     [Authorize]
     public class ChatController : Controller

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using HabitTracker.Data;
-using HabitTracker.Models;
+using Habit_Tracker_Project.Data;
+using Habit_Tracker_Project.Models;
 using System.Security.Claims;
 
-namespace HabitTracker.Controllers
+namespace Habit_Tracker_Project.Controllers
 {
     [Authorize]
     public class AchievementsController : Controller

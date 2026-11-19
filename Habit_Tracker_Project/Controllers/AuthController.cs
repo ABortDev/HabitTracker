@@ -1,19 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using HabitTracker.Models;
+using Microsoft.Extensions.Localization;
+using Habit_Tracker_Project.Models;
 using Habit_Tracker_Project.Models.ViewModels;
+using Habit_Tracker_Project;
 
-namespace HabitTracker.Controllers
+namespace Habit_Tracker_Project.Controllers
 {
     public class AuthController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IStringLocalizer<SharedResource> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -34,20 +41,20 @@ namespace HabitTracker.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Error = "Please enter a valid email and password.";
+                ViewBag.Error = _localizer["Please enter a valid email and password."];
                 return View(model);
             }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                ViewBag.Error = "Invalid email or password.";
+                ViewBag.Error = _localizer["Invalid email or password."];
                 return View(model);
             }
 
             if (user.IsBlocked)
             {
-                ViewBag.Error = "Your account has been blocked by an administrator.";
+                ViewBag.Error = _localizer["Your account has been blocked by an administrator."];
                 return View(model);
             }
 
@@ -60,7 +67,7 @@ namespace HabitTracker.Controllers
             if (result.Succeeded)
                 return RedirectToAction("Index", "Dashboard");
 
-            ViewBag.Error = "Invalid email or password.";
+            ViewBag.Error = _localizer["Invalid email or password."];
             return View(model);
         }
 
@@ -79,7 +86,7 @@ namespace HabitTracker.Controllers
 
             if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
-                ModelState.AddModelError(nameof(model.Email), "This email is already registered.");
+                ModelState.AddModelError(nameof(model.Email), _localizer["This email is already registered."]);
                 return View(model);
             }
 

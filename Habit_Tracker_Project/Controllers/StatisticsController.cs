@@ -1,12 +1,12 @@
-﻿using HabitTracker.Data;
-using HabitTracker.Models.Enums;
+﻿using Habit_Tracker_Project.Data;
+using Habit_Tracker_Project.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace HabitTracker.Controllers
+namespace Habit_Tracker_Project.Controllers
 {
     [Authorize]
     public class StatisticsController : Controller

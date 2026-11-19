@@ -1,14 +1,13 @@
-using System.Globalization;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using HabitTracker.Data;
-using HabitTracker.Services;
-using HabitTracker.Models; 
+using Habit_Tracker_Project.Data;
+using Habit_Tracker_Project.Services;
+using Habit_Tracker_Project.Models;
+using Habit_Tracker_Project;
 
 var builder = WebApplication.CreateBuilder(args);
-CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -34,10 +33,28 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
 });
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add<HabitTracker.Filters.BlockedUserFilter>();
+    options.Filters.Add<Habit_Tracker_Project.Filters.BlockedUserFilter>();
+})
+.AddViewLocalization()
+.AddDataAnnotationsLocalization(options =>
+{
+    options.DataAnnotationLocalizerProvider = (type, factory) =>
+        factory.Create(typeof(SharedResource));
 });
+
+var supportedCultures = new[] { "en", "uk" };
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.SetDefaultCulture("en");
+    options.AddSupportedCultures(supportedCultures);
+    options.AddSupportedUICultures(supportedCultures);
+    options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
+});
+
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 builder.Services.AddHostedService<TelegramBotService>();
@@ -47,7 +64,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    SeedData.Initialize(services); 
+    SeedData.Initialize(services);
 }
 
 using (var scope = app.Services.CreateScope())
@@ -63,15 +80,14 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseRequestLocalization();
 app.UseRouting();
 
 app.UseAuthentication();
@@ -83,6 +99,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

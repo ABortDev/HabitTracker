@@ -2,10 +2,10 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using HabitTracker.Models; 
-using HabitTracker.Models.Enums; 
+using Habit_Tracker_Project.Models; 
+using Habit_Tracker_Project.Models.Enums; 
 
-namespace HabitTracker.Data
+namespace Habit_Tracker_Project.Data
 {
     public static class SeedData
     {

@@ -1,5 +1,5 @@
-﻿@model List<HabitTracker.Models.Habit>
-@using HabitTracker.Models.Enums
+﻿@model List<Habit_Tracker_Project.Models.Habit>
+@using Habit_Tracker_Project.Models.Enums
 @using System.Globalization
 @{
     ViewData["Title"] = "Dashboard";
@@ -8,8 +8,8 @@
     var todayUtc = DateOnly.FromDateTime(DateTime.UtcNow);
     string Num(decimal? value) => value?.ToString("0.##", CultureInfo.InvariantCulture) ?? "0";
 
-    var regularHabits = Model?.Where(h => h.Frequency != HabitFrequency.Onetime).ToList() ?? new List<HabitTracker.Models.Habit>();
-    var oneTimeTodos = Model?.Where(h => h.Frequency == HabitFrequency.Onetime).ToList() ?? new List<HabitTracker.Models.Habit>();
+    var regularHabits = Model?.Where(h => h.Frequency != HabitFrequency.Onetime).ToList() ?? new List<Habit_Tracker_Project.Models.Habit>();
+    var oneTimeTodos = Model?.Where(h => h.Frequency == HabitFrequency.Onetime).ToList() ?? new List<Habit_Tracker_Project.Models.Habit>();
 
     string DifficultyLabel(DifficultyLevel difficulty) => difficulty switch
     {

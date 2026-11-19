@@ -1,10 +1,10 @@
 ﻿using Habit_Tracker_Project.Enums;
-using HabitTracker.Data;
-using HabitTracker.Models;
-using HabitTracker.Models.Enums;
+using Habit_Tracker_Project.Data;
+using Habit_Tracker_Project.Models;
+using Habit_Tracker_Project.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace HabitTracker.Services
+namespace Habit_Tracker_Project.Services
 {
     public class ReminderDispatcher : BackgroundService
     {
@@ -40,13 +40,12 @@ namespace HabitTracker.Services
                     _logger.LogError(ex, "Reminder dispatcher failed");
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }
 
         private async Task ProcessDueRemindersAsync(CancellationToken ct)
         {
-
             using var scope = _scopeFactory.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
@@ -57,7 +56,7 @@ namespace HabitTracker.Services
             var startOfTodayKyiv = today.ToDateTime(TimeOnly.MinValue);
             var startUtc = TimeZoneInfo.ConvertTimeToUtc(
                 DateTime.SpecifyKind(startOfTodayKyiv, DateTimeKind.Unspecified), Kyiv);
-            
+
             var reminders = await db.HabitReminders
                 .Include(r => r.Habit)
                     .ThenInclude(h => h.Category)
@@ -66,6 +65,7 @@ namespace HabitTracker.Services
                             && r.Habit.Status == HabitStatus.Active)
                 .ToListAsync(ct);
 
+            var sentHabitIds = new HashSet<int>();
 
             foreach (var reminder in reminders)
             {
@@ -81,6 +81,9 @@ namespace HabitTracker.Services
                 if (!IsDueToday(habit, today))
                     continue;
 
+                if (sentHabitIds.Contains(habit.Id))
+                    continue;
+
                 var alreadySent = await db.Notifications.AnyAsync(n =>
                     n.HabitId == habit.Id
                     && n.UserId == habit.UserId
@@ -89,6 +92,8 @@ namespace HabitTracker.Services
 
                 if (alreadySent)
                     continue;
+
+                sentHabitIds.Add(habit.Id);
 
                 var categoryName = habit.Category != null ? habit.Category.Name : "No category";
                 var details =
@@ -111,6 +116,7 @@ namespace HabitTracker.Services
                     IsRead = false,
                     CreatedAt = DateTime.UtcNow
                 });
+                await db.SaveChangesAsync(ct);
 
                 if (user?.TelegramChatId != null)
                 {
@@ -135,8 +141,6 @@ namespace HabitTracker.Services
                     }
                 }
             }
-
-            await db.SaveChangesAsync(ct);
         }
 
         private static bool IsDueToday(Habit habit, DateOnly today)

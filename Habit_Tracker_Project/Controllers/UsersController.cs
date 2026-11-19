@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using HabitTracker.Models;
+using Habit_Tracker_Project.Models;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
-using HabitTracker.Data;
+using Habit_Tracker_Project.Data;
 using Habit_Tracker_Project.Enums;
 using Microsoft.Extensions.Caching.Memory;
-using HabitTracker.Services;
+using Habit_Tracker_Project.Services;
 using Habit_Tracker_Project.Models.ViewModels;
+using Microsoft.Extensions.Localization;
 
-namespace HabitTracker.Controllers
+namespace Habit_Tracker_Project.Controllers
 {
     [Authorize]
     public class UsersController : Controller
@@ -19,13 +20,20 @@ namespace HabitTracker.Controllers
         private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public UsersController(UserManager<User> userManager, ApplicationDbContext context, IMemoryCache cache, IConfiguration config)
+        public UsersController(
+            UserManager<User> userManager,
+            ApplicationDbContext context,
+            IMemoryCache cache,
+            IConfiguration config,
+            IStringLocalizer<SharedResource> localizer)
         {
             _userManager = userManager;
             _context = context;
             _cache = cache;
             _config = config;
+            _localizer = localizer;
         }
 
         private string GetCurrentUserId()
@@ -195,9 +203,9 @@ namespace HabitTracker.Controllers
             var code = "HT-" + Guid.NewGuid().ToString("N")[..4].ToUpperInvariant();
 
             _cache.Set(
-                TelegramBotService.LinkCachePrefix + code,
-                userId,
-                TimeSpan.FromMinutes(10));
+                    TelegramBotService.LinkCachePrefix + code,
+                    userId,
+                    TimeSpan.FromDays(30));
 
             var bot = _config["Telegram:BotUsername"];
             return Json(new

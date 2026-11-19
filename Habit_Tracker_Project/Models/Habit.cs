@@ -1,9 +1,9 @@
-﻿using HabitTracker.Models;
-using HabitTracker.Models.Enums;
+﻿using Habit_Tracker_Project.Models;
+using Habit_Tracker_Project.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace HabitTracker.Models
+namespace Habit_Tracker_Project.Models
 {
     public class Habit
     {

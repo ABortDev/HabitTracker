@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HabitTracker.Data;
+using Habit_Tracker_Project.Data;
 using Habit_Tracker_Project.Enums;
 using System.Security.Claims;
 
-namespace HabitTracker.Controllers
+namespace Habit_Tracker_Project.Controllers
 {
     [Authorize]
     public class NotificationsController : Controller

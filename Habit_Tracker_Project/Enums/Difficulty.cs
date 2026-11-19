@@ -1,6 +1,9 @@
-﻿public enum DifficultyLevel
+﻿namespace Habit_Tracker_Project.Models.Enums
 {
-    Easy,
-    Medium,
-    Hard
+    public enum DifficultyLevel
+    {
+        Easy,
+        Medium,
+        Hard
+    }
 }
