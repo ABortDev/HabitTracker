@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|c:\\users\\vikal\\source\\repos\\habittracker-backend-with-frontend\\habit_tracker_project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|c:\\users\\vikal\\source\\repos\\habittracker-backend-with-frontend\\habit_tracker_project\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|c:\\users\\vikal\\source\\repos\\habittracker-backend-with-frontend\\habit_tracker_project\\views\\chat\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\views\\chat\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|c:\\users\\vikal\\source\\repos\\habittracker-backend-with-frontend\\habit_tracker_project\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -32,10 +44,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|c:\\users\\vikal\\source\\repos\\habittracker-backend-with-frontend\\habit_tracker_project\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|c:\\users\\vikal\\source\\repos\\habittracker-backend-with-frontend\\habit_tracker_project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|solutionrelative:habit_tracker_project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F27C12E-E9C1-4F63-9257-327DCCF723B5}|Habit_Tracker_Project\\Habit_Tracker_Project.csproj|c:\\users\\vikal\\source\\repos\\habittracker-backend-with-frontend\\habit_tracker_project\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
@@ -69,21 +77,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 9,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "NotificationsController.cs",
-              "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
-              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
-              "ToolTip": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
-              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAcwE4AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-19T12:12:58.77Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
@@ -102,7 +97,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Views\\Chat\\Index.cshtml",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Chat\\Index.cshtml",
+              "ToolTip": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Views\\Chat\\Index.cshtml",
+              "RelativeToolTip": "Habit_Tracker_Project\\Views\\Chat\\Index.cshtml",
+              "ViewState": "AgIAACYAAAAAAAAAAAAAAD4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-11-19T12:16:34.987Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "NotificationsController.cs",
+              "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
+              "ToolTip": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
+              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\NotificationsController.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAUwE4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-19T12:12:58.77Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "secrets.json",
               "DocumentMoniker": "C:\\Users\\vikal\\AppData\\Roaming\\Microsoft\\UserSecrets\\48ddc857-17b5-48c4-b5ef-bec1c090cd25\\secrets.json",
               "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Roaming\\Microsoft\\UserSecrets\\48ddc857-17b5-48c4-b5ef-bec1c090cd25\\secrets.json",
@@ -115,7 +136,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "ProfileViewModel.cs",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Models\\ViewModels\\ProfileViewModel.cs",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Models\\ViewModels\\ProfileViewModel.cs",
@@ -128,7 +149,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Models\\User.cs",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Models\\User.cs",
@@ -141,20 +162,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Program.cs",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Program.cs",
               "ToolTip": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Program.cs",
               "RelativeToolTip": "Habit_Tracker_Project\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-19T11:50:56.727Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "ChatController.cs",
+              "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Controllers\\ChatController.cs",
+              "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\ChatController.cs",
+              "ToolTip": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Controllers\\ChatController.cs",
+              "RelativeToolTip": "Habit_Tracker_Project\\Controllers\\ChatController.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAswFwAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-19T12:17:22.218Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Controllers\\UsersController.cs",
@@ -167,7 +201,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Profile.cshtml",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Views\\Users\\Profile.cshtml",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Users\\Profile.cshtml",
@@ -180,7 +214,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "TelegramBotService.cs",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Services\\TelegramBotService.cs",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Services\\TelegramBotService.cs",
@@ -193,7 +227,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "ReminderDispatcher.cs",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Services\\ReminderDispatcher.cs",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Services\\ReminderDispatcher.cs",
@@ -206,7 +240,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\appsettings.Development.json",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\appsettings.Development.json",
@@ -218,7 +252,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Shared\\_Layout.cshtml",
@@ -230,7 +264,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "site.js",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\wwwroot\\js\\site.js",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\wwwroot\\js\\site.js",
@@ -242,7 +276,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Views\\Notifications\\Index.cshtml",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Views\\Notifications\\Index.cshtml",
@@ -254,7 +288,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "site.css",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\wwwroot\\css\\site.css",
@@ -266,7 +300,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "Habit_Tracker_Project.csproj",
               "DocumentMoniker": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
               "RelativeDocumentMoniker": "Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
