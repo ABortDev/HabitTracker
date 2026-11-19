@@ -91,9 +91,6 @@ namespace HabitTracker.Controllers
             }
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = moderators.Count == 0
-                ? "Message saved. No moderators are currently assigned."
-                : "Message sent.";
             return RedirectToAction(nameof(Index));
         }
 

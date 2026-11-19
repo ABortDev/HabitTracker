@@ -22,5 +22,6 @@ namespace Habit_Tracker_Project.Models.ViewModels
         public int TotalPoints { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsBlocked { get; set; }
+        public long? TelegramChatId { get; set; }
     }
 }

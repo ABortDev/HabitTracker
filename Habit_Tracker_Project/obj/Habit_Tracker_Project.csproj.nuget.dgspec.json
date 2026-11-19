@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "K:\\HABIT TRACKER\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj": {}
+    "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj": {}
   },
   "projects": {
-    "K:\\HABIT TRACKER\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj": {
+    "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "K:\\HABIT TRACKER\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
+        "projectUniqueName": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
         "projectName": "Habit_Tracker_Project",
-        "projectPath": "K:\\HABIT TRACKER\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
-        "packagesPath": "C:\\Users\\super\\.nuget\\packages\\",
-        "outputPath": "K:\\HABIT TRACKER\\Habit_Tracker_Project\\obj\\",
+        "projectPath": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\Habit_Tracker_Project.csproj",
+        "packagesPath": "C:\\Users\\vikal\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\vikal\\source\\repos\\HabitTracker-backend-with-frontend\\Habit_Tracker_Project\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\super\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\vikal\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -30,6 +30,7 @@
         },
         "frameworks": {
           "net9.0": {
+            "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {}
           }
@@ -44,10 +45,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net9.0": {
+          "framework": "net9.0",
           "targetAlias": "net9.0",
           "dependencies": {
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
@@ -88,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

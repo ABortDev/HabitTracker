@@ -48,7 +48,8 @@ namespace HabitTracker.Controllers
                 Role = roles.Contains("Admin") ? "Admin" : roles.Contains("Moderator") ? "Moderator" : "User",
                 TotalPoints = user.TotalPoints,
                 CreatedAt = user.CreatedAt,
-                IsBlocked = user.IsBlocked
+                IsBlocked = user.IsBlocked,
+                TelegramChatId = user.TelegramChatId
             };
             return View(model);
         }

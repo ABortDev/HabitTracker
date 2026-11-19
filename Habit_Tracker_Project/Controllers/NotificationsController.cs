@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HabitTracker.Data;
+using Habit_Tracker_Project.Enums;
 using System.Security.Claims;
 
 namespace HabitTracker.Controllers
@@ -24,7 +25,7 @@ namespace HabitTracker.Controllers
         {
             var userId = GetCurrentUserId();
             var items = await _context.Notifications
-                .Where(n => n.UserId == userId)
+                .Where(n => n.UserId == userId && n.Type != NotificationType.Reminder)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
 
@@ -37,10 +38,12 @@ namespace HabitTracker.Controllers
             var userId = GetCurrentUserId();
 
             var unreadCount = await _context.Notifications
-                .CountAsync(n => n.UserId == userId && !n.IsRead);
+                .CountAsync(n => n.UserId == userId
+                    && !n.IsRead
+                    && n.Type != NotificationType.Reminder);
 
             var items = await _context.Notifications
-                .Where(n => n.UserId == userId)
+                .Where(n => n.UserId == userId && n.Type != NotificationType.Reminder)
                 .OrderByDescending(n => n.CreatedAt)
                 .Take(8)
                 .Select(n => new
