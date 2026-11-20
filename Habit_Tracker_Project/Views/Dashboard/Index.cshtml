@@ -232,9 +232,10 @@
         <div class="ht-modal-content ht-card">
             <h2 id="addModalTitle" class="ht-modal-title">Add new habit</h2>
             <form method="post" asp-controller="Dashboard" asp-action="AddHabit">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="ht-form-group">
                     <label class="ht-form-label">Habit title</label>
-                    <input type="text" name="title" class="form-control ht-form-control" placeholder="e.g., Read 20 pages" required />
+                    <input type="text" name="title" class="form-control ht-form-control" placeholder="e.g., Read book" />
                 </div>
                 <div class="ht-form-group">
                     <label class="ht-form-label" for="addTaskType">Task type</label>
@@ -322,7 +323,7 @@
                 <input type="hidden" name="id" id="editId" />
                 <div class="ht-form-group">
                     <label class="ht-form-label">Habit title</label>
-                    <input type="text" name="title" id="editTitle" class="form-control ht-form-control" required />
+                    <input type="text" name="title" id="editTitle" class="form-control ht-form-control" />
                 </div>
                 <div class="ht-form-group">
                     <label class="ht-form-label" for="editTaskType">Task type</label>
@@ -391,6 +392,11 @@
     </div>
 
     @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        @if (ViewBag.ShowAddModal == true)
+        {
+            <script>document.addEventListener('DOMContentLoaded', function () { openAddModal(); });</script>
+        }
         <script>
             function toggleEndDate(prefix, frequencyValue) {
                 var container = document.getElementById(prefix + 'EndDateContainer');

@@ -30,11 +30,13 @@
                 <div class="ht-form-group">
                     <label asp-for="Email" class="ht-form-label"></label>
                     <input asp-for="Email" class="form-control ht-form-control" placeholder="your@example.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div class="ht-form-group">
                     <label asp-for="Password" class="ht-form-label"></label>
                     <input asp-for="Password" class="form-control ht-form-control" placeholder="••••••••" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <label class="ht-check-row">
@@ -51,5 +53,7 @@
             </p>
         </section>
     </main>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
 </body>
 </html>

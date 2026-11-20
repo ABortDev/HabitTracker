@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Habit_Tracker_Project.Models.ViewModels.RegisterViewModel
+@{
     ViewData["Title"] = "Sign Up";
     Layout = null;
 }
@@ -25,24 +26,30 @@
             }
 
             <form method="post" asp-controller="Auth" asp-action="Register" class="ht-auth-form">
+                <div asp-validation-summary="ModelOnly" class="ht-alert ht-alert-error"></div>
+
                 <div class="ht-form-group">
-                    <label for="fullName" class="ht-form-label">Full name</label>
-                    <input id="fullName" type="text" name="fullName" class="form-control ht-form-control" placeholder="Your name" required />
+                    <label asp-for="FullName" class="ht-form-label"></label>
+                    <input asp-for="FullName" class="form-control ht-form-control" placeholder="Your name" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
 
                 <div class="ht-form-group">
-                    <label for="email" class="ht-form-label">Email</label>
-                    <input id="email" type="email" name="email" class="form-control ht-form-control" placeholder="you@example.com" required />
+                    <label asp-for="Email" class="ht-form-label"></label>
+                    <input asp-for="Email" class="form-control ht-form-control" placeholder="you@example.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div class="ht-form-group">
-                    <label for="password" class="ht-form-label">Password</label>
-                    <input id="password" type="password" name="password" class="form-control ht-form-control" placeholder="••••••••" required />
+                    <label asp-for="Password" class="ht-form-label"></label>
+                    <input asp-for="Password" class="form-control ht-form-control" placeholder="••••••••" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="ht-form-group">
-                    <label for="confirmPassword" class="ht-form-label">Confirm password</label>
-                    <input id="confirmPassword" type="password" name="confirmPassword" class="form-control ht-form-control" placeholder="••••••••" required />
+                    <label asp-for="ConfirmPassword" class="ht-form-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control ht-form-control" placeholder="••••••••" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn ht-btn-primary ht-auth-submit">Create account</button>
@@ -54,5 +61,7 @@
             </p>
         </section>
     </main>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
 </body>
 </html>

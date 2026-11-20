@@ -41,20 +41,20 @@ namespace Habit_Tracker_Project.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Error = _localizer["Please enter a valid email and password."];
+                ViewBag.Error = _localizer["Please enter a valid email and password."].Value;
                 return View(model);
             }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                ViewBag.Error = _localizer["Invalid email or password."];
+                ViewBag.Error = _localizer["This account does not exist. Please register."].Value;
                 return View(model);
             }
 
             if (user.IsBlocked)
             {
-                ViewBag.Error = _localizer["Your account has been blocked by an administrator."];
+                ViewBag.Error = _localizer["Your account has been blocked by an administrator."].Value;
                 return View(model);
             }
 
@@ -67,7 +67,7 @@ namespace Habit_Tracker_Project.Controllers
             if (result.Succeeded)
                 return RedirectToAction("Index", "Dashboard");
 
-            ViewBag.Error = _localizer["Invalid email or password."];
+            ViewBag.Error = _localizer["Invalid email or password."].Value;
             return View(model);
         }
 
@@ -96,7 +96,6 @@ namespace Habit_Tracker_Project.Controllers
                 UserName = firstName + "_" + Guid.NewGuid().ToString()[..3],
                 Email = model.Email,
                 FullName = model.FullName,
-                PhoneNumber = model.PhoneNumber,
                 CreatedAt = DateTime.UtcNow,
                 TotalPoints = 0,
                 IsBlocked = false
