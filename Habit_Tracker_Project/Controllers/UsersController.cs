@@ -65,6 +65,7 @@ namespace HabitTracker.Controllers
             model.TotalPoints = user.TotalPoints;
             model.CreatedAt = user.CreatedAt;
             model.IsBlocked = user.IsBlocked;
+            model.TelegramChatId = user.TelegramChatId;
             var roles = await _userManager.GetRolesAsync(user);
             model.Role = roles.Contains("Admin") ? "Admin" : roles.Contains("Moderator") ? "Moderator" : "User";
 

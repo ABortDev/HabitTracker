@@ -55,3 +55,13 @@
         </form>
     </section>
 </div>
+@section Scripts {
+    <script>
+        document.getElementById('chatText').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.form.submit();
+            }
+        });
+    </script>
+}
