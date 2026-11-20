@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using System.Text.Json;
-using HabitTracker.Data;
+using Habit_Tracker_Project.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace HabitTracker.Services
+namespace Habit_Tracker_Project.Services
 {
     public class TelegramBotService : BackgroundService
     {

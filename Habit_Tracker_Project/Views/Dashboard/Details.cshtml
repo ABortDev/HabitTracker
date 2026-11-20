@@ -1,5 +1,5 @@
-﻿@model HabitTracker.Models.Habit
-@using HabitTracker.Models.Enums
+﻿@model Habit_Tracker_Project.Models.Habit
+@using Habit_Tracker_Project.Models.Enums
 @using System.Globalization
 @{
     ViewData["Title"] = Model.Title;
@@ -17,11 +17,11 @@
 
     string schedule = Model.Frequency switch
     {
-        HabitFrequency.Onetime => "One-time task",
-        HabitFrequency.Daily => "Every day",
-        HabitFrequency.Weekly => $"Every week on {Model.CreatedAt.DayOfWeek}",
-        HabitFrequency.Monthly => $"Every month on day {Model.CreatedAt.Day}",
-        HabitFrequency.Yearly => $"Every year on {Model.CreatedAt.ToString("MMMM d", CultureInfo.InvariantCulture)}",
+        HabitFrequency.Onetime => SharedLocalizer["One-time task"].Value,
+        HabitFrequency.Daily => SharedLocalizer["Every day"].Value,
+        HabitFrequency.Weekly => string.Format(SharedLocalizer["Every week on {0}"].Value, SharedLocalizer[Model.CreatedAt.DayOfWeek.ToString()].Value),
+        HabitFrequency.Monthly => string.Format(SharedLocalizer["Every month on day {0}"].Value, Model.CreatedAt.Day),
+        HabitFrequency.Yearly => string.Format(SharedLocalizer["Every year on {0}"].Value, Model.CreatedAt.ToString("MMMM d", CultureInfo.InvariantCulture)),
         _ => Model.Frequency.ToString()
     };
 }
@@ -29,10 +29,10 @@
 <main class="ht-dashboard-container">
     <div class="ht-page-heading">
         <div>
-            <span class="ht-eyebrow">@(Model.Category?.Name ?? "General")</span>
+            <span class="ht-eyebrow">@(Model.Category?.Name ?? SharedLocalizer["General"].Value)</span>
             <h1>@Model.Title</h1>
         </div>
-        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
     </div>
 
     @if (TempData["Success"] != null)
@@ -48,31 +48,31 @@
         <section class="ht-dashboard-card ht-card">
             <div class="ht-section-heading">
                 <div>
-                    <h2>Habit details</h2>
-                    <p>@(string.IsNullOrEmpty(Model.Description) ? "No description" : Model.Description)</p>
+                        <h2>@SharedLocalizer["Habit details"]</h2>
+                    <p>@(string.IsNullOrEmpty(Model.Description) ? SharedLocalizer["No description"] : Model.Description)</p>
                 </div>
             </div>
 
             <div class="ht-habit-meta">
                 <span>@schedule</span>
-                <span>@Model.Difficulty · @points pts</span>
+                <span>@SharedLocalizer[Model.Difficulty.ToString()] · @points @SharedLocalizer["pts"]</span>
             </div>
 
             <ul class="list-unstyled mt-3">
-                <li><strong>Created:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
-                <li><strong>Reminder:</strong> @(reminder != null ? reminder.ReminderTime.ToString("HH:mm") : "not set")</li>
+                <li><strong>@SharedLocalizer["Created"]:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                <li><strong>@SharedLocalizer["Reminder"]:</strong> @(reminder != null ? reminder.ReminderTime.ToString("HH:mm") : SharedLocalizer["not set"])</li>
                 @if (Model.EndDate.HasValue)
                 {
-                    <li><strong>@(Model.Frequency == HabitFrequency.Onetime ? "Due date" : "Ends"):</strong> @Model.EndDate.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                    <li><strong>@(Model.Frequency == HabitFrequency.Onetime ? SharedLocalizer["Due date"] : SharedLocalizer["Ends"]):</strong> @Model.EndDate.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
                 }
-                <li><strong>Completions:</strong> @ViewBag.TotalCompletions</li>
+                <li><strong>@SharedLocalizer["Completions"]:</strong> @ViewBag.TotalCompletions</li>
                 @if (lastCompleted.HasValue)
                 {
-                    <li><strong>Last completed:</strong> @lastCompleted.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                    <li><strong>@SharedLocalizer["Last completed"]:</strong> @lastCompleted.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
                 }
                 @if (Model.Frequency == HabitFrequency.Daily)
                 {
-                    <li><strong>Current streak:</strong> @ViewBag.Streak days</li>
+                    <li><strong>@SharedLocalizer["Current streak"]:</strong> @ViewBag.Streak @SharedLocalizer["days"]</li>
                 }
             </ul>
 
@@ -84,45 +84,45 @@
                         var todayLog = Model.Logs?.FirstOrDefault(log => log.Date == DateOnly.FromDateTime(DateTime.UtcNow));
                         <div class="ht-form-group mb-3">
                             <label for="habitActualValue" class="ht-form-label">
-                                Progress: @(todayLog?.ActualValue ?? 0) / @Model.TargetValue @(Model.Unit ?? "")
+                                @SharedLocalizer["Progress"]: @(todayLog?.ActualValue ?? 0) / @Model.TargetValue @(Model.Unit ?? "")
                             </label>
                             <input id="habitActualValue" type="number" name="actualValue" min="0.01" step="any"
-                                   class="form-control ht-form-control" placeholder="Amount completed" required />
+                                   class="form-control ht-form-control" placeholder="@SharedLocalizer["Amount completed"]" required />
                         </div>
                     }
-                    <button type="submit" class="btn ht-btn-primary">Mark as done (+@points pts)</button>
+                    <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Mark as done"] (+@points @SharedLocalizer["pts"])</button>
                 </form>
             }
             else
             {
-                <div class="ht-empty-state">Completed today ✓</div>
+                <div class="ht-empty-state">@SharedLocalizer["Completed today ✓"]</div>
             }
         </section>
 
         <section class="ht-dashboard-card ht-card">
             <div class="ht-section-heading">
                 <div>
-                    <h2>Schedule</h2>
-                    <p>Mark past days complete or plan upcoming days.</p>
+                    <h2>@SharedLocalizer["Schedule"]</h2>
+                    <p>@SharedLocalizer["Mark past days complete or plan upcoming days."]</p>
                 </div>
             </div>
             <div class="ht-cal" id="habitCalendar">
                 <div class="ht-cal-head">
                     <strong id="calendarMonth"></strong>
                     <div class="ht-cal-nav">
-                        <button type="button" id="calendarPrevious" aria-label="Previous month">‹</button>
-                        <button type="button" id="calendarNext" aria-label="Next month">›</button>
+                         <button type="button" id="calendarPrevious" aria-label="@SharedLocalizer["Previous month"]">‹</button>
+                         <button type="button" id="calendarNext" aria-label="@SharedLocalizer["Next month"]">›</button>
                     </div>
                 </div>
                 <div class="ht-cal-weekdays" aria-hidden="true">
-                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
-                    <span>Thu</span><span>Fri</span><span>Sat</span>
+                    <span>@SharedLocalizer["Sun"]</span><span>@SharedLocalizer["Mon"]</span><span>@SharedLocalizer["Tue"]</span><span>@SharedLocalizer["Wed"]</span>
+                    <span>@SharedLocalizer["Thu"]</span><span>@SharedLocalizer["Fri"]</span><span>@SharedLocalizer["Sat"]</span>
                 </div>
                 <div class="ht-cal-days" id="calendarDays"></div>
                 <div class="ht-cal-legend">
-                    <span><i class="ht-cal-key ht-cal-key-completed"></i>Completed</span>
-                    <span><i class="ht-cal-key ht-cal-key-partial"></i>Partial</span>
-                    <span><i class="ht-cal-key ht-cal-key-planned"></i>Planned</span>
+                    <span><i class="ht-cal-key ht-cal-key-completed"></i>@SharedLocalizer["Completed"]</span>
+                    <span><i class="ht-cal-key ht-cal-key-partial"></i>@SharedLocalizer["Partial"]</span>
+                    <span><i class="ht-cal-key ht-cal-key-planned"></i>@SharedLocalizer["Planned"]</span>
                 </div>
             </div>
             <form id="completeDateForm" method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@Model.Id" class="ht-hidden-field">
@@ -156,6 +156,16 @@
             const completeForm = document.getElementById("completeDateForm");
             const toggleForm = document.getElementById("toggleScheduleForm");
             const requiresActualValue = @((Model.TargetValue is > 0).ToString().ToLowerInvariant());
+             const calendarText = {
+                 completed: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["completed"].Value)),
+                 partial: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["partial progress"].Value)),
+                 planned: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["planned"].Value)),
+                 alreadyCompleted: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["Already completed"].Value)),
+                 afterEndDate: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["This date is after the habit end date"].Value)),
+                 unplan: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["Click to unplan this date"].Value)),
+                 record: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["Click to record progress"].Value)),
+                 plan: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["Click to plan this date"].Value))
+             };
             let displayedMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
             const dateString = date => [
@@ -200,16 +210,16 @@
                     number.textContent = day;
                     button.appendChild(number);
                     button.dataset.date = value;
-                    button.setAttribute("aria-label", `${value}${isCompleted ? ", completed" : isPartial ? ", partial progress" : isPlanned ? ", planned" : ""}`);
+                     button.setAttribute("aria-label", `${value}${isCompleted ? ", " + calendarText.completed : isPartial ? ", " + calendarText.partial : isPlanned ? ", " + calendarText.planned : ""}`);
                     button.disabled = isCompleted || isAfterEndDate;
                     if (isCompleted) {
-                        button.title = "Already completed";
+                         button.title = calendarText.alreadyCompleted;
                     } else if (isAfterEndDate) {
-                        button.title = "This date is after the habit end date";
+                         button.title = calendarText.afterEndDate;
                     } else if (isPlanned) {
-                        button.title = "Click to unplan this date";
+                         button.title = calendarText.unplan;
                     } else {
-                        button.title = value <= todayString ? "Click to record progress" : "Click to plan this date";
+                         button.title = value <= todayString ? calendarText.record : calendarText.plan;
                     }
                     daysElement.appendChild(button);
                 }

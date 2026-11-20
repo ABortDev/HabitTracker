@@ -2,24 +2,27 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using HabitTracker.Data;
-using HabitTracker.Models;
-using HabitTracker.Models.Enums;
+using Habit_Tracker_Project.Data;
+using Habit_Tracker_Project.Models;
+using Habit_Tracker_Project.Models.Enums;
 using System.Security.Claims;
 using Habit_Tracker_Project.Enums;
 using System.Globalization;
 using Habit_Tracker_Project.Models.ViewModels;
+using Microsoft.Extensions.Localization;
 
-namespace HabitTracker.Controllers
+namespace Habit_Tracker_Project.Controllers
 {
     [Authorize]
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public DashboardController(ApplicationDbContext context)
+        public DashboardController(ApplicationDbContext context, IStringLocalizer<SharedResource> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         private string GetCurrentUserId()
@@ -65,15 +68,23 @@ namespace HabitTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddHabit(HabitFormViewModel model)
         {
+            var userId = GetCurrentUserId();
+
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = string.Join(" ", ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage));
-                return RedirectToAction(nameof(Index));
+                var habits = await _context.Habits
+                    .Include(h => h.Category)
+                    .Include(h => h.Reminders)
+                    .Include(h => h.Logs)
+                    .Where(h => h.UserId == userId && !h.IsDeleted)
+                    .OrderByDescending(h => h.CreatedAt)
+                    .ToListAsync();
+
+                ViewBag.Categories = await _context.HabitCategories.OrderBy(c => c.Name).ToListAsync();
+                ViewBag.ShowAddModal = true;
+                return View("Index", habits);
             }
 
-            var userId = GetCurrentUserId();
             var defaultCategory = await _context.HabitCategories.FirstOrDefaultAsync();
             var finalCategoryId = model.CategoryId > 0 ? model.CategoryId : (defaultCategory?.Id ?? 1);
 
@@ -107,7 +118,7 @@ namespace HabitTracker.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            TempData["Success"] = "Habit created successfully!";
+            TempData["Success"] = _localizer["Habit created successfully!"].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -115,15 +126,24 @@ namespace HabitTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditHabit(HabitFormViewModel model)
         {
+            var userId = GetCurrentUserId();
+
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = string.Join(" ", ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage));
-                return RedirectToAction(nameof(Index));
+                var habits = await _context.Habits
+                    .Include(h => h.Category)
+                    .Include(h => h.Reminders)
+                    .Include(h => h.Logs)
+                    .Where(h => h.UserId == userId && !h.IsDeleted)
+                    .OrderByDescending(h => h.CreatedAt)
+                    .ToListAsync();
+
+                ViewBag.Categories = await _context.HabitCategories
+                    .OrderBy(c => c.Name)
+                    .ToListAsync();
+                return View("Index", habits);
             }
 
-            var userId = GetCurrentUserId();
             var habit = await _context.Habits
                 .Include(h => h.Reminders)
                 .FirstOrDefaultAsync(h => h.Id == model.Id && h.UserId == userId && !h.IsDeleted);
@@ -163,7 +183,7 @@ namespace HabitTracker.Controllers
             }
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Habit updated!";
+            TempData["Success"] = _localizer["Habit updated!"].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -342,7 +362,7 @@ namespace HabitTracker.Controllers
             habit.DeletedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Habit deleted.";
+            TempData["Success"] = _localizer["Habit deleted."].Value;
 
             return RedirectToAction(nameof(Index));
         }

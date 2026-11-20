@@ -1,8 +1,7 @@
-﻿using HabitTracker.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace HabitTracker.Models
+namespace Habit_Tracker_Project.Models
 {
     public class User : IdentityUser
     {

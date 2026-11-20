@@ -10,6 +10,9 @@
         const badge = notificationMenu.querySelector('[data-notification-badge]');
         const count = notificationMenu.querySelector('[data-notification-count]');
         const feed = notificationMenu.querySelector('[data-notification-feed]');
+        const emptyText = feed.dataset.emptyText || 'You have no notifications.';
+        const newNotificationText = feed.dataset.newNotification || 'New notification';
+        const unreadText = feed.dataset.unreadSuffix || 'unread';
         const seenStorageKey = 'habit-tracker-notification-ids';
 
         const getSeenIds = () => {
@@ -36,7 +39,7 @@
             toast.setAttribute('role', 'status');
 
             const title = document.createElement('strong');
-            title.textContent = item.title || 'New notification';
+            title.textContent = item.title || newNotificationText;
             const message = document.createElement('span');
             message.textContent = item.message || '';
             toast.append(title, message);
@@ -49,7 +52,7 @@
             if (!items.length) {
                 const empty = document.createElement('p');
                 empty.className = 'ht-notification-empty';
-                empty.textContent = 'You have no notifications.';
+                empty.textContent = emptyText;
                 feed.appendChild(empty);
                 return;
             }
@@ -92,7 +95,7 @@
                 const unreadCount = Number(data.unreadCount) || 0;
                 badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
                 badge.hidden = unreadCount === 0;
-                count.textContent = unreadCount ? `${unreadCount} unread` : '';
+                count.textContent = unreadCount ? `${unreadCount} ${unreadText}` : '';
 
                 if (!isFirstLoad && newItems.length) showToast(newItems[0]);
             } catch {

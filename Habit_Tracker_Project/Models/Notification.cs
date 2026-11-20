@@ -1,9 +1,9 @@
-﻿using HabitTracker.Models;
+﻿using Habit_Tracker_Project.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Habit_Tracker_Project.Enums;
 
-namespace HabitTracker.Models
+namespace Habit_Tracker_Project.Models
 {
     public class Notification
     {

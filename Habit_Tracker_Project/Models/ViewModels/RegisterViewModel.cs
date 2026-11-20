@@ -13,14 +13,9 @@ namespace Habit_Tracker_Project.Models.ViewModels
 
         [Required]
         [EmailAddress]
+        [DataType(DataType.EmailAddress)]
         [Display(Name = "Email")]
         public string Email { get; set; } = string.Empty;
-
-        [Required]
-        [Phone]
-        [DataType(DataType.PhoneNumber)]
-        [Display(Name = "Phone")]
-        public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]
         [StringLength(100, MinimumLength = 6)]

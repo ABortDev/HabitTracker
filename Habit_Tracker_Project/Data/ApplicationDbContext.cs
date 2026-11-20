@@ -1,9 +1,9 @@
-﻿using HabitTracker.Models;
+﻿using Habit_Tracker_Project.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 
-namespace HabitTracker.Data
+namespace Habit_Tracker_Project.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {

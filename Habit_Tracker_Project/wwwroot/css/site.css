@@ -316,6 +316,45 @@
   gap: 1rem;
 }
 
+.ht-language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem;
+  border: 1px solid rgba(83, 123, 79, 0.35);
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.ht-language-switcher-home {
+  margin-right: 0.25rem;
+}
+
+.ht-language-button,
+.ht-language-switcher .btn {
+  min-width: 2.4rem;
+  border: 0;
+  border-radius: 0.4rem;
+  padding: 0.35rem 0.5rem;
+  background: transparent;
+  color: var(--ht-primary-dark);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+}
+
+.ht-language-button:hover,
+.ht-language-button:focus-visible,
+.ht-language-switcher .btn:hover,
+.ht-language-switcher .btn:focus-visible {
+  background: var(--ht-primary-light);
+  color: var(--ht-primary-dark);
+  outline: 2px solid rgba(63, 97, 60, 0.25);
+  outline-offset: 1px;
+}
+
 .ht-home-link,
 .ht-home-greeting {
   color: var(--ht-text);
@@ -1034,6 +1073,13 @@
   min-height: 100vh;
   place-items: center;
   padding: 1.5rem;
+}
+
+.ht-auth-shell > .ht-language-switcher {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
 }
 
 .ht-auth-card {

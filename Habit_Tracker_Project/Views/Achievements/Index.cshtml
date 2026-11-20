@@ -1,19 +1,19 @@
-@model List<HabitTracker.Models.Achievement>
+@model List<Habit_Tracker_Project.Models.Achievement>
 @{
-    ViewData["Title"] = "Achievements";
+    ViewData["Title"] = SharedLocalizer["Achievements"];
     var userAchievementIds = ViewBag.UserAchievements as List<int> ?? new List<int>();
 }
 
 <div class="ht-achievements-page">
     <div class="ht-page-heading">
         <div>
-            <span class="ht-eyebrow">Keep going</span>
-            <h1>Achievements</h1>
+            <span class="ht-eyebrow">@SharedLocalizer["Keep going"]</span>
+            <h1>@SharedLocalizer["Achievements"]</h1>
         </div>
-        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
     </div>
 
-    <p class="ht-page-intro">Celebrate the progress you make while building consistent routines.</p>
+    <p class="ht-page-intro">@SharedLocalizer["Celebrate the progress you make while building consistent routines."]</p>
 
     @if (Model != null && Model.Any())
     {
@@ -24,9 +24,9 @@
                 <article class="ht-achievement-card ht-card @(isUnlocked ? "ht-achievement-unlocked" : "ht-achievement-locked")">
                     <div class="ht-achievement-icon" aria-hidden="true">@(isUnlocked ? "★" : "☆")</div>
                     <div class="ht-achievement-content">
-                        <div class="ht-achievement-status">@(isUnlocked ? "Unlocked" : "Keep practicing")</div>
-                        <h2>@achievement.Title</h2>
-                        <p>@achievement.Description</p>
+                        <div class="ht-achievement-status">@(isUnlocked ? SharedLocalizer["Unlocked"] : SharedLocalizer["Keep practicing"])</div>
+                        <h2>@SharedLocalizer[achievement.Title]</h2>
+                        <p>@SharedLocalizer[achievement.Description]</p>
                     </div>
                 </article>
             }
@@ -36,8 +36,8 @@
     {
         <section class="ht-empty-achievements ht-card">
             <div class="ht-achievement-icon" aria-hidden="true">☆</div>
-            <h2>Your achievements will appear here</h2>
-            <p>Keep completing habits and your progress will be celebrated here.</p>
+            <h2>@SharedLocalizer["Your achievements will appear here"]</h2>
+            <p>@SharedLocalizer["Keep completing habits and your progress will be celebrated here."]</p>
         </section>
     }
 </div>

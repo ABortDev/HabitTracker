@@ -1,17 +1,17 @@
-﻿@model List<HabitTracker.Models.Habit>
-@using HabitTracker.Models.Enums
+﻿@model List<Habit_Tracker_Project.Models.Habit>
+@using Habit_Tracker_Project.Models.Enums
 @{
-    ViewData["Title"] = "User habits";
+    ViewData["Title"] = SharedLocalizer["User habits"];
 }
 
 <div class="ht-admin-page">
     <div class="ht-page-heading">
         <div>
-            <span class="ht-eyebrow">User habits</span>
+            <span class="ht-eyebrow">@SharedLocalizer["User habits"]</span>
             <h1>@ViewBag.FullName</h1>
             <p class="ht-user-habits-email">@ViewBag.Email</p>
         </div>
-        <a asp-controller="Users" asp-action="Manage" class="btn ht-btn-secondary">Back to users</a>
+        <a asp-controller="Users" asp-action="Manage" class="btn ht-btn-secondary">@SharedLocalizer["Back to users"]</a>
     </div>
 
     <section class="ht-admin-table-card ht-card">
@@ -19,11 +19,11 @@
             <table class="ht-admin-table">
                 <thead>
                     <tr>
-                        <th>Habit</th>
-                        <th>Category</th>
-                        <th>Frequency</th>
-                        <th>Difficulty</th>
-                        <th>Status</th>
+                        <th>@SharedLocalizer["Habit"]</th>
+                        <th>@SharedLocalizer["Category"]</th>
+                        <th>@SharedLocalizer["Frequency"]</th>
+                        <th>@SharedLocalizer["Difficulty"]</th>
+                        <th>@SharedLocalizer["Status"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,17 +32,17 @@
                         foreach (var habit in Model)
                         {
                             <tr>
-                                <td data-label="Habit">@habit.Title</td>
-                                <td data-label="Category">@(habit.Category?.Name ?? "General")</td>
-                                <td data-label="Frequency">@habit.Frequency</td>
-                                <td data-label="Difficulty">@habit.Difficulty</td>
-                                <td data-label="Status">@habit.Status</td>
+                                <td data-label="@SharedLocalizer["Habit"]">@habit.Title</td>
+                                <td data-label="@SharedLocalizer["Category"]">@(habit.Category?.Name ?? SharedLocalizer["General"].Value)</td>
+                                <td data-label="@SharedLocalizer["Frequency"]">@SharedLocalizer[habit.Frequency.ToString()]</td>
+                                <td data-label="@SharedLocalizer["Difficulty"]">@SharedLocalizer[habit.Difficulty.ToString()]</td>
+                                <td data-label="@SharedLocalizer["Status"]">@SharedLocalizer[habit.Status.ToString()]</td>
                             </tr>
                         }
                     }
                     else
                     {
-                        <tr><td colspan="5" class="ht-table-empty">This user has no habits.</td></tr>
+                        <tr><td colspan="5" class="ht-table-empty">@SharedLocalizer["This user has no habits."]</td></tr>
                     }
                 </tbody>
             </table>

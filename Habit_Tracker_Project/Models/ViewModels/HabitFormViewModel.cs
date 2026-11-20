@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HabitTracker.Models.Enums;
+using Habit_Tracker_Project.Models.Enums;
 
 namespace Habit_Tracker_Project.Models.ViewModels
 {
@@ -37,10 +37,12 @@ namespace Habit_Tracker_Project.Models.ViewModels
 
         [DataType(DataType.Date)]
         [Display(Name = "Target date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateOnly? EndDate { get; set; }
 
         [DataType(DataType.Time)]
         [Display(Name = "Reminder time")]
+        [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
         public TimeOnly? ReminderTime { get; set; }
 
         public bool ReminderEnabled { get; set; } = true;

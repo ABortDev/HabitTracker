@@ -1,20 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HabitTracker.Data;
+using Habit_Tracker_Project.Data;
 using Habit_Tracker_Project.Enums;
 using System.Security.Claims;
+using Microsoft.Extensions.Localization;
 
-namespace HabitTracker.Controllers
+namespace Habit_Tracker_Project.Controllers
 {
     [Authorize]
     public class NotificationsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public NotificationsController(ApplicationDbContext context)
+        public NotificationsController(ApplicationDbContext context, IStringLocalizer<SharedResource> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         private string GetCurrentUserId() =>
@@ -56,7 +59,27 @@ namespace HabitTracker.Controllers
                 })
                 .ToListAsync();
 
-            return Json(new { unreadCount, items });
+            var localizedItems = items.Select(notification => new
+            {
+                notification.Id,
+                title = _localizer[notification.Title].Value,
+                message = LocalizeMessage(notification.Message),
+                notification.IsRead,
+                notification.createdAt
+            });
+
+            return Json(new { unreadCount, items = localizedItems });
+        }
+
+        private string LocalizeMessage(string message)
+        {
+            if (message.StartsWith("You completed ", StringComparison.Ordinal))
+            {
+                var habitTitle = message["You completed ".Length..].TrimEnd('.');
+                return _localizer["You completed {0}.", habitTitle].Value;
+            }
+
+            return _localizer[message].Value;
         }
 
         [HttpPost]

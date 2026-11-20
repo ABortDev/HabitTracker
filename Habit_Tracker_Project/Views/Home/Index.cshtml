@@ -1,10 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Welcome to Habit Tracker";
+    ViewData["Title"] = SharedLocalizer["Welcome to Habit Tracker"];
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,64 +16,67 @@
     <header class="ht-home-header">
         <a asp-controller="Home" asp-action="Index" class="ht-home-logo">Habit Tracker</a>
 
-        <nav class="ht-home-nav" aria-label="Main navigation">
+        <nav class="ht-home-nav" aria-label="@SharedLocalizer["Main navigation"]">
+            <form method="post" asp-controller="Home" asp-action="SetLanguage" class="ht-language-switcher ht-language-switcher-home">
+                <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                <button type="submit" name="culture" value="en" class="ht-language-button">EN</button>
+                <button type="submit" name="culture" value="uk" class="ht-language-button">UK</button>
+            </form>
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                <span class="ht-home-greeting">Hello, @User.Identity.Name!</span>
-                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-primary">Dashboard</a>
+                <span class="ht-home-greeting">@SharedLocalizer["Hello, {0}!", User.Identity.Name]</span>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-primary">@SharedLocalizer["Dashboard"]</a>
             }
             else
             {
-                <a asp-controller="Auth" asp-action="Login" class="ht-home-link">Log in</a>
-                <a asp-controller="Auth" asp-action="Register" class="btn ht-btn-primary">Sign up</a>
+                <a asp-controller="Auth" asp-action="Login" class="ht-home-link">@SharedLocalizer["Log in"]</a>
+                <a asp-controller="Auth" asp-action="Register" class="btn ht-btn-primary">@SharedLocalizer["Sign up"]</a>
             }
         </nav>
     </header>
 
     <main class="ht-home-main">
         <section class="ht-hero">
-            <span class="ht-eyebrow">Small steps. Real progress.</span>
-            <h1>Build better habits, one day at a time.</h1>
+            <span class="ht-eyebrow">@SharedLocalizer["Small steps. Real progress."]</span>
+            <h1>@SharedLocalizer["Build better habits, one day at a time."]</h1>
             <p>
-                Track your routines, stay motivated, and turn consistent actions into lasting progress.
+                @SharedLocalizer["Track your routines, stay motivated, and turn consistent actions into lasting progress."]
             </p>
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-primary ht-hero-button">Go to dashboard</a>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-primary ht-hero-button">@SharedLocalizer["Go to dashboard"]</a>
             }
             else
             {
-                <a asp-controller="Auth" asp-action="Login" class="btn ht-btn-primary ht-hero-button">Start your journey</a>
+                <a asp-controller="Auth" asp-action="Login" class="btn ht-btn-primary ht-hero-button">@SharedLocalizer["Start your journey"]</a>
             }
         </section>
 
         <section class="ht-home-info ht-card">
             <div>
-                <span class="ht-eyebrow">About Habit Tracker</span>
-                <h2>Make progress visible.</h2>
+                <span class="ht-eyebrow">@SharedLocalizer["About Habit Tracker"]</span>
+                <h2>@SharedLocalizer["Make progress visible."]</h2>
                 <p>
-                    Create personal routines, check in every day, and celebrate improvements that add up over time.
-                    Habit Tracker helps you stay accountable without making your goals feel overwhelming.
+                    @SharedLocalizer["Create personal routines, check in every day, and celebrate improvements that add up over time. Habit Tracker helps you stay accountable without making your goals feel overwhelming."]
                 </p>
             </div>
             <div class="ht-home-highlights">
                 <div class="ht-highlight ht-highlight-primary">
                     <strong>01</strong>
-                    <span>Plan routines that fit your life.</span>
+                    <span>@SharedLocalizer["Plan routines that fit your life."]</span>
                 </div>
                 <div class="ht-highlight ht-highlight-muted">
                     <strong>02</strong>
-                    <span>Track consistency and celebrate wins.</span>
+                    <span>@SharedLocalizer["Track consistency and celebrate wins."]</span>
                 </div>
             </div>
         </section>
 
         <section id="privacy" class="ht-privacy-section ht-card">
-            <span class="ht-eyebrow">Privacy</span>
-            <h2>Privacy policy</h2>
+            <span class="ht-eyebrow">@SharedLocalizer["Privacy"]</span>
+            <h2>@SharedLocalizer["Privacy policy"]</h2>
             <p>
-                Habit Tracker uses your account information and habit data only to provide the features of this application.
-                Your personal information is not displayed to other users, except where an administrator view explicitly requires it.
+                @SharedLocalizer["Habit Tracker uses your account information and habit data only to provide the features of this application. Your personal information is not displayed to other users, except where an administrator view explicitly requires it."]
             </p>
         </section>
     </main>
