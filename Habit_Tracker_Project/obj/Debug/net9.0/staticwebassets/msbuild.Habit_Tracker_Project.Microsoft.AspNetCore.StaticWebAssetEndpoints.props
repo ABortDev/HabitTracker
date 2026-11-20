@@ -28,13 +28,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Habit_Tracker_Project.xxohk2g9aw.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-hbQdpgHCdpRFgz9jUo9ee3kO0MK/YeA9fZxcnW8UhSc="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1139"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022hbQdpgHCdpRFgz9jUo9ee3kO0MK/YeA9fZxcnW8UhSc=\u0022"},{"Name":"Last-Modified","Value":"Wed, 04 Nov 2026 19:27:01 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1139"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022hbQdpgHCdpRFgz9jUo9ee3kO0MK/YeA9fZxcnW8UhSc=\u0022"},{"Name":"Last-Modified","Value":"Fri, 20 Nov 2026 11:25:29 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Habit_Tracker_Project/Habit_Tracker_Project.xxohk2g9aw.bundle.scp.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Habit_Tracker_Project.xxohk2g9aw.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"xxohk2g9aw"},{"Name":"integrity","Value":"sha256-hbQdpgHCdpRFgz9jUo9ee3kO0MK/YeA9fZxcnW8UhSc="},{"Name":"label","Value":"_content/Habit_Tracker_Project/Habit_Tracker_Project.bundle.scp.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1139"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022hbQdpgHCdpRFgz9jUo9ee3kO0MK/YeA9fZxcnW8UhSc=\u0022"},{"Name":"Last-Modified","Value":"Wed, 04 Nov 2026 19:27:01 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1139"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022hbQdpgHCdpRFgz9jUo9ee3kO0MK/YeA9fZxcnW8UhSc=\u0022"},{"Name":"Last-Modified","Value":"Fri, 20 Nov 2026 11:25:29 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Habit_Tracker_Project/js/site.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\site.js'))</AssetFile>

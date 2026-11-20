@@ -81,7 +81,6 @@ namespace Habit_Tracker_Project.Controllers
                 return View("Profile", model);
 
             user.FullName = model.FullName.Trim();
-            user.PhoneNumber = model.PhoneNumber.Trim();
             await _userManager.UpdateAsync(user);
 
             TempData["Success"] = "Profile updated successfully!";
