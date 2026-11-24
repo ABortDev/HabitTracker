@@ -10,17 +10,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="~/js/theme.js" asp-append-version="true"></script>
     <title>@ViewData["Title"] - Habit Tracker</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="ht-auth-page">
     <main class="ht-auth-shell">
-        <form method="post" asp-controller="Home" asp-action="SetLanguage" class="ht-language-switcher">
-            <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
-            <button type="submit" name="culture" value="en" class="btn btn-sm btn-outline-light">EN</button>
-            <button type="submit" name="culture" value="uk" class="btn btn-sm btn-outline-light">UK</button>
-        </form>
+        <partial name="_HeaderPreferences" />
         <section class="ht-auth-card ht-card">
             <a asp-controller="Home" asp-action="Index" class="ht-auth-brand">@SharedLocalizer["Habit Tracker"]</a>
             <h1 class="ht-auth-title">@SharedLocalizer["Welcome back"]</h1>

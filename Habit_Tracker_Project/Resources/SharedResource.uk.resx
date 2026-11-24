@@ -345,4 +345,6 @@
   <data name="You can only plan today or future dates."><value>Можна планувати лише сьогоднішні або майбутні дати.</value></data>
   <data name="This day already has progress and cannot be unplanned."><value>Цей день уже має прогрес, тому скасувати його планування неможливо.</value></data>
   <data name="Target date is required for one-time tasks."><value>Для одноразового завдання потрібно вказати цільову дату.</value></data>
+  <data name="Switch to dark theme"><value>Увімкнути темну тему</value></data>
+  <data name="Switch to light theme"><value>Увімкнути світлу тему</value></data>
 </root>

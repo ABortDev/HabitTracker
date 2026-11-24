@@ -1,0 +1,17 @@
+@using System.Globalization
+@model Habit
+
+<button type="button" class="ht-action-button ht-action-edit"
+        data-edit-habit
+        data-id="@Model.Id"
+        data-title="@Model.Title"
+        data-description="@(Model.Description ?? "")"
+        data-category-id="@Model.CategoryId"
+        data-frequency="@((int)Model.Frequency)"
+        data-end-date="@(Model.EndDate?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? "")"
+        data-difficulty="@((int)Model.Difficulty)"
+        data-target-value="@(Model.TargetValue?.ToString(CultureInfo.InvariantCulture) ?? "")"
+        data-unit="@(Model.Unit ?? "")"
+        data-reminder-time="@(Model.Reminders.FirstOrDefault()?.ReminderTime.ToString("HH:mm", CultureInfo.InvariantCulture) ?? "")">
+    @SharedLocalizer[LocalizationKeys.Common.Edit]
+</button>

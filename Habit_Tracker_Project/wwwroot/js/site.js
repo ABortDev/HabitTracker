@@ -162,3 +162,40 @@
         });
     }
 })();
+
+
+(function () {
+    const table = document.querySelector('[data-user-sort-table]');
+    if (!table) {
+        return;
+    }
+
+    const collator = new Intl.Collator(document.documentElement.lang, { sensitivity: 'base' });
+    const body = table.tBodies[0];
+
+    table.querySelectorAll('[data-sort-column]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const column = Number(button.dataset.sortColumn);
+            const header = button.closest('th');
+            const ascending = header.getAttribute('aria-sort') !== 'ascending';
+            const rows = Array.from(body.querySelectorAll('[data-user-row]'), function (row) {
+                const cell = row.cells[column];
+                const key = cell.dataset.sortValue === undefined
+                    ? cell.textContent.replace(/\s+/g, ' ').trim()
+                    : Number(cell.dataset.sortValue);
+                return { row, key };
+            });
+
+            rows.sort(function (a, b) {
+                const comparison = typeof a.key === 'number'
+                    ? a.key - b.key
+                    : collator.compare(a.key, b.key);
+                return ascending ? comparison : -comparison;
+            });
+
+            body.append(...rows.map(entry => entry.row));
+            table.querySelector('[aria-sort]')?.removeAttribute('aria-sort');
+            header.setAttribute('aria-sort', ascending ? 'ascending' : 'descending');
+        });
+    });
+})();

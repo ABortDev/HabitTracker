@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="~/js/theme.js" asp-append-version="true"></script>
     <title>@ViewData["Title"] - Habit_Tracker_Project</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -12,15 +13,15 @@
 <body>
     <div class="ht-page">
     <header>
-        <nav class="navbar navbar-expand-md ht-navbar">
+        <nav class="navbar navbar-expand-lg ht-navbar">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@SharedLocalizer["Habit Tracker"]</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="@SharedLocalizer["Toggle navigation"]">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@SharedLocalizer[LocalizationKeys.Navigation.Home]</a>
                         </li>
@@ -64,14 +65,10 @@
                             </li>
                         }
                     </ul>
-                    <form method="post" asp-controller="Home" asp-action="SetLanguage" class="ht-language-switcher">
-                        <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
-                        <button type="submit" name="culture" value="en" class="btn btn-sm btn-outline-light">EN</button>
-                        <button type="submit" name="culture" value="uk" class="btn btn-sm btn-outline-light">UK</button>
-                    </form>
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <div class="ht-navbar-actions">
+                    <div class="ht-navbar-actions">
+                        <partial name="_HeaderPreferences" />
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
                             <div class="ht-notification-menu" data-notification-menu>
                                 <button type="button" class="ht-notification-button" data-notification-toggle
                                          aria-label="@SharedLocalizer[LocalizationKeys.Navigation.Notifications]" aria-expanded="false" aria-controls="notificationPanel">
@@ -95,10 +92,10 @@
                                 </div>
                             </div>
                             <form method="post" asp-controller="Auth" asp-action="Logout" class="d-flex">
-                         <button type="submit" class="ht-logout-button">@SharedLocalizer[LocalizationKeys.Navigation.Logout]</button>
+                                <button type="submit" class="ht-logout-button">@SharedLocalizer[LocalizationKeys.Navigation.Logout]</button>
                             </form>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
         </nav>

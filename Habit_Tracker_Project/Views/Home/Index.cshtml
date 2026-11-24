@@ -8,6 +8,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="~/js/theme.js" asp-append-version="true"></script>
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -17,11 +18,7 @@
         <a asp-controller="Home" asp-action="Index" class="ht-home-logo">@SharedLocalizer["Habit Tracker"]</a>
 
         <nav class="ht-home-nav" aria-label="@SharedLocalizer["Main navigation"]">
-            <form method="post" asp-controller="Home" asp-action="SetLanguage" class="ht-language-switcher ht-language-switcher-home">
-                <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
-                <button type="submit" name="culture" value="en" class="ht-language-button">EN</button>
-                <button type="submit" name="culture" value="uk" class="ht-language-button">UK</button>
-            </form>
+            <partial name="_HeaderPreferences" />
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 <span class="ht-home-greeting">@SharedLocalizer["Hello, {0}!", User.Identity.Name]</span>

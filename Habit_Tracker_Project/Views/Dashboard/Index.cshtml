@@ -111,10 +111,7 @@
                                 </div>
                             </div>
                             <div class="ht-habit-actions">
-                             <button type="button" class="ht-action-button ht-action-edit"
-                                    onclick="openEditModal(@habit.Id, '@Html.Raw(habit.Title.Replace("'", "\\'"))', '@Html.Raw((habit.Description ?? "").Replace("'", "\\'"))', @habit.CategoryId, '@((int)habit.Frequency)', '@(habit.EndDate?.ToString("yyyy-MM-dd") ?? "")', '@habit.Difficulty', '@(habit.TargetValue?.ToString("0.##", CultureInfo.InvariantCulture) ?? "")', '@Html.Raw((habit.Unit ?? "").Replace("'", "\\'"))', '@(habit.Reminders.FirstOrDefault()?.ReminderTime.ToString("HH:mm") ?? "")', '@((habit.Reminders.FirstOrDefault()?.IsEnabled ?? true) ? "1" : "0")')">
-                                 @SharedLocalizer[LocalizationKeys.Common.Edit]
-                            </button>
+                                <partial name="_EditHabitButton" model="habit" />
                                 <form method="post" asp-controller="Dashboard" asp-action="DeleteHabit" asp-route-id="@habit.Id" class="ht-inline-form" onsubmit="return confirm('@SharedLocalizer["Are you sure?"]');">
                                      <button type="submit" class="ht-action-button ht-action-delete">@SharedLocalizer[LocalizationKeys.Common.Delete]</button>
                                 </form>
@@ -191,10 +188,7 @@
                                 </div>
                             </div>
                             <div class="ht-habit-actions">
-                            <button type="button" class="ht-action-button ht-action-edit"
-                                    onclick="openEditModal(@todo.Id, '@Html.Raw(todo.Title.Replace("'", "\\'"))', '@Html.Raw((todo.Description ?? "").Replace("'", "\\'"))', @todo.CategoryId, '@((int)todo.Frequency)', '@(todo.EndDate?.ToString("yyyy-MM-dd") ?? "")', '@todo.Difficulty', '@(todo.TargetValue?.ToString("0.##", CultureInfo.InvariantCulture) ?? "")', '@Html.Raw((todo.Unit ?? "").Replace("'", "\\'"))', '@(todo.Reminders.FirstOrDefault()?.ReminderTime.ToString("HH:mm") ?? "")', '@((todo.Reminders.FirstOrDefault()?.IsEnabled ?? true) ? "1" : "0")')">
-                                 @SharedLocalizer[LocalizationKeys.Common.Edit]
-                            </button>
+                                <partial name="_EditHabitButton" model="todo" />
                                  <form method="post" asp-controller="Dashboard" asp-action="DeleteHabit" asp-route-id="@todo.Id" class="ht-inline-form" onsubmit="return confirm('@SharedLocalizer["Are you sure?"]');">
                                      <button type="submit" class="ht-action-button ht-action-delete">@SharedLocalizer[LocalizationKeys.Common.Delete]</button>
                                 </form>
@@ -447,14 +441,21 @@
                 document.getElementById('addModal').style.display = 'flex';
             }
 
-            function openEditModal(id, title, description, categoryId, frequency, endDate, difficulty, targetValue, unit, reminderTime, reminderEnabled) {
+            document.querySelectorAll('[data-edit-habit]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    openEditModal(button.dataset);
+                });
+            });
+
+            function openEditModal({ id, title, description = '', categoryId, frequency, endDate = '',
+                                     difficulty, targetValue = '', unit = '', reminderTime = '' }) {
                 document.getElementById('editId').value = id;
                 document.getElementById('editTitle').value = title;
                 document.getElementById('editDescription').value = description;
                 document.getElementById('editCategoryId').value = categoryId;
                 document.getElementById('editFrequency').value = frequency;
                 document.getElementById('editEndDate').value = endDate;
-                document.getElementById('editDifficulty').value = difficulty === 'Easy' ? '0' : difficulty === 'Hard' ? '2' : '1';
+                document.getElementById('editDifficulty').value = difficulty;
 
                 var isQuantity = targetValue !== '';
                 document.getElementById('editTaskType').value = isQuantity ? 'quantity' : 'simple';

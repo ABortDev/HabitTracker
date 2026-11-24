@@ -1,10 +1,19 @@
 ﻿@model List<Habit_Tracker_Project.Models.User>
 @{
     ViewData["Title"] = SharedLocalizer["Admin Panel"];
+    var columns = new[]
+    {
+        LocalizationKeys.Auth.FullName,
+        LocalizationKeys.Auth.Email,
+        "Points",
+        "Status",
+        "Role",
+        "Actions"
+    };
     var moderatorIds = ViewBag.ModeratorIds as HashSet<string> ?? new HashSet<string>();
 }
 
-<div class="ht-admin-page">
+<div class="ht-admin-page ht-user-management">
     <div class="ht-page-heading">
         <div>
             <span class="ht-eyebrow">@SharedLocalizer["Administration"]</span>
@@ -58,15 +67,17 @@
             </div>
         </form>
         <div class="ht-table-wrapper">
-            <table class="ht-admin-table">
+            <table class="ht-admin-table" data-user-sort-table>
                 <thead>
                     <tr>
-                        <th>@SharedLocalizer[LocalizationKeys.Auth.FullName]</th>
-                        <th>@SharedLocalizer[LocalizationKeys.Auth.Email]</th>
-                        <th>@SharedLocalizer["Points"]</th>
-                        <th>@SharedLocalizer["Status"]</th>
-                        <th>@SharedLocalizer["Role"]</th>
-                        <th>@SharedLocalizer["Actions"]</th>
+                        @for (var i = 0; i < columns.Length; i++)
+                        {
+                            <th scope="col">
+                                <button type="button" class="ht-table-sort" data-sort-column="@i">
+                                    @SharedLocalizer[columns[i]]<span class="ht-table-sort-arrow" aria-hidden="true"></span>
+                                </button>
+                            </th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -74,14 +85,14 @@
                     {
                         foreach (var user in Model)
                         {
-                            <tr>
+                            <tr data-user-row>
                                 <td data-label="@SharedLocalizer[LocalizationKeys.Auth.FullName]">
                                     <a asp-controller="Users" asp-action="Habits" asp-route-id="@user.Id">
                                         @(string.IsNullOrWhiteSpace(user.FullName) ? user.Email : user.FullName)
                                     </a>
                                 </td>
                                 <td data-label="@SharedLocalizer[LocalizationKeys.Auth.Email]">@user.Email</td>
-                                <td data-label="@SharedLocalizer["Points"]">@user.TotalPoints</td>
+                                <td data-sort-value="@user.TotalPoints" data-label="@SharedLocalizer["Points"]">@user.TotalPoints</td>
                                 <td data-label="@SharedLocalizer["Status"]">
                                     @if (user.IsBlocked)
                                     {
@@ -94,22 +105,24 @@
                                 </td>
                                 <td data-label="@SharedLocalizer["Role"]">@(moderatorIds.Contains(user.Id) ? SharedLocalizer["Moderator"] : SharedLocalizer["User"])</td>
                                 <td data-label="@SharedLocalizer["Actions"]">
-                                    <form method="post" asp-controller="Users" asp-action="SetModerator" class="ht-inline-form">
-                                        <input type="hidden" name="userId" value="@user.Id" />
-                                        <button type="submit" class="btn ht-btn-moderator btn-sm">
-                                            @(moderatorIds.Contains(user.Id) ? SharedLocalizer["Remove moderator"] : SharedLocalizer["Make moderator"])
-                                        </button>
-                                    </form>
-                                    <form method="post" asp-controller="Users" asp-action="ToggleBlock" asp-route-userId="@user.Id" class="ht-inline-form">
-                                        @if (user.IsBlocked)
-                                        {
-                                            <button type="submit" class="btn ht-btn-primary btn-sm">@SharedLocalizer["Unblock"]</button>
-                                        }
-                                        else
-                                        {
-                                            <button type="submit" class="btn ht-btn-danger btn-sm">@SharedLocalizer["Block"]</button>
-                                        }
-                                    </form>
+                                    <div class="ht-user-actions">
+                                        <form method="post" asp-controller="Users" asp-action="SetModerator">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <button type="submit" class="btn ht-btn-moderator btn-sm">
+                                                @(moderatorIds.Contains(user.Id) ? SharedLocalizer["Remove moderator"] : SharedLocalizer["Make moderator"])
+                                            </button>
+                                        </form>
+                                        <form method="post" asp-controller="Users" asp-action="ToggleBlock" asp-route-userId="@user.Id">
+                                            @if (user.IsBlocked)
+                                            {
+                                                <button type="submit" class="btn ht-btn-primary btn-sm">@SharedLocalizer["Unblock"]</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit" class="btn ht-btn-danger btn-sm">@SharedLocalizer["Block"]</button>
+                                            }
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         }

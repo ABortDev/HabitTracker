@@ -346,4 +346,6 @@
   <data name="You can only plan today or future dates."><value>You can only plan today or future dates.</value></data>
   <data name="This day already has progress and cannot be unplanned."><value>This day already has progress and cannot be unplanned.</value></data>
   <data name="Target date is required for one-time tasks."><value>Target date is required for one-time tasks.</value></data>
+  <data name="Switch to dark theme"><value>Switch to dark theme</value></data>
+  <data name="Switch to light theme"><value>Switch to light theme</value></data>
 </root>
