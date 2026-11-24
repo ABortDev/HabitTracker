@@ -53,16 +53,16 @@
                 </select>
             </div>
             <div class="ht-filter-actions">
-                <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Search"]</button>
-                <a asp-controller="Users" asp-action="Manage" class="btn ht-btn-secondary">@SharedLocalizer["Reset"]</a>
+                <button type="submit" class="btn ht-btn-primary">@SharedLocalizer[LocalizationKeys.Common.Search]</button>
+                <a asp-controller="Users" asp-action="Manage" class="btn ht-btn-secondary">@SharedLocalizer[LocalizationKeys.Common.Reset]</a>
             </div>
         </form>
         <div class="ht-table-wrapper">
             <table class="ht-admin-table">
                 <thead>
                     <tr>
-                        <th>@SharedLocalizer["Full name"]</th>
-                        <th>@SharedLocalizer["Email"]</th>
+                        <th>@SharedLocalizer[LocalizationKeys.Auth.FullName]</th>
+                        <th>@SharedLocalizer[LocalizationKeys.Auth.Email]</th>
                         <th>@SharedLocalizer["Points"]</th>
                         <th>@SharedLocalizer["Status"]</th>
                         <th>@SharedLocalizer["Role"]</th>
@@ -75,12 +75,12 @@
                         foreach (var user in Model)
                         {
                             <tr>
-                                <td data-label="@SharedLocalizer["Full name"]">
+                                <td data-label="@SharedLocalizer[LocalizationKeys.Auth.FullName]">
                                     <a asp-controller="Users" asp-action="Habits" asp-route-id="@user.Id">
                                         @(string.IsNullOrWhiteSpace(user.FullName) ? user.Email : user.FullName)
                                     </a>
                                 </td>
-                                <td data-label="@SharedLocalizer["Email"]">@user.Email</td>
+                                <td data-label="@SharedLocalizer[LocalizationKeys.Auth.Email]">@user.Email</td>
                                 <td data-label="@SharedLocalizer["Points"]">@user.TotalPoints</td>
                                 <td data-label="@SharedLocalizer["Status"]">
                                     @if (user.IsBlocked)
@@ -96,7 +96,7 @@
                                 <td data-label="@SharedLocalizer["Actions"]">
                                     <form method="post" asp-controller="Users" asp-action="SetModerator" class="ht-inline-form">
                                         <input type="hidden" name="userId" value="@user.Id" />
-                                        <button type="submit" class="btn ht-btn-secondary btn-sm">
+                                        <button type="submit" class="btn ht-btn-moderator btn-sm">
                                             @(moderatorIds.Contains(user.Id) ? SharedLocalizer["Remove moderator"] : SharedLocalizer["Make moderator"])
                                         </button>
                                     </form>

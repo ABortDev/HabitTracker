@@ -1,13 +1,13 @@
 ﻿@model List<Habit_Tracker_Project.Models.Notification>
 @{
-    ViewData["Title"] = SharedLocalizer["Notifications"];
+    ViewData["Title"] = SharedLocalizer[LocalizationKeys.Navigation.Notifications];
 }
 
 <div class="ht-content-narrow">
     <div class="ht-page-heading">
         <div>
             <span class="ht-eyebrow">@SharedLocalizer["Stay up to date"]</span>
-            <h1>@SharedLocalizer["Notifications"]</h1>
+            <h1>@SharedLocalizer[LocalizationKeys.Navigation.Notifications]</h1>
         </div>
         <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
     </div>

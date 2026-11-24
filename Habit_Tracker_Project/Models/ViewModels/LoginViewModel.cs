@@ -4,18 +4,18 @@ namespace Habit_Tracker_Project.Models.ViewModels
 {
     public class LoginViewModel
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
+        [EmailAddress(ErrorMessage = LocalizationKeys.Validation.InvalidEmail)]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email")]
+        [Display(Name = LocalizationKeys.Auth.Email)]
         public string Email { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = LocalizationKeys.Auth.Password)]
         public string Password { get; set; } = string.Empty;
 
-        [Display(Name = "Remember me")]
+        [Display(Name = LocalizationKeys.Auth.RememberMe)]
         public bool RememberMe { get; set; }
     }
 }

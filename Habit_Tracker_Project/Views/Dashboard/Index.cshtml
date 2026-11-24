@@ -2,7 +2,7 @@
 @using Habit_Tracker_Project.Models.Enums
 @using System.Globalization
 @{
-    ViewData["Title"] = SharedLocalizer["Dashboard"];
+    ViewData["Title"] = SharedLocalizer[LocalizationKeys.Navigation.Dashboard];
     Layout = "_Layout";
     var today = DateOnly.FromDateTime(DateTime.Today);
     var todayUtc = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -77,8 +77,8 @@
                 </select>
             </div>
             <div class="ht-filter-actions">
-                <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Search"]</button>
-                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Reset"]</a>
+                <button type="submit" class="btn ht-btn-primary">@SharedLocalizer[LocalizationKeys.Common.Search]</button>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer[LocalizationKeys.Common.Reset]</a>
             </div>
         </form>
 
@@ -113,10 +113,10 @@
                             <div class="ht-habit-actions">
                              <button type="button" class="ht-action-button ht-action-edit"
                                     onclick="openEditModal(@habit.Id, '@Html.Raw(habit.Title.Replace("'", "\\'"))', '@Html.Raw((habit.Description ?? "").Replace("'", "\\'"))', @habit.CategoryId, '@((int)habit.Frequency)', '@(habit.EndDate?.ToString("yyyy-MM-dd") ?? "")', '@habit.Difficulty', '@(habit.TargetValue?.ToString("0.##", CultureInfo.InvariantCulture) ?? "")', '@Html.Raw((habit.Unit ?? "").Replace("'", "\\'"))', '@(habit.Reminders.FirstOrDefault()?.ReminderTime.ToString("HH:mm") ?? "")', '@((habit.Reminders.FirstOrDefault()?.IsEnabled ?? true) ? "1" : "0")')">
-                                 @SharedLocalizer["Edit"]
+                                 @SharedLocalizer[LocalizationKeys.Common.Edit]
                             </button>
                                 <form method="post" asp-controller="Dashboard" asp-action="DeleteHabit" asp-route-id="@habit.Id" class="ht-inline-form" onsubmit="return confirm('@SharedLocalizer["Are you sure?"]');">
-                                     <button type="submit" class="ht-action-button ht-action-delete">@SharedLocalizer["Delete"]</button>
+                                     <button type="submit" class="ht-action-button ht-action-delete">@SharedLocalizer[LocalizationKeys.Common.Delete]</button>
                                 </form>
                                 <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@habit.Id" class="ht-inline-form">
                                     <div class="ht-complete-stack">
@@ -182,7 +182,7 @@
                                     <span class="ht-difficulty-badge @DifficultyClass(todo.Difficulty)">@DifficultyLabel(todo.Difficulty) · @DifficultyPoints(todo.Difficulty) @SharedLocalizer["pts"]</span>
                                     @if (todo.EndDate.HasValue)
                                     {
-                                        <span class="ht-deadline-badge">@todoDeadlineText · @todo.EndDate.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</span>
+                                        <span class="ht-deadline-badge">@todoDeadlineText · @todo.EndDate.Value.ToString("MMM dd, yyyy")</span>
                                     }
                                     @if (todo.Reminders != null && todo.Reminders.Any())
                                     {
@@ -193,10 +193,10 @@
                             <div class="ht-habit-actions">
                             <button type="button" class="ht-action-button ht-action-edit"
                                     onclick="openEditModal(@todo.Id, '@Html.Raw(todo.Title.Replace("'", "\\'"))', '@Html.Raw((todo.Description ?? "").Replace("'", "\\'"))', @todo.CategoryId, '@((int)todo.Frequency)', '@(todo.EndDate?.ToString("yyyy-MM-dd") ?? "")', '@todo.Difficulty', '@(todo.TargetValue?.ToString("0.##", CultureInfo.InvariantCulture) ?? "")', '@Html.Raw((todo.Unit ?? "").Replace("'", "\\'"))', '@(todo.Reminders.FirstOrDefault()?.ReminderTime.ToString("HH:mm") ?? "")', '@((todo.Reminders.FirstOrDefault()?.IsEnabled ?? true) ? "1" : "0")')">
-                                 @SharedLocalizer["Edit"]
+                                 @SharedLocalizer[LocalizationKeys.Common.Edit]
                             </button>
                                  <form method="post" asp-controller="Dashboard" asp-action="DeleteHabit" asp-route-id="@todo.Id" class="ht-inline-form" onsubmit="return confirm('@SharedLocalizer["Are you sure?"]');">
-                                     <button type="submit" class="ht-action-button ht-action-delete">@SharedLocalizer["Delete"]</button>
+                                     <button type="submit" class="ht-action-button ht-action-delete">@SharedLocalizer[LocalizationKeys.Common.Delete]</button>
                                 </form>
                                 <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@todo.Id" class="ht-inline-form">
                                     @if (todo.TargetValue is > 0)
@@ -315,7 +315,7 @@
                 </div>
                 <small class="ht-field-hint">@SharedLocalizer["Leave the reminder time empty if you don't need a reminder."]</small>
                 <div class="ht-modal-actions">
-                    <button type="button" class="btn ht-btn-secondary" onclick="closeModals()">@SharedLocalizer["Cancel"]</button>
+                    <button type="button" class="btn ht-btn-secondary" onclick="closeModals()">@SharedLocalizer[LocalizationKeys.Common.Cancel]</button>
                     <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Save habit"]</button>
                 </div>
             </form>
@@ -396,7 +396,7 @@
                 </div>
                 <small class="ht-field-hint">@SharedLocalizer["Leave the reminder time empty to remove the reminder."]</small>
                 <div class="ht-modal-actions">
-                    <button type="button" class="btn ht-btn-secondary" onclick="closeModals()">@SharedLocalizer["Cancel"]</button>
+                    <button type="button" class="btn ht-btn-secondary" onclick="closeModals()">@SharedLocalizer[LocalizationKeys.Common.Cancel]</button>
                     <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Update habit"]</button>
                 </div>
             </form>

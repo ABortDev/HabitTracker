@@ -1,0 +1,81 @@
+﻿@model Habit_Tracker_Project.Models.ViewModels.ProfileViewModel
+@using System.Linq
+@{
+    ViewData["Title"] = SharedLocalizer["My profile"];
+    var nameForInitials = string.IsNullOrWhiteSpace(Model.FullName) ? Model.Email ?? "?" : Model.FullName;
+    var initials = string.Join("", nameForInitials
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .Take(2)
+        .Select(part => char.ToUpperInvariant(part[0])));
+}
+
+<div class="ht-content-narrow">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">@SharedLocalizer["Account settings"]</span>
+            <h1>@SharedLocalizer["My profile"]</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="ht-alert ht-alert-success" role="status">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="ht-alert ht-alert-error" role="alert">@TempData["Error"]</div>
+    }
+
+    <section class="ht-profile-card ht-card">
+        <div class="ht-profile-heading">
+            <div class="ht-profile-avatar" aria-hidden="true">@initials</div>
+            <div>
+                <h2>@(string.IsNullOrWhiteSpace(Model.FullName) ? SharedLocalizer["Your profile"] : Model.FullName)</h2>
+                <p>@Model.Email</p>
+            </div>
+        </div>
+
+        <form method="post" asp-controller="Users" asp-action="UpdateProfile" class="ht-profile-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="ht-form-group">
+                <label asp-for="FullName" class="ht-form-label"></label>
+                <input asp-for="FullName" class="form-control ht-form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn ht-btn-primary ht-profile-submit">@SharedLocalizer["Save changes"]</button>
+        </form>
+
+        <section class="ht-telegram-card" aria-labelledby="telegram-heading">
+            <div>
+                <span class="ht-eyebrow">@SharedLocalizer["Telegram reminders"]</span>
+                <h2 id="telegram-heading">@SharedLocalizer["Telegram reminders"]</h2>
+                <p class="ht-help-text">@SharedLocalizer["Open the bot using the link below or send"] <strong>/start</strong> @SharedLocalizer["and this code in Telegram. The code is valid for 10 minutes."]</p>
+            </div>
+            <p class="ht-telegram-status" data-telegram-status role="status">
+                @(Model.TelegramChatId.HasValue ? SharedLocalizer["Connected"] : SharedLocalizer["Not connected"])
+            </p>
+            <button type="button" class="btn ht-btn-primary" data-connect-telegram>
+                @(Model.TelegramChatId.HasValue ? SharedLocalizer["Reconnect"] : SharedLocalizer["Connect Telegram"])
+            </button>
+            <div class="ht-telegram-result" data-telegram-result hidden>
+                 <p>@SharedLocalizer["Code:"] <strong data-telegram-code></strong></p>
+                 <a data-telegram-link href="#" target="_blank" rel="noopener noreferrer">@SharedLocalizer["Open Telegram bot"]</a>
+            </div>
+        </section>
+
+        <dl class="ht-profile-details">
+             <div><dt>@SharedLocalizer["Registered"]</dt><dd>@Model.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</dd></div>
+        <div><dt>@SharedLocalizer["Role"]</dt><dd>@(Model.Role is null ? "" : SharedLocalizer[Model.Role])</dd></div>
+             <div><dt>@SharedLocalizer["Total points"]</dt><dd>@Model.TotalPoints</dd></div>
+            <div>
+                 <dt>@SharedLocalizer["Account status"]</dt>
+                 <dd>@(Model.IsBlocked ? SharedLocalizer["Blocked"] : SharedLocalizer["Active"])</dd>
+            </div>
+        </dl>
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -131,18 +131,18 @@
         telegramButton.addEventListener('click', async () => {
             const telegramWindow = window.open('', '_blank');
             telegramButton.disabled = true;
-            telegramButton.textContent = 'Connecting...';
+            telegramButton.textContent = telegramButton.dataset.connectingText || 'Connecting...';
             try {
                 const response = await fetch('/Users/ConnectTelegram', {
                     method: 'POST',
                     headers: { Accept: 'application/json' },
                     credentials: 'same-origin'
                 });
-                if (!response.ok) throw new Error('Unable to connect Telegram.');
+                if (!response.ok) throw new Error(telegramButton.dataset.connectError || 'Unable to connect Telegram.');
                 const data = await response.json();
                 const botUrl = new URL(data.botUrl || '', window.location.origin);
                 if (botUrl.protocol !== 'https:' || botUrl.hostname !== 't.me') {
-                    throw new Error('Invalid Telegram bot URL.');
+                    throw new Error(telegramButton.dataset.invalidUrl || 'Invalid Telegram bot URL.');
                 }
 
                 code.textContent = data.code || '';
@@ -150,11 +150,11 @@
                 link.textContent = botUrl.href;
                 link.hidden = false;
                 result.hidden = false;
-                status.textContent = 'Connection pending';
+                status.textContent = status.dataset.pendingText || 'Connection pending';
                 if (telegramWindow) telegramWindow.location.href = botUrl.href;
             } catch {
                 if (telegramWindow) telegramWindow.close();
-                status.textContent = 'Could not generate a Telegram code. Please try again.';
+                status.textContent = telegramButton.dataset.generationError || 'Could not generate a Telegram code. Please try again.';
             } finally {
                 telegramButton.disabled = false;
                 telegramButton.textContent = buttonLabel;

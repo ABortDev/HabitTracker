@@ -43,11 +43,6 @@
                 <input asp-for="FullName" class="form-control ht-form-control" />
                 <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
-            <div class="ht-form-group">
-                <label asp-for="PhoneNumber" class="ht-form-label"></label>
-                <input asp-for="PhoneNumber" class="form-control ht-form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
             <button type="submit" class="btn ht-btn-primary ht-profile-submit">@SharedLocalizer["Save changes"]</button>
         </form>
 
@@ -57,10 +52,16 @@
                 <h2 id="telegram-heading">@SharedLocalizer["Telegram reminders"]</h2>
                 <p class="ht-help-text">@SharedLocalizer["Open the bot using the link below or send"] <strong>/start</strong> @SharedLocalizer["and this code in Telegram. The code is valid for 10 minutes."]</p>
             </div>
-            <p class="ht-telegram-status" data-telegram-status role="status">
+            <p class="ht-telegram-status" data-telegram-status role="status"
+               data-connected-text="@SharedLocalizer["Connected"]"
+               data-pending-text="@SharedLocalizer["Connection pending"]">
                 @(Model.TelegramChatId.HasValue ? SharedLocalizer["Connected"] : SharedLocalizer["Not connected"])
             </p>
-            <button type="button" class="btn ht-btn-primary" data-connect-telegram>
+            <button type="button" class="btn ht-btn-primary" data-connect-telegram
+                    data-connecting-text="@SharedLocalizer["Connecting..."]"
+                    data-connect-error="@SharedLocalizer["Unable to connect Telegram."]"
+                    data-invalid-url="@SharedLocalizer["Invalid Telegram bot URL."]"
+                    data-generation-error="@SharedLocalizer["Could not generate a Telegram code. Please try again."]">
                 @(Model.TelegramChatId.HasValue ? SharedLocalizer["Reconnect"] : SharedLocalizer["Connect Telegram"])
             </button>
             <div class="ht-telegram-result" data-telegram-result hidden>
@@ -71,7 +72,7 @@
 
         <dl class="ht-profile-details">
              <div><dt>@SharedLocalizer["Registered"]</dt><dd>@Model.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</dd></div>
-             <div><dt>@SharedLocalizer["Role"]</dt><dd>@Model.Role</dd></div>
+        <div><dt>@SharedLocalizer["Role"]</dt><dd>@(Model.Role is null ? "" : SharedLocalizer[Model.Role])</dd></div>
              <div><dt>@SharedLocalizer["Total points"]</dt><dd>@Model.TotalPoints</dd></div>
             <div>
                  <dt>@SharedLocalizer["Account status"]</dt>

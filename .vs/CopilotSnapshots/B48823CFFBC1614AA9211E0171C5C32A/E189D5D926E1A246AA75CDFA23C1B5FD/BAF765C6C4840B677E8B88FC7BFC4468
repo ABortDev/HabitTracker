@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Habit_Tracker_Project</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Habit_Tracker_Project.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="ht-page">
+    <header>
+        <nav class="navbar navbar-expand-md ht-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@SharedLocalizer["Habit Tracker"]</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="@SharedLocalizer["Toggle navigation"]">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@SharedLocalizer[LocalizationKeys.Navigation.Home]</a>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Dashboard" asp-action="Index">@SharedLocalizer[LocalizationKeys.Navigation.Dashboard]</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Achievements" asp-action="Index">@SharedLocalizer["Achievements"]</a>
+                            </li>
+                            <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Statistics" asp-action="Index">@SharedLocalizer["Statistics"]</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Users" asp-action="Profile">@SharedLocalizer[LocalizationKeys.Navigation.Profile]</a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger-ht" asp-controller="Users" asp-action="Manage">@SharedLocalizer["Admin Panel"]</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Moderator"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Chat" asp-action="Inbox">@SharedLocalizer["Moderator inbox"]</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("User") && !User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Chat" asp-action="Index">@SharedLocalizer["Help"]</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="privacy">@SharedLocalizer["Privacy"]</a>
+                            </li>
+                        }
+                    </ul>
+                    <form method="post" asp-controller="Home" asp-action="SetLanguage" class="ht-language-switcher">
+                        <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                        <button type="submit" name="culture" value="en" class="btn btn-sm btn-outline-light">EN</button>
+                        <button type="submit" name="culture" value="uk" class="btn btn-sm btn-outline-light">UK</button>
+                    </form>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="ht-navbar-actions">
+                            <div class="ht-notification-menu" data-notification-menu>
+                                <button type="button" class="ht-notification-button" data-notification-toggle
+                                         aria-label="@SharedLocalizer[LocalizationKeys.Navigation.Notifications]" aria-expanded="false" aria-controls="notificationPanel">
+                                    <svg class="ht-notification-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
+                                    </svg>
+                                    <span class="ht-notification-badge" data-notification-badge hidden></span>
+                                </button>
+                                <div id="notificationPanel" class="ht-notification-panel" data-notification-panel hidden>
+                                    <div class="ht-notification-panel-heading">
+                                         <strong>@SharedLocalizer[LocalizationKeys.Navigation.Notifications]</strong>
+                                        <span data-notification-count></span>
+                                    </div>
+                                    <div class="ht-notification-feed" data-notification-feed
+                                         data-empty-text='@SharedLocalizer["You have no notifications."]'
+                                         data-new-notification='@SharedLocalizer["New notification"]'
+                                         data-unread-suffix='@SharedLocalizer["unread"]'>
+                                         <p class="ht-notification-empty">@SharedLocalizer["Loading notifications..."]</p>
+                                    </div>
+                                    <a class="ht-notification-all" asp-controller="Notifications" asp-action="Index">@SharedLocalizer["View all notifications"]</a>
+                                </div>
+                            </div>
+                            <form method="post" asp-controller="Auth" asp-action="Logout" class="d-flex">
+                         <button type="submit" class="ht-logout-button">@SharedLocalizer[LocalizationKeys.Navigation.Logout]</button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="ht-main">
+            @RenderBody()
+    </main>
+
+    <footer class="ht-footer">
+        <div class="container-fluid">
+             &copy; 2026 - Habit Tracker - <a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="privacy">@SharedLocalizer["Privacy"]</a>
+        </div>
+    </footer>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

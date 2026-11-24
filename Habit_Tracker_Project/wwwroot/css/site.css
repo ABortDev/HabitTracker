@@ -824,8 +824,29 @@
   color: #fff;
 }
 
+.ht-btn-moderator {
+  background: #6879a8;
+  border: 1px solid #6879a8;
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ht-btn-moderator:hover,
+.ht-btn-moderator:focus {
+  background: #53648f;
+  border-color: #53648f;
+  color: #fff;
+}
+
 .ht-admin-table-card {
   overflow: hidden;
+}
+
+.ht-admin-table th:last-child,
+.ht-admin-table td:last-child {
+  min-width: 22rem;
+  white-space: nowrap;
 }
 
 .ht-table-wrapper {

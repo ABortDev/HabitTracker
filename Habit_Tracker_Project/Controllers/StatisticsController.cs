@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 namespace Habit_Tracker_Project.Controllers
 {
@@ -12,10 +14,12 @@ namespace Habit_Tracker_Project.Controllers
     public class StatisticsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public StatisticsController(ApplicationDbContext context)
+        public StatisticsController(ApplicationDbContext context, IStringLocalizer<SharedResource> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         private string GetCurrentUserId()
@@ -68,9 +72,11 @@ namespace Habit_Tracker_Project.Controllers
                 points = weekChart.Sum(),
                 completions = CompletionsBetween(weekStart, weekStart.AddDays(6)),
                 streak,
-                label = "This week",
+                label = _localizer["This week"].Value,
                 chart = weekChart,
-                labels = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" }
+                labels = Enumerable.Range(0, 7)
+                    .Select(i => weekStart.AddDays(i).ToString("ddd", CultureInfo.CurrentCulture))
+                    .ToArray()
             };
 
             var monthStart = new DateOnly(today.Year, today.Month, 1);
@@ -94,7 +100,7 @@ namespace Habit_Tracker_Project.Controllers
                 points = PointsBetween(monthStart, monthEnd),
                 completions = CompletionsBetween(monthStart, monthEnd),
                 streak,
-                label = "This month",
+                label = _localizer["This month"].Value,
                 chart = monthChart,
                 labels = monthRanges.Select(r => $"{r.From.Day}-{r.To.Day}").ToArray()
             };
@@ -115,9 +121,11 @@ namespace Habit_Tracker_Project.Controllers
                 points = PointsBetween(yearStart, yearEnd),
                 completions = CompletionsBetween(yearStart, yearEnd),
                 streak,
-                label = "This year",
+                label = _localizer["This year"].Value,
                 chart = yearChart,
-                labels = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
+                labels = Enumerable.Range(1, 12)
+                    .Select(m => new DateOnly(today.Year, m, 1).ToString("MMM", CultureInfo.CurrentCulture))
+                    .ToArray()
             };
 
             ViewBag.StatisticsJson = JsonSerializer.Serialize(new { week, month, year });

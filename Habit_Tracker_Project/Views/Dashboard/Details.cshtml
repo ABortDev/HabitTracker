@@ -21,7 +21,7 @@
         HabitFrequency.Daily => SharedLocalizer["Every day"].Value,
         HabitFrequency.Weekly => string.Format(SharedLocalizer["Every week on {0}"].Value, SharedLocalizer[Model.CreatedAt.DayOfWeek.ToString()].Value),
         HabitFrequency.Monthly => string.Format(SharedLocalizer["Every month on day {0}"].Value, Model.CreatedAt.Day),
-        HabitFrequency.Yearly => string.Format(SharedLocalizer["Every year on {0}"].Value, Model.CreatedAt.ToString("MMMM d", CultureInfo.InvariantCulture)),
+        HabitFrequency.Yearly => string.Format(SharedLocalizer["Every year on {0}"].Value, Model.CreatedAt.ToString("MMMM d")),
         _ => Model.Frequency.ToString()
     };
 }
@@ -59,16 +59,16 @@
             </div>
 
             <ul class="list-unstyled mt-3">
-                <li><strong>@SharedLocalizer["Created"]:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                <li><strong>@SharedLocalizer["Created"]:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy")</li>
                 <li><strong>@SharedLocalizer["Reminder"]:</strong> @(reminder != null ? reminder.ReminderTime.ToString("HH:mm") : SharedLocalizer["not set"])</li>
                 @if (Model.EndDate.HasValue)
                 {
-                    <li><strong>@(Model.Frequency == HabitFrequency.Onetime ? SharedLocalizer["Due date"] : SharedLocalizer["Ends"]):</strong> @Model.EndDate.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                    <li><strong>@(Model.Frequency == HabitFrequency.Onetime ? SharedLocalizer["Due date"] : SharedLocalizer["Ends"]):</strong> @Model.EndDate.Value.ToString("MMM dd, yyyy")</li>
                 }
                 <li><strong>@SharedLocalizer["Completions"]:</strong> @ViewBag.TotalCompletions</li>
                 @if (lastCompleted.HasValue)
                 {
-                    <li><strong>@SharedLocalizer["Last completed"]:</strong> @lastCompleted.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                    <li><strong>@SharedLocalizer["Last completed"]:</strong> @lastCompleted.Value.ToString("MMM dd, yyyy")</li>
                 }
                 @if (Model.Frequency == HabitFrequency.Daily)
                 {

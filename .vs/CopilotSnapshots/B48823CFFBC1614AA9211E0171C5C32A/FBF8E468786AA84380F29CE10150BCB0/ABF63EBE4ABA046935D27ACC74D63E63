@@ -1,0 +1,127 @@
+﻿@model List<Habit_Tracker_Project.Models.User>
+@{
+    ViewData["Title"] = SharedLocalizer["Admin Panel"];
+    var moderatorIds = ViewBag.ModeratorIds as HashSet<string> ?? new HashSet<string>();
+}
+
+<div class="ht-admin-page">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">@SharedLocalizer["Administration"]</span>
+            <h1>@SharedLocalizer["User management"]</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="ht-alert ht-alert-success" role="alert">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="ht-alert ht-alert-error" role="alert">@TempData["Error"]</div>
+    }
+
+    <section class="ht-admin-table-card ht-card">
+        <form method="get" asp-controller="Users" asp-action="Manage" class="ht-filter-bar">
+            <div class="ht-form-group">
+                <label for="userSearch" class="ht-form-label">@SharedLocalizer["Search users"]</label>
+                <input id="userSearch" type="search" name="searchString" value="@ViewBag.SearchString"
+                       class="form-control ht-form-control" placeholder="@SharedLocalizer["Name or email"]" />
+            </div>
+            <div class="ht-form-group">
+                <label for="userStatus" class="ht-form-label">@SharedLocalizer["Status"]</label>
+                <select id="userStatus" name="status" class="form-select ht-form-control">
+                    @if (ViewBag.Status == "active")
+                    {
+                        <option value="">@SharedLocalizer["All"]</option>
+                        <option value="active" selected>@SharedLocalizer["Active"]</option>
+                        <option value="blocked">@SharedLocalizer["Blocked"]</option>
+                    }
+                    else if (ViewBag.Status == "blocked")
+                    {
+                        <option value="">@SharedLocalizer["All"]</option>
+                        <option value="active">@SharedLocalizer["Active"]</option>
+                        <option value="blocked" selected>@SharedLocalizer["Blocked"]</option>
+                    }
+                    else
+                    {
+                        <option value="" selected>@SharedLocalizer["All"]</option>
+                        <option value="active">@SharedLocalizer["Active"]</option>
+                        <option value="blocked">@SharedLocalizer["Blocked"]</option>
+                    }
+                </select>
+            </div>
+            <div class="ht-filter-actions">
+                <button type="submit" class="btn ht-btn-primary">@SharedLocalizer[LocalizationKeys.Common.Search]</button>
+                <a asp-controller="Users" asp-action="Manage" class="btn ht-btn-secondary">@SharedLocalizer[LocalizationKeys.Common.Reset]</a>
+            </div>
+        </form>
+        <div class="ht-table-wrapper">
+            <table class="ht-admin-table">
+                <thead>
+                    <tr>
+                        <th>@SharedLocalizer[LocalizationKeys.Auth.FullName]</th>
+                        <th>@SharedLocalizer[LocalizationKeys.Auth.Email]</th>
+                        <th>@SharedLocalizer["Points"]</th>
+                        <th>@SharedLocalizer["Status"]</th>
+                        <th>@SharedLocalizer["Role"]</th>
+                        <th>@SharedLocalizer["Actions"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var user in Model)
+                        {
+                            <tr>
+                                <td data-label="@SharedLocalizer[LocalizationKeys.Auth.FullName]">
+                                    <a asp-controller="Users" asp-action="Habits" asp-route-id="@user.Id">
+                                        @(string.IsNullOrWhiteSpace(user.FullName) ? user.Email : user.FullName)
+                                    </a>
+                                </td>
+                                <td data-label="@SharedLocalizer[LocalizationKeys.Auth.Email]">@user.Email</td>
+                                <td data-label="@SharedLocalizer["Points"]">@user.TotalPoints</td>
+                                <td data-label="@SharedLocalizer["Status"]">
+                                    @if (user.IsBlocked)
+                                    {
+                                        <span class="ht-status-badge ht-status-blocked">@SharedLocalizer["Blocked"]</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="ht-status-badge ht-status-active">@SharedLocalizer["Active"]</span>
+                                    }
+                                </td>
+                                <td data-label="@SharedLocalizer["Role"]">@(moderatorIds.Contains(user.Id) ? SharedLocalizer["Moderator"] : SharedLocalizer["User"])</td>
+                                <td data-label="@SharedLocalizer["Actions"]">
+                                    <form method="post" asp-controller="Users" asp-action="SetModerator" class="ht-inline-form">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit" class="btn ht-moderator-action btn-sm">
+                                            @(moderatorIds.Contains(user.Id) ? SharedLocalizer["Remove moderator"] : SharedLocalizer["Make moderator"])
+                                        </button>
+                                    </form>
+                                    <form method="post" asp-controller="Users" asp-action="ToggleBlock" asp-route-userId="@user.Id" class="ht-inline-form">
+                                        @if (user.IsBlocked)
+                                        {
+                                            <button type="submit" class="btn ht-btn-primary btn-sm">@SharedLocalizer["Unblock"]</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn ht-btn-danger btn-sm">@SharedLocalizer["Block"]</button>
+                                        }
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="ht-table-empty">@SharedLocalizer["No users found."]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

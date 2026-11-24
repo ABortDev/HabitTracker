@@ -6,6 +6,8 @@ using Habit_Tracker_Project.Models;
 using Habit_Tracker_Project.Enums;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
+using Habit_Tracker_Project;
 
 namespace Habit_Tracker_Project.Controllers
 {
@@ -14,11 +16,13 @@ namespace Habit_Tracker_Project.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public ChatController(ApplicationDbContext context, UserManager<User> userManager)
+        public ChatController(ApplicationDbContext context, UserManager<User> userManager, IStringLocalizer<SharedResource> localizer)
         {
             _context = context;
             _userManager = userManager;
+            _localizer = localizer;
         }
 
         private string GetCurrentUserId() =>
@@ -62,7 +66,7 @@ namespace Habit_Tracker_Project.Controllers
 
             if (string.IsNullOrWhiteSpace(text) || text.Trim().Length > 4000)
             {
-                TempData["Error"] = "Message must contain between 1 and 4000 characters.";
+                TempData["Error"] = _localizer["Message must contain between 1 and 4000 characters."].Value;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -168,7 +172,7 @@ namespace Habit_Tracker_Project.Controllers
         {
             if (string.IsNullOrWhiteSpace(text) || text.Trim().Length > 4000)
             {
-                TempData["Error"] = "Message must contain between 1 and 4000 characters.";
+                TempData["Error"] = _localizer["Message must contain between 1 and 4000 characters."].Value;
                 return RedirectToAction(nameof(Thread), new { userId });
             }
 
@@ -199,7 +203,7 @@ namespace Habit_Tracker_Project.Controllers
             });
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Reply sent.";
+            TempData["Success"] = _localizer["Reply sent."].Value;
             return RedirectToAction(nameof(Thread), new { userId });
         }
         private async Task SendAutoModeratorMessageAsync(string userId, string text)

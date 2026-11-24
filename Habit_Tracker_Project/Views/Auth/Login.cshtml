@@ -1,6 +1,6 @@
 ﻿@model Habit_Tracker_Project.Models.ViewModels.LoginViewModel
 @{
-    ViewData["Title"] = SharedLocalizer["Login"];
+    ViewData["Title"] = SharedLocalizer[LocalizationKeys.Auth.LoginTitle];
     Layout = null;
     var error = ViewBag.Error as string ?? TempData["Error"] as string;
 }
@@ -22,7 +22,7 @@
             <button type="submit" name="culture" value="uk" class="btn btn-sm btn-outline-light">UK</button>
         </form>
         <section class="ht-auth-card ht-card">
-            <a asp-controller="Home" asp-action="Index" class="ht-auth-brand">Habit Tracker</a>
+            <a asp-controller="Home" asp-action="Index" class="ht-auth-brand">@SharedLocalizer["Habit Tracker"]</a>
             <h1 class="ht-auth-title">@SharedLocalizer["Welcome back"]</h1>
             <p class="ht-auth-subtitle">@SharedLocalizer["Log in to continue building better habits."]</p>
 
@@ -34,27 +34,27 @@
             <form method="post" asp-controller="Auth" asp-action="Login" class="ht-auth-form">
                 <div class="ht-form-group">
                     <label asp-for="Email" class="ht-form-label"></label>
-                    <input asp-for="Email" class="form-control ht-form-control" placeholder="@SharedLocalizer["Email"]" />
+                    <input asp-for="Email" class="form-control ht-form-control" placeholder="@SharedLocalizer[LocalizationKeys.Auth.Email]" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div class="ht-form-group">
                     <label asp-for="Password" class="ht-form-label"></label>
-                    <input asp-for="Password" class="form-control ht-form-control" placeholder="@SharedLocalizer["Password"]" />
+                    <input asp-for="Password" class="form-control ht-form-control" placeholder="@SharedLocalizer[LocalizationKeys.Auth.Password]" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <label class="ht-check-row">
                     <input asp-for="RememberMe" />
-                    <span>@SharedLocalizer["Remember me"]</span>
+                    <span>@SharedLocalizer[LocalizationKeys.Auth.RememberMe]</span>
                 </label>
 
-                <button type="submit" class="btn ht-btn-primary ht-auth-submit">@SharedLocalizer["Log In"]</button>
+                <button type="submit" class="btn ht-btn-primary ht-auth-submit">@SharedLocalizer[LocalizationKeys.Navigation.Login]</button>
             </form>
 
             <p class="ht-auth-footer">
                 @SharedLocalizer["Don't have an account?"]
-                <a asp-controller="Auth" asp-action="Register">@SharedLocalizer["Create account"]</a>
+                <a asp-controller="Auth" asp-action="Register">@SharedLocalizer[LocalizationKeys.Navigation.Register]</a>
             </p>
         </section>
     </main>

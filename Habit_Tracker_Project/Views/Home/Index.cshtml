@@ -14,7 +14,7 @@
 </head>
 <body class="ht-home-page">
     <header class="ht-home-header">
-        <a asp-controller="Home" asp-action="Index" class="ht-home-logo">Habit Tracker</a>
+        <a asp-controller="Home" asp-action="Index" class="ht-home-logo">@SharedLocalizer["Habit Tracker"]</a>
 
         <nav class="ht-home-nav" aria-label="@SharedLocalizer["Main navigation"]">
             <form method="post" asp-controller="Home" asp-action="SetLanguage" class="ht-language-switcher ht-language-switcher-home">
@@ -25,12 +25,12 @@
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 <span class="ht-home-greeting">@SharedLocalizer["Hello, {0}!", User.Identity.Name]</span>
-                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-primary">@SharedLocalizer["Dashboard"]</a>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-primary">@SharedLocalizer[LocalizationKeys.Navigation.Dashboard]</a>
             }
             else
             {
-                <a asp-controller="Auth" asp-action="Login" class="ht-home-link">@SharedLocalizer["Log in"]</a>
-                <a asp-controller="Auth" asp-action="Register" class="btn ht-btn-primary">@SharedLocalizer["Sign up"]</a>
+                <a asp-controller="Auth" asp-action="Login" class="ht-home-link">@SharedLocalizer[LocalizationKeys.Navigation.Login]</a>
+                <a asp-controller="Auth" asp-action="Register" class="btn ht-btn-primary">@SharedLocalizer[LocalizationKeys.Navigation.Register]</a>
             }
         </nav>
     </header>

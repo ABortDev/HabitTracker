@@ -209,13 +209,13 @@ namespace Habit_Tracker_Project.Controllers
 
             if (targetDate > today)
             {
-                TempData["Error"] = "You can complete only today or a past date.";
+                TempData["Error"] = _localizer["You can complete only today or a past date."].Value;
                 return Back();
             }
 
             if (habit.EndDate.HasValue && targetDate > habit.EndDate.Value)
             {
-                TempData["Error"] = "This date is after the habit's end date.";
+                TempData["Error"] = _localizer["This date is after the habit's end date."].Value;
                 return Back();
             }
 
@@ -237,7 +237,7 @@ namespace Habit_Tracker_Project.Controllers
 
             if (alreadyInPeriod)
             {
-                TempData["Error"] = "This habit is already completed for this period.";
+                TempData["Error"] = _localizer["This habit is already completed for this period."].Value;
                 return Back();
             }
 
@@ -246,7 +246,7 @@ namespace Habit_Tracker_Project.Controllers
 
             if (log != null && log.CompletedAt != null)
             {
-                TempData["Error"] = "This day is already completed.";
+                TempData["Error"] = _localizer["This day is already completed."].Value;
                 return Back();
             }
 
@@ -257,7 +257,7 @@ namespace Habit_Tracker_Project.Controllers
             {
                 if (!actualValue.HasValue || actualValue.Value <= 0)
                 {
-                    TempData["Error"] = "Enter how much you completed.";
+                TempData["Error"] = _localizer["Enter how much you completed."].Value;
                     return Back();
                 }
 
@@ -290,8 +290,8 @@ namespace Habit_Tracker_Project.Controllers
                 log.Status = HabitLogStatus.Partial;
                 await _context.SaveChangesAsync();
 
-                TempData["Success"] =
-                    $"Progress saved: {log.ActualValue:0.##} / {habit.TargetValue:0.##} {habit.Unit}";
+                TempData["Success"] = _localizer["Progress saved: {0:0.##} / {1:0.##} {2}",
+                    log.ActualValue, habit.TargetValue, habit.Unit].Value;
                 return Back();
             }
 
@@ -331,15 +331,15 @@ namespace Habit_Tracker_Project.Controllers
             {
                 habit.IsDeleted = true;
                 habit.DeletedAt = now;
-                TempData["Success"] = $"Task completed (+{points} pts) and removed from your list!";
+                TempData["Success"] = _localizer["Task completed (+{0} pts) and removed from your list!", points].Value;
             }
             else if (targetDate == today)
             {
-                TempData["Success"] = $"Habit completed for today! +{points} pts";
+                TempData["Success"] = _localizer["Habit completed for today! +{0} pts", points].Value;
             }
             else
             {
-                TempData["Success"] = $"Habit completed for {targetDate:yyyy-MM-dd}! +{points} pts";
+                TempData["Success"] = _localizer["Habit completed for {0:yyyy-MM-dd}! +{1} pts", targetDate, points].Value;
             }
 
             await _context.SaveChangesAsync();
@@ -430,10 +430,10 @@ namespace Habit_Tracker_Project.Controllers
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
             if (date < today)
-                return BadRequest(new { error = "You can only plan today or future dates." });
+            return BadRequest(new { error = _localizer["You can only plan today or future dates."].Value });
 
             if (habit.EndDate.HasValue && date > habit.EndDate.Value)
-                return BadRequest(new { error = "This date is after the habit's end date." });
+            return BadRequest(new { error = _localizer["This date is after the habit's end date."].Value });
 
             var log = await _context.HabitLogs
                 .FirstOrDefaultAsync(l => l.HabitId == id && l.Date == date);
@@ -458,7 +458,7 @@ namespace Habit_Tracker_Project.Controllers
             }
             else
             {
-                return BadRequest(new { error = "This day already has progress and cannot be unplanned." });
+            return BadRequest(new { error = _localizer["This day already has progress and cannot be unplanned."].Value });
             }
 
             await _context.SaveChangesAsync();

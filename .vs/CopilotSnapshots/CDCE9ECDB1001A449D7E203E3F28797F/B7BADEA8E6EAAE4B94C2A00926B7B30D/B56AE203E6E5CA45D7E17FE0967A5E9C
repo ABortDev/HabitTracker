@@ -1,0 +1,476 @@
+﻿@model List<Habit_Tracker_Project.Models.Habit>
+@using Habit_Tracker_Project.Models.Enums
+@using System.Globalization
+@{
+    ViewData["Title"] = SharedLocalizer["Dashboard"];
+    Layout = "_Layout";
+    var today = DateOnly.FromDateTime(DateTime.Today);
+    var todayUtc = DateOnly.FromDateTime(DateTime.UtcNow);
+    string Num(decimal? value) => value?.ToString("0.##", CultureInfo.InvariantCulture) ?? "0";
+
+    var regularHabits = Model?.Where(h => h.Frequency != HabitFrequency.Onetime).ToList() ?? new List<Habit_Tracker_Project.Models.Habit>();
+    var oneTimeTodos = Model?.Where(h => h.Frequency == HabitFrequency.Onetime).ToList() ?? new List<Habit_Tracker_Project.Models.Habit>();
+
+    string DifficultyLabel(DifficultyLevel difficulty) => difficulty switch
+    {
+        DifficultyLevel.Easy => SharedLocalizer["Easy"].Value,
+        DifficultyLevel.Hard => SharedLocalizer["Hard"].Value,
+        _ => SharedLocalizer["Medium"].Value
+    };
+
+    int DifficultyPoints(DifficultyLevel difficulty) => difficulty switch
+    {
+        DifficultyLevel.Easy => 10,
+        DifficultyLevel.Hard => 30,
+        _ => 20
+    };
+
+    string DifficultyClass(DifficultyLevel difficulty) => difficulty switch
+    {
+        DifficultyLevel.Easy => "ht-difficulty-easy",
+        DifficultyLevel.Hard => "ht-difficulty-hard",
+        _ => "ht-difficulty-medium"
+    };
+
+    var selectedCategoryId = ViewBag.CategoryId is int categoryId ? categoryId : 0;
+}
+
+<main class="ht-dashboard-container ht-dashboard-page">
+        <div class="ht-dashboard-header">
+            <div>
+                <span class="ht-eyebrow">@SharedLocalizer["Your daily progress"]</span>
+                <h1 class="ht-dashboard-title">@SharedLocalizer["My Dashboard"]</h1>
+            </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="ht-dashboard-alert ht-dashboard-alert-success" role="status">✓ @TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="ht-dashboard-alert ht-dashboard-alert-error" role="alert">@TempData["Error"]</div>
+        }
+            <button type="button" class="btn ht-btn-primary ht-add-button" onclick="openAddModal()">+ @SharedLocalizer["Add habit"]</button>
+        </div>
+
+        <form method="get" asp-controller="Dashboard" asp-action="Index" class="ht-filter-bar">
+            <div class="ht-form-group">
+                <label for="habitSearch" class="ht-form-label">@SharedLocalizer["Search habits"]</label>
+                <input id="habitSearch" type="search" name="searchString" value="@ViewBag.SearchString"
+                       class="form-control ht-form-control" placeholder="@SharedLocalizer["Habit name"]" />
+            </div>
+            <div class="ht-form-group">
+                <label for="habitCategory" class="ht-form-label">@SharedLocalizer["Category"]</label>
+                <select id="habitCategory" name="categoryId" class="form-select ht-form-control">
+                    <option value="">@SharedLocalizer["All"]</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        if (selectedCategoryId == category.Id)
+                        {
+                            <option value="@category.Id" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="ht-filter-actions">
+                <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Search"]</button>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Reset"]</a>
+            </div>
+        </form>
+
+        <div class="ht-dashboard-grid">
+            <section class="ht-dashboard-card ht-card">
+                <div class="ht-section-heading">
+                    <div>
+                        <h2>@SharedLocalizer["Habits"]</h2>
+                        <p>@SharedLocalizer["Keep your routines moving forward."]</p>
+                    </div>
+                    <span class="ht-count-badge">@regularHabits.Count</span>
+                </div>
+
+                @if (regularHabits.Any())
+                {
+                    foreach (var habit in regularHabits)
+                    {
+                        <div class="ht-habit-item">
+                            <div class="ht-habit-info">
+                            <h3><a asp-controller="Dashboard" asp-action="Details" asp-route-id="@habit.Id" class="ht-habit-link">@habit.Title</a></h3>
+                                <p>@(string.IsNullOrEmpty(habit.Description) ? SharedLocalizer["No description"] : habit.Description)</p>
+                                <div class="ht-habit-meta">
+                                    <span>@(habit.Category?.Name ?? SharedLocalizer["General"])</span>
+                                    <span>@habit.Frequency</span>
+                                    <span class="ht-difficulty-badge @DifficultyClass(habit.Difficulty)">@DifficultyLabel(habit.Difficulty) · @DifficultyPoints(habit.Difficulty) pts</span>
+                                    @if (habit.Reminders != null && habit.Reminders.Any())
+                                    {
+                                        <span>@habit.Reminders.First().ReminderTime.ToString("HH:mm")</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="ht-habit-actions">
+                             <button type="button" class="ht-action-button ht-action-edit"
+                                    onclick="openEditModal(@habit.Id, '@Html.Raw(habit.Title.Replace("'", "\\'"))', '@Html.Raw((habit.Description ?? "").Replace("'", "\\'"))', @habit.CategoryId, '@((int)habit.Frequency)', '@(habit.EndDate?.ToString("yyyy-MM-dd") ?? "")', '@habit.Difficulty', '@(habit.TargetValue?.ToString("0.##", CultureInfo.InvariantCulture) ?? "")', '@Html.Raw((habit.Unit ?? "").Replace("'", "\\'"))', '@(habit.Reminders.FirstOrDefault()?.ReminderTime.ToString("HH:mm") ?? "")', '@((habit.Reminders.FirstOrDefault()?.IsEnabled ?? true) ? "1" : "0")')">
+                                 @SharedLocalizer["Edit"]
+                            </button>
+                                <form method="post" asp-controller="Dashboard" asp-action="DeleteHabit" asp-route-id="@habit.Id" class="ht-inline-form" onsubmit="return confirm('Are you sure?');">
+                                     <button type="submit" class="ht-action-button ht-action-delete">@SharedLocalizer["Delete"]</button>
+                                </form>
+                                <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@habit.Id" class="ht-inline-form">
+                                    <div class="ht-complete-stack">
+                                        @if (habit.TargetValue is > 0)
+                                        {
+                                            var todayLog = habit.Logs?.FirstOrDefault(log => log.Date == todayUtc);
+                                            var currentProgress = todayLog?.ActualValue ?? 0;
+                                            <span class="ht-progress-label">@Num(currentProgress) / @Num(habit.TargetValue) @(habit.Unit ?? "")</span>
+                                            <div class="ht-complete-controls">
+                                                <input type="number" name="actualValue" min="0.01" step="any"
+                                                       class="form-control ht-form-control ht-amount-input"
+                                                        placeholder="@(habit.Unit ?? SharedLocalizer["Amount"].Value)" aria-label="@SharedLocalizer["Amount completed for {0}", habit.Title]" required />
+                                                 <button type="submit" class="ht-complete-button" title="@SharedLocalizer["Add progress"]" aria-label="@SharedLocalizer["Add progress for {0}", habit.Title]">✓</button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                             <button type="submit" class="ht-complete-button" title="@SharedLocalizer["Mark as done"]" aria-label="@SharedLocalizer["Mark {0} as done", habit.Title]">✓</button>
+                                        }
+                                         <span class="ht-completion-count">@(habit.Logs?.Count(log => log.CompletedAt.HasValue) ?? 0) @SharedLocalizer["completions"]</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="ht-empty-state">@SharedLocalizer["No habits yet. Click “+ Add habit” to start."]</div>
+                }
+            </section>
+
+            <section class="ht-dashboard-card ht-card">
+                <div class="ht-section-heading">
+                    <div>
+                        <h2>@SharedLocalizer["To-do list"]</h2>
+                        <p>@SharedLocalizer["One-time tasks you want to finish."]</p>
+                    </div>
+                    <span class="ht-count-badge">@oneTimeTodos.Count</span>
+                </div>
+
+                @if (oneTimeTodos.Any())
+                {
+                    foreach (var todo in oneTimeTodos)
+                    {
+                        var todoClass = todo.EndDate.HasValue && todo.EndDate.Value < today
+                            ? "ht-todo-overdue"
+                            : todo.EndDate.HasValue && todo.EndDate.Value == today
+                                ? "ht-todo-due-today"
+                                : string.Empty;
+                        var todoDeadlineText = todo.EndDate.HasValue && todo.EndDate.Value < today
+                            ? SharedLocalizer["Overdue"].Value
+                            : todo.EndDate.HasValue && todo.EndDate.Value == today
+                                ? SharedLocalizer["Due today"].Value
+                                : string.Empty;
+
+                        <div class="ht-habit-item @todoClass">
+                            <div class="ht-habit-info">
+                            <h3><a asp-controller="Dashboard" asp-action="Details" asp-route-id="@todo.Id" class="ht-habit-link">@todo.Title</a></h3>
+                                <p>@(string.IsNullOrEmpty(todo.Description) ? SharedLocalizer["No description"] : todo.Description)</p>
+                                <div class="ht-habit-meta">
+                                    <span>@(todo.Category?.Name ?? SharedLocalizer["General"])</span>
+                                    <span class="ht-difficulty-badge @DifficultyClass(todo.Difficulty)">@DifficultyLabel(todo.Difficulty) · @DifficultyPoints(todo.Difficulty) pts</span>
+                                    @if (todo.EndDate.HasValue)
+                                    {
+                                        <span class="ht-deadline-badge">@todoDeadlineText · @todo.EndDate.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    @if (todo.Reminders != null && todo.Reminders.Any())
+                                    {
+                                        <span>@todo.Reminders.First().ReminderTime.ToString("HH:mm")</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="ht-habit-actions">
+                            <button type="button" class="ht-action-button ht-action-edit"
+                                    onclick="openEditModal(@todo.Id, '@Html.Raw(todo.Title.Replace("'", "\\'"))', '@Html.Raw((todo.Description ?? "").Replace("'", "\\'"))', @todo.CategoryId, '@((int)todo.Frequency)', '@(todo.EndDate?.ToString("yyyy-MM-dd") ?? "")', '@todo.Difficulty', '@(todo.TargetValue?.ToString("0.##", CultureInfo.InvariantCulture) ?? "")', '@Html.Raw((todo.Unit ?? "").Replace("'", "\\'"))', '@(todo.Reminders.FirstOrDefault()?.ReminderTime.ToString("HH:mm") ?? "")', '@((todo.Reminders.FirstOrDefault()?.IsEnabled ?? true) ? "1" : "0")')">
+                                 @SharedLocalizer["Edit"]
+                            </button>
+                                <form method="post" asp-controller="Dashboard" asp-action="DeleteHabit" asp-route-id="@todo.Id" class="ht-inline-form" onsubmit="return confirm('Are you sure?');">
+                                     <button type="submit" class="ht-action-button ht-action-delete">@SharedLocalizer["Delete"]</button>
+                                </form>
+                                <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@todo.Id" class="ht-inline-form">
+                                    @if (todo.TargetValue is > 0)
+                                    {
+                                        var todayLog = todo.Logs?.FirstOrDefault(log => log.Date == todayUtc);
+                                        var currentProgress = todayLog?.ActualValue ?? 0;
+                                        <div class="ht-complete-stack">
+                                            <span class="ht-progress-label">@Num(currentProgress) / @Num(todo.TargetValue) @(todo.Unit ?? "")</span>
+                                            <div class="ht-complete-controls">
+                                                <input type="number" name="actualValue" min="0.01" step="any"
+                                                       class="form-control ht-form-control ht-amount-input"
+                                                        placeholder="@(todo.Unit ?? SharedLocalizer["Amount"].Value)" aria-label="@SharedLocalizer["Amount completed for {0}", todo.Title]" required />
+                                                 <button type="submit" class="ht-complete-button" title="@SharedLocalizer["Add progress"]" aria-label="@SharedLocalizer["Add progress for {0}", todo.Title]">✓</button>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                     <button type="submit" class="ht-complete-button" title="@SharedLocalizer["Mark as done"]" aria-label="@SharedLocalizer["Mark {0} as done", todo.Title]">✓</button>
+                                    }
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="ht-empty-state">@SharedLocalizer["No tasks yet."]</div>
+                }
+            </section>
+        </div>
+    <div id="addModal" class="ht-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
+        <div class="ht-modal-content ht-card">
+            <h2 id="addModalTitle" class="ht-modal-title">@SharedLocalizer["Add new habit"]</h2>
+            <form method="post" asp-controller="Dashboard" asp-action="AddHabit">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">@SharedLocalizer["Habit title"]</label>
+                    <input type="text" name="title" class="form-control ht-form-control" placeholder="@SharedLocalizer["e.g., Read book"]" />
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label" for="addTaskType">@SharedLocalizer["Task type"]</label>
+                    <select id="addTaskType" class="form-select ht-form-control" onchange="toggleTargetFields('add', this.value)">
+                        <option value="simple" selected>@SharedLocalizer["Simple (just do it)"]</option>
+                        <option value="quantity">@SharedLocalizer["Measurable (target amount)"]</option>
+                    </select>
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">@SharedLocalizer["Description"]</label>
+                    <textarea name="description" rows="2" class="form-control ht-form-control ht-description-input" placeholder="@SharedLocalizer["Why do you want to build this habit?"]"></textarea>
+                </div>
+                    <div class="ht-form-group">
+                        <label for="addDifficulty" class="ht-form-label">@SharedLocalizer["Difficulty"]</label>
+                        <select name="difficulty" id="addDifficulty" class="form-select ht-form-control" onchange="updateDifficultyPoints('add')">
+                            <option value="0" data-points="10">@SharedLocalizer["Easy · 10 points"]</option>
+                            <option value="1" data-points="20" selected>@SharedLocalizer["Medium · 20 points"]</option>
+                            <option value="2" data-points="30">@SharedLocalizer["Hard · 30 points"]</option>
+                        </select>
+                        <small class="ht-field-hint" id="addDifficultyHint">@SharedLocalizer["Completing this habit will earn 20 points."]</small>
+                    </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">@SharedLocalizer["Category"]</label>
+                    <select name="categoryId" class="form-select ht-form-control" required>
+                        <option value="">@SharedLocalizer["-- Select a category --"]</option>
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var category in ViewBag.Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="ht-form-grid">
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">@SharedLocalizer["Frequency"]</label>
+                        <select name="frequency" id="addFrequency" class="form-select ht-form-control" asp-items="Html.GetEnumSelectList<HabitFrequency>()" onchange="toggleEndDate('add', this.value)" required></select>
+                    </div>
+                </div>
+                <div class="ht-form-grid" id="addTargetFields" style="display:none;">
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">@SharedLocalizer["Target value"]</label>
+                        <input type="number" name="targetValue" step="any" min="0.01" class="form-control ht-form-control" placeholder="e.g., 2000" disabled />
+                    </div>
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">@SharedLocalizer["Unit"]</label>
+                        <input type="text" name="unit" list="unitOptions" maxlength="20" class="form-control ht-form-control" placeholder="@SharedLocalizer["ml, pages, min..."]" disabled />
+                    </div>
+                </div>
+
+                <datalist id="unitOptions">
+                    <option value="ml"></option>
+                    <option value="l"></option>
+                    <option value="pages"></option>
+                    <option value="minutes"></option>
+                    <option value="km"></option>
+                    <option value="steps"></option>
+                    <option value="times"></option>
+                </datalist>
+                <div class="ht-form-grid" style="align-items: start;">
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">@SharedLocalizer["Reminder time"]</label>
+                        <input type="time" name="reminderTime" id="addReminderTime" class="form-control ht-form-control" />
+                        <input type="hidden" name="reminderEnabled" value="true" />
+                    </div>
+                    <div class="ht-form-group ht-hidden-field" id="addEndDateContainer">
+                         <label class="ht-form-label">@SharedLocalizer["Target date"]</label>
+                        <input type="date" lang="en-US" name="endDate" id="addEndDate" class="form-control ht-form-control" />
+                    </div>
+                </div>
+                <small class="ht-field-hint">@SharedLocalizer["Leave the reminder time empty if you don't need a reminder."]</small>
+                <div class="ht-modal-actions">
+                    <button type="button" class="btn ht-btn-secondary" onclick="closeModals()">@SharedLocalizer["Cancel"]</button>
+                    <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Save habit"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="ht-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="ht-modal-content ht-card">
+            <h2 id="editModalTitle" class="ht-modal-title">@SharedLocalizer["Edit habit"]</h2>
+            <form method="post" asp-controller="Dashboard" asp-action="EditHabit">
+                <input type="hidden" name="id" id="editId" />
+                <div class="ht-form-group">
+                    <label class="ht-form-label">@SharedLocalizer["Habit title"]</label>
+                    <input type="text" name="title" id="editTitle" class="form-control ht-form-control" />
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label" for="editTaskType">@SharedLocalizer["Task type"]</label>
+                    <select id="editTaskType" class="form-select ht-form-control" onchange="toggleTargetFields('edit', this.value)">
+                        <option value="simple">@SharedLocalizer["Simple (just do it)"]</option>
+                        <option value="quantity">@SharedLocalizer["Measurable (target amount)"]</option>
+                    </select>
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">@SharedLocalizer["Description"]</label>
+                    <textarea name="description" id="editDescription" rows="2" class="form-control ht-form-control ht-description-input"></textarea>
+                </div>
+                <div class="ht-form-group">
+                    <label for="editDifficulty" class="ht-form-label">@SharedLocalizer["Difficulty"]</label>
+                    <select name="difficulty" id="editDifficulty" class="form-select ht-form-control" onchange="updateDifficultyPoints('edit')">
+                        <option value="0" data-points="10">@SharedLocalizer["Easy · 10 points"]</option>
+                        <option value="1" data-points="20">@SharedLocalizer["Medium · 20 points"]</option>
+                        <option value="2" data-points="30">@SharedLocalizer["Hard · 30 points"]</option>
+                    </select>
+                    <small class="ht-field-hint" id="editDifficultyHint">@SharedLocalizer["Completing this habit will earn 20 points."]</small>
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">@SharedLocalizer["Category"]</label>
+                    <select name="categoryId" id="editCategoryId" class="form-select ht-form-control" required>
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var category in ViewBag.Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="ht-form-group">
+                    <label class="ht-form-label">@SharedLocalizer["Frequency"]</label>
+                    <select name="frequency" id="editFrequency" class="form-select ht-form-control" asp-items="Html.GetEnumSelectList<HabitFrequency>()" onchange="toggleEndDate('edit', this.value)" required></select>
+                </div>
+                <div class="ht-form-grid" id="editTargetFields" style="display:none;">
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">@SharedLocalizer["Target value"]</label>
+                        <input type="number" name="targetValue" id="editTargetValue" step="any" min="0.01" class="form-control ht-form-control" disabled />
+                    </div>
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">@SharedLocalizer["Unit"]</label>
+                        <input type="text" name="unit" id="editUnit" list="unitOptions" maxlength="20" class="form-control ht-form-control" disabled />
+                    </div>
+                </div>
+                <div class="ht-form-grid" style="align-items: start;">
+                    <div class="ht-form-group">
+                        <label class="ht-form-label">@SharedLocalizer["Reminder time"]</label>
+                        <input type="time" name="reminderTime" id="editReminderTime" class="form-control ht-form-control" />
+                        <input type="hidden" name="reminderEnabled" value="true" />
+                    </div>
+                    <div class="ht-form-group ht-hidden-field" id="editEndDateContainer">
+                         <label class="ht-form-label">@SharedLocalizer["Target date"]</label>
+                        <input type="date" lang="en-US" name="endDate" id="editEndDate" class="form-control ht-form-control" />
+                    </div>
+                </div>
+                <small class="ht-field-hint">@SharedLocalizer["Leave the reminder time empty to remove the reminder."]</small>
+                <div class="ht-modal-actions">
+                    <button type="button" class="btn ht-btn-secondary" onclick="closeModals()">@SharedLocalizer["Cancel"]</button>
+                    <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Update habit"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        @if (ViewBag.ShowAddModal == true)
+        {
+            <script>document.addEventListener('DOMContentLoaded', function () { openAddModal(); });</script>
+        }
+        <script>
+            function toggleEndDate(prefix, frequencyValue) {
+                var container = document.getElementById(prefix + 'EndDateContainer');
+                var input = document.getElementById(prefix + 'EndDate');
+
+                if (frequencyValue === '0') {
+                container.style.display = 'grid';
+                input.required = true;}
+                else {
+                container.style.display = 'none';
+                input.required = false;
+                input.value = '';
+                }
+            }
+
+            function toggleTargetFields(prefix, type) {
+                var container = document.getElementById(prefix + 'TargetFields');
+                var isQuantity = type === 'quantity';
+
+                container.style.display = isQuantity ? '' : 'none';
+
+                container.querySelectorAll('input').forEach(function (input) {
+                    input.disabled = !isQuantity;
+                    if (!isQuantity) {
+                        input.value = '';
+                    }
+                });
+
+                var targetInput = container.querySelector('input[name="targetValue"]');
+                targetInput.required = isQuantity;
+            }
+
+            function openAddModal() {
+                document.getElementById('addTaskType').value = 'simple';
+                toggleTargetFields('add', 'simple');
+                document.getElementById('addModal').style.display = 'flex';
+            }
+
+            function openEditModal(id, title, description, categoryId, frequency, endDate, difficulty, targetValue, unit, reminderTime, reminderEnabled) {
+                document.getElementById('editId').value = id;
+                document.getElementById('editTitle').value = title;
+                document.getElementById('editDescription').value = description;
+                document.getElementById('editCategoryId').value = categoryId;
+                document.getElementById('editFrequency').value = frequency;
+                document.getElementById('editEndDate').value = endDate;
+                document.getElementById('editDifficulty').value = difficulty === 'Easy' ? '0' : difficulty === 'Hard' ? '2' : '1';
+
+                var isQuantity = targetValue !== '';
+                document.getElementById('editTaskType').value = isQuantity ? 'quantity' : 'simple';
+                toggleTargetFields('edit', isQuantity ? 'quantity' : 'simple');
+                document.getElementById('editTargetValue').value = targetValue;
+                document.getElementById('editUnit').value = unit;
+
+                document.getElementById('editReminderTime').value = reminderTime;
+                toggleEndDate('edit', frequency);
+                updateDifficultyPoints('edit');
+                document.getElementById('editModal').style.display = 'flex';
+            }
+
+            function updateDifficultyPoints(prefix) {
+                var select = document.getElementById(prefix + 'Difficulty');
+                var points = select.options[select.selectedIndex].dataset.points;
+                document.getElementById(prefix + 'DifficultyHint').textContent = 'Completing this habit will earn ' + points + ' points.';
+            }
+
+            function closeModals() {
+                document.getElementById('addModal').style.display = 'none';
+                document.getElementById('editModal').style.display = 'none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target.classList.contains('ht-modal-overlay')) {
+                    closeModals();
+                }
+            }
+        </script>
+    }

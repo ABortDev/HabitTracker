@@ -41,20 +41,20 @@ namespace Habit_Tracker_Project.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Error = _localizer["Please enter a valid email and password."].Value;
+                ViewBag.Error = _localizer[LocalizationKeys.Messages.InvalidLogin].Value;
                 return View(model);
             }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                ViewBag.Error = _localizer["This account does not exist. Please register."].Value;
+                ViewBag.Error = _localizer[LocalizationKeys.Messages.AccountNotFound].Value;
                 return View(model);
             }
 
             if (user.IsBlocked)
             {
-                ViewBag.Error = _localizer["Your account has been blocked by an administrator."].Value;
+                ViewBag.Error = _localizer[LocalizationKeys.Messages.AccountBlocked].Value;
                 return View(model);
             }
 
@@ -67,7 +67,7 @@ namespace Habit_Tracker_Project.Controllers
             if (result.Succeeded)
                 return RedirectToAction("Index", "Dashboard");
 
-            ViewBag.Error = _localizer["Invalid email or password."].Value;
+            ViewBag.Error = _localizer[LocalizationKeys.Messages.InvalidLogin].Value;
             return View(model);
         }
 
@@ -86,7 +86,7 @@ namespace Habit_Tracker_Project.Controllers
 
             if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
-                ModelState.AddModelError(nameof(model.Email), _localizer["This email is already registered."]);
+                ModelState.AddModelError(nameof(model.Email), _localizer[LocalizationKeys.Messages.EmailAlreadyRegistered]);
                 return View(model);
             }
 
