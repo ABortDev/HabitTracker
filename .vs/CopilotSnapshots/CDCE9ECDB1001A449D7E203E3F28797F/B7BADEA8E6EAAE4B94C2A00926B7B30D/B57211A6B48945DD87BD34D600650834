@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = SharedLocalizer["Statistics"];
+}
+
+<div class="ht-statistics-page" data-statistics-page>
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">@SharedLocalizer["Your progress"]</span>
+            <h1>@SharedLocalizer["Statistics"]</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
+    </div>
+
+    <div class="ht-period-switcher" role="group" aria-label="@SharedLocalizer["Statistics period"]">
+        <button type="button" class="ht-period-button is-active" data-period="week">@SharedLocalizer["Week"]</button>
+        <button type="button" class="ht-period-button" data-period="month">@SharedLocalizer["Month"]</button>
+        <button type="button" class="ht-period-button" data-period="year">@SharedLocalizer["Year"]</button>
+    </div>
+
+    <section class="ht-stat-summary-grid" aria-label="@SharedLocalizer["Summary"]">
+        <article class="ht-stat-summary-card ht-card">
+            <span>@SharedLocalizer["Earned points"]</span>
+            <strong data-stat-points>0</strong>
+            <small data-stat-period-label>@SharedLocalizer["This week"]</small>
+        </article>
+        <article class="ht-stat-summary-card ht-card">
+            <span>@SharedLocalizer["Completed tasks"]</span>
+            <strong data-stat-completions>0</strong>
+            <small>@SharedLocalizer["Successful check-ins"]</small>
+        </article>
+        <article class="ht-stat-summary-card ht-card">
+            <span>@SharedLocalizer["Current streak"]</span>
+            <strong><span data-stat-streak>0</span> @SharedLocalizer["days"]</strong>
+            <small>@SharedLocalizer["Keep the momentum going"]</small>
+        </article>
+    </section>
+
+    <section class="ht-chart-card ht-card">
+        <div class="ht-chart-heading">
+            <div>
+                <span class="ht-eyebrow">@SharedLocalizer["Points over time"]</span>
+                <h2>@SharedLocalizer["Consistency brings progress"]</h2>
+            </div>
+            <span class="ht-chart-legend"><i></i> @SharedLocalizer["Points"]</span>
+        </div>
+        <div class="ht-chart" data-points-chart aria-label="Points earned over selected period"></div>
+    </section>
+
+    <section class="ht-streak-card ht-card" aria-label="@SharedLocalizer["Your streak"]">
+        <div class="ht-streak-icon" aria-hidden="true">↗</div>
+        <div>
+            <span class="ht-eyebrow">@SharedLocalizer["Your streak"]</span>
+            <h2><span data-stat-streak>0</span> @SharedLocalizer["days in a row"]</h2>
+            <p>@SharedLocalizer["Complete at least one habit every day to grow your streak."]</p>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        const statisticsData = @Html.Raw(ViewBag.StatisticsJson);
+
+        const chart = document.querySelector('[data-points-chart]');
+        const periodButtons = document.querySelectorAll('[data-period]');
+        const pointValue = document.querySelector('[data-stat-points]');
+        const completionValue = document.querySelector('[data-stat-completions]');
+        const streakValues = document.querySelectorAll('[data-stat-streak]');
+        const periodLabel = document.querySelector('[data-stat-period-label]');
+
+        function renderStatistics(period) {
+            const data = statisticsData[period];
+            pointValue.textContent = data.points;
+            completionValue.textContent = data.completions;
+            periodLabel.textContent = data.label;
+            streakValues.forEach((element) => element.textContent = data.streak);
+
+            const max = Math.max(...data.chart, 1);
+
+            chart.innerHTML = data.chart.map((value, index) => `
+                <div class="ht-chart-column">
+                    <div class="ht-chart-value">${value}</div>
+                    <div class="ht-chart-bar" style="height: ${Math.max(value / max * 100, 4)}%" title="${value} points"></div>
+                    <span>${data.labels[index]}</span>
+                </div>
+            `).join('');
+        }
+
+        periodButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                periodButtons.forEach((item) => item.classList.remove('is-active'));
+                button.classList.add('is-active');
+                renderStatistics(button.dataset.period);
+            });
+        });
+
+        renderStatistics('week');
+    </script>
+}

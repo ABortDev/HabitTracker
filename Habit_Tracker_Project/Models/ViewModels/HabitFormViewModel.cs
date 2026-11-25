@@ -7,16 +7,16 @@ namespace Habit_Tracker_Project.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(150, MinimumLength = 3)]
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
+        [StringLength(150, MinimumLength = 3, ErrorMessage = "The field {0} must be a string with a minimum length of {2} and a maximum length of {1}.")]
         [Display(Name = "Habit title")]
         public string Title { get; set; } = string.Empty;
 
-        [StringLength(500)]
+        [StringLength(500, ErrorMessage = "The field {0} must be a string with a maximum length of {1}.")]
         [Display(Name = "Description")]
         public string? Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
         [Range(1, int.MaxValue, ErrorMessage = "Select a category.")]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
@@ -27,11 +27,11 @@ namespace Habit_Tracker_Project.Models.ViewModels
         [Display(Name = "Difficulty")]
         public DifficultyLevel Difficulty { get; set; } = DifficultyLevel.Medium;
 
-        [Range(0.01, 99999999)]
+        [Range(0.01, 99999999, ErrorMessage = "The field {0} must be between {1} and {2}.")]
         [Display(Name = "Target value")]
         public decimal? TargetValue { get; set; }
 
-        [StringLength(20)]
+        [StringLength(20, ErrorMessage = "The field {0} must be a string with a maximum length of {1}.")]
         [Display(Name = "Unit")]
         public string? Unit { get; set; }
 

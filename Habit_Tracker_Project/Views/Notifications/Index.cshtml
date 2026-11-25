@@ -1,15 +1,15 @@
 ﻿@model List<Habit_Tracker_Project.Models.Notification>
 @{
-    ViewData["Title"] = "Notifications";
+    ViewData["Title"] = SharedLocalizer[LocalizationKeys.Navigation.Notifications];
 }
 
 <div class="ht-content-narrow">
     <div class="ht-page-heading">
         <div>
-            <span class="ht-eyebrow">Stay up to date</span>
-            <h1>Notifications</h1>
+            <span class="ht-eyebrow">@SharedLocalizer["Stay up to date"]</span>
+            <h1>@SharedLocalizer[LocalizationKeys.Navigation.Notifications]</h1>
         </div>
-        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
     </div>
 
     <section class="ht-notification-list">
@@ -17,15 +17,25 @@
         {
             foreach (var notification in Model)
             {
+                var localizedMessage = notification.Message;
+                if (notification.Message.StartsWith("You completed ", StringComparison.Ordinal))
+                {
+                    var habitTitle = notification.Message["You completed ".Length..].TrimEnd('.');
+                    localizedMessage = SharedLocalizer["You completed {0}.", habitTitle].Value;
+                }
+                else
+                {
+                    localizedMessage = SharedLocalizer[notification.Message].Value;
+                }
                 <article class="ht-card ht-notification-card @(notification.IsRead ? "ht-notification-read" : "ht-notification-unread")">
                     <div class="ht-notification-content">
                         <div class="ht-notification-heading">
-                            <h2>@notification.Title</h2>
+                            <h2>@SharedLocalizer[notification.Title]</h2>
                             <span class="ht-status-badge @(notification.IsRead ? "ht-status-active" : "ht-status-blocked")">
-                                @(notification.IsRead ? "Read" : "Unread")
+                                @(notification.IsRead ? SharedLocalizer["Read"] : SharedLocalizer["Unread"])
                             </span>
                         </div>
-                        <p class="ht-notification-message">@notification.Message</p>
+                        <p class="ht-notification-message">@localizedMessage</p>
                         <time datetime="@notification.CreatedAt.ToString("O")">
                             @notification.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")
                         </time>
@@ -34,7 +44,7 @@
                     {
                         <form method="post" asp-controller="Notifications" asp-action="MarkRead">
                             <input type="hidden" name="id" value="@notification.Id" />
-                            <button type="submit" class="btn ht-btn-secondary">Mark as read</button>
+                            <button type="submit" class="btn ht-btn-secondary">@SharedLocalizer["Mark as read"]</button>
                         </form>
                     }
                 </article>
@@ -42,7 +52,7 @@
         }
         else
         {
-            <div class="ht-card ht-empty-state">You have no notifications.</div>
+            <div class="ht-card ht-empty-state">@SharedLocalizer["You have no notifications."]</div>
         }
     </section>
 </div>

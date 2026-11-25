@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\Habit_Tracker_Project.props" />
-</Project>

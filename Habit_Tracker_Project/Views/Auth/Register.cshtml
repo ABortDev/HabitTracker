@@ -1,24 +1,26 @@
 ﻿@model Habit_Tracker_Project.Models.ViewModels.RegisterViewModel
 @{
-    ViewData["Title"] = "Sign Up";
+    ViewData["Title"] = SharedLocalizer[LocalizationKeys.Auth.RegisterTitle];
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="~/js/theme.js" asp-append-version="true"></script>
     <title>@ViewData["Title"] - Habit Tracker</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="ht-auth-page">
     <main class="ht-auth-shell">
+        <partial name="_HeaderPreferences" />
         <section class="ht-auth-card ht-card">
-            <a asp-controller="Home" asp-action="Index" class="ht-auth-brand">Habit Tracker</a>
-            <h1 class="ht-auth-title">Create your account</h1>
-            <p class="ht-auth-subtitle">Start building routines that work for you.</p>
+            <a asp-controller="Home" asp-action="Index" class="ht-auth-brand">@SharedLocalizer["Habit Tracker"]</a>
+            <h1 class="ht-auth-title">@SharedLocalizer["Create your account"]</h1>
+            <p class="ht-auth-subtitle">@SharedLocalizer["Start building routines that work for you."]</p>
 
             @if (ViewBag.Error != null)
             {
@@ -30,34 +32,34 @@
 
                 <div class="ht-form-group">
                     <label asp-for="FullName" class="ht-form-label"></label>
-                    <input asp-for="FullName" class="form-control ht-form-control" placeholder="Your name" />
+                    <input asp-for="FullName" class="form-control ht-form-control" placeholder="@SharedLocalizer[LocalizationKeys.Auth.FullName]" />
                     <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
 
                 <div class="ht-form-group">
                     <label asp-for="Email" class="ht-form-label"></label>
-                    <input asp-for="Email" class="form-control ht-form-control" placeholder="you@example.com" />
+                    <input asp-for="Email" class="form-control ht-form-control" placeholder="@SharedLocalizer[LocalizationKeys.Auth.Email]" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div class="ht-form-group">
                     <label asp-for="Password" class="ht-form-label"></label>
-                    <input asp-for="Password" class="form-control ht-form-control" placeholder="••••••••" />
+                    <input asp-for="Password" class="form-control ht-form-control" placeholder="@SharedLocalizer[LocalizationKeys.Auth.Password]" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="ht-form-group">
                     <label asp-for="ConfirmPassword" class="ht-form-label"></label>
-                    <input asp-for="ConfirmPassword" class="form-control ht-form-control" placeholder="••••••••" />
+                    <input asp-for="ConfirmPassword" class="form-control ht-form-control" placeholder="@SharedLocalizer[LocalizationKeys.Auth.ConfirmPassword]" />
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn ht-btn-primary ht-auth-submit">Create account</button>
+                <button type="submit" class="btn ht-btn-primary ht-auth-submit">@SharedLocalizer[LocalizationKeys.Auth.RegisterTitle]</button>
             </form>
 
             <p class="ht-auth-footer">
-                Already have an account?
-                <a asp-controller="Auth" asp-action="Login">Log in</a>
+                @SharedLocalizer["Already have an account?"]
+                <a asp-controller="Auth" asp-action="Login">@SharedLocalizer[LocalizationKeys.Navigation.Login]</a>
             </p>
         </section>
     </main>

@@ -51,7 +51,6 @@ namespace Habit_Tracker_Project.Controllers
             var model = new ProfileViewModel
             {
                 FullName = user.FullName ?? "",
-                PhoneNumber = user.PhoneNumber ?? "",
                 Email = user.Email,
                 Role = roles.Contains("Admin") ? "Admin" : roles.Contains("Moderator") ? "Moderator" : "User",
                 TotalPoints = user.TotalPoints,
@@ -83,7 +82,7 @@ namespace Habit_Tracker_Project.Controllers
             user.FullName = model.FullName.Trim();
             await _userManager.UpdateAsync(user);
 
-            TempData["Success"] = "Profile updated successfully!";
+            TempData["Success"] = _localizer["Profile updated successfully!"].Value;
             return RedirectToAction(nameof(Profile));
         }
 
@@ -147,7 +146,7 @@ namespace Habit_Tracker_Project.Controllers
 
             if (user.Id == GetCurrentUserId())
             {
-                TempData["Error"] = "You cannot block yourself.";
+                TempData["Error"] = _localizer["You cannot block yourself."].Value;
                 return RedirectToAction(nameof(Manage));
             }
 
@@ -170,7 +169,9 @@ namespace Habit_Tracker_Project.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            TempData["Success"] = user.IsBlocked ? "User blocked." : "User unblocked.";
+            TempData["Success"] = user.IsBlocked
+                ? _localizer["User blocked."].Value
+                : _localizer["User unblocked."].Value;
             return RedirectToAction(nameof(Manage));
         }
 
@@ -185,12 +186,12 @@ namespace Habit_Tracker_Project.Controllers
             if (await _userManager.IsInRoleAsync(user, "Moderator"))
             {
                 await _userManager.RemoveFromRoleAsync(user, "Moderator");
-                TempData["Success"] = "Moderator role removed.";
+                TempData["Success"] = _localizer["Moderator role removed."].Value;
             }
             else
             {
                 await _userManager.AddToRoleAsync(user, "Moderator");
-                TempData["Success"] = "User is now a moderator.";
+                TempData["Success"] = _localizer["User is now a moderator."].Value;
             }
 
             return RedirectToAction(nameof(Manage));

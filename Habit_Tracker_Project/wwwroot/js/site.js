@@ -10,6 +10,9 @@
         const badge = notificationMenu.querySelector('[data-notification-badge]');
         const count = notificationMenu.querySelector('[data-notification-count]');
         const feed = notificationMenu.querySelector('[data-notification-feed]');
+        const emptyText = feed.dataset.emptyText || 'You have no notifications.';
+        const newNotificationText = feed.dataset.newNotification || 'New notification';
+        const unreadText = feed.dataset.unreadSuffix || 'unread';
         const seenStorageKey = 'habit-tracker-notification-ids';
 
         const getSeenIds = () => {
@@ -36,7 +39,7 @@
             toast.setAttribute('role', 'status');
 
             const title = document.createElement('strong');
-            title.textContent = item.title || 'New notification';
+            title.textContent = item.title || newNotificationText;
             const message = document.createElement('span');
             message.textContent = item.message || '';
             toast.append(title, message);
@@ -49,7 +52,7 @@
             if (!items.length) {
                 const empty = document.createElement('p');
                 empty.className = 'ht-notification-empty';
-                empty.textContent = 'You have no notifications.';
+                empty.textContent = emptyText;
                 feed.appendChild(empty);
                 return;
             }
@@ -92,7 +95,7 @@
                 const unreadCount = Number(data.unreadCount) || 0;
                 badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
                 badge.hidden = unreadCount === 0;
-                count.textContent = unreadCount ? `${unreadCount} unread` : '';
+                count.textContent = unreadCount ? `${unreadCount} ${unreadText}` : '';
 
                 if (!isFirstLoad && newItems.length) showToast(newItems[0]);
             } catch {
@@ -128,18 +131,18 @@
         telegramButton.addEventListener('click', async () => {
             const telegramWindow = window.open('', '_blank');
             telegramButton.disabled = true;
-            telegramButton.textContent = 'Connecting...';
+            telegramButton.textContent = telegramButton.dataset.connectingText || 'Connecting...';
             try {
                 const response = await fetch('/Users/ConnectTelegram', {
                     method: 'POST',
                     headers: { Accept: 'application/json' },
                     credentials: 'same-origin'
                 });
-                if (!response.ok) throw new Error('Unable to connect Telegram.');
+                if (!response.ok) throw new Error(telegramButton.dataset.connectError || 'Unable to connect Telegram.');
                 const data = await response.json();
                 const botUrl = new URL(data.botUrl || '', window.location.origin);
                 if (botUrl.protocol !== 'https:' || botUrl.hostname !== 't.me') {
-                    throw new Error('Invalid Telegram bot URL.');
+                    throw new Error(telegramButton.dataset.invalidUrl || 'Invalid Telegram bot URL.');
                 }
 
                 code.textContent = data.code || '';
@@ -147,15 +150,52 @@
                 link.textContent = botUrl.href;
                 link.hidden = false;
                 result.hidden = false;
-                status.textContent = 'Connection pending';
+                status.textContent = status.dataset.pendingText || 'Connection pending';
                 if (telegramWindow) telegramWindow.location.href = botUrl.href;
             } catch {
                 if (telegramWindow) telegramWindow.close();
-                status.textContent = 'Could not generate a Telegram code. Please try again.';
+                status.textContent = telegramButton.dataset.generationError || 'Could not generate a Telegram code. Please try again.';
             } finally {
                 telegramButton.disabled = false;
                 telegramButton.textContent = buttonLabel;
             }
         });
     }
+})();
+
+
+(function () {
+    const table = document.querySelector('[data-user-sort-table]');
+    if (!table) {
+        return;
+    }
+
+    const collator = new Intl.Collator(document.documentElement.lang, { sensitivity: 'base' });
+    const body = table.tBodies[0];
+
+    table.querySelectorAll('[data-sort-column]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const column = Number(button.dataset.sortColumn);
+            const header = button.closest('th');
+            const ascending = header.getAttribute('aria-sort') !== 'ascending';
+            const rows = Array.from(body.querySelectorAll('[data-user-row]'), function (row) {
+                const cell = row.cells[column];
+                const key = cell.dataset.sortValue === undefined
+                    ? cell.textContent.replace(/\s+/g, ' ').trim()
+                    : Number(cell.dataset.sortValue);
+                return { row, key };
+            });
+
+            rows.sort(function (a, b) {
+                const comparison = typeof a.key === 'number'
+                    ? a.key - b.key
+                    : collator.compare(a.key, b.key);
+                return ascending ? comparison : -comparison;
+            });
+
+            body.append(...rows.map(entry => entry.row));
+            table.querySelector('[aria-sort]')?.removeAttribute('aria-sort');
+            header.setAttribute('aria-sort', ascending ? 'ascending' : 'descending');
+        });
+    });
 })();

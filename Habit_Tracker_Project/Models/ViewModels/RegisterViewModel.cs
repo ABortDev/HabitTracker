@@ -4,29 +4,29 @@ namespace Habit_Tracker_Project.Models.ViewModels
 {
     public class RegisterViewModel
     {
-        [Required]
-        [StringLength(100, MinimumLength = 2)]
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "The field {0} must be a string with a minimum length of {2} and a maximum length of {1}.")]
         [RegularExpression(@"^[A-ZА-ЯІЇЄҐ][A-Za-zА-Яа-яІіЇїЄєҐґ'\- ]+$",
             ErrorMessage = "Start with a capital letter. Letters, spaces and hyphen only.")]
-        [Display(Name = "Full name")]
+        [Display(Name = LocalizationKeys.Auth.FullName)]
         public string FullName { get; set; } = string.Empty;
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
+        [EmailAddress(ErrorMessage = LocalizationKeys.Validation.InvalidEmail)]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email")]
+        [Display(Name = LocalizationKeys.Auth.Email)]
         public string Email { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(100, MinimumLength = 6)]
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "The password must contain between {2} and {1} characters.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = LocalizationKeys.Auth.Password)]
         public string Password { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match.")]
-        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = LocalizationKeys.Validation.PasswordsDoNotMatch)]
+        [Display(Name = LocalizationKeys.Auth.ConfirmPassword)]
         public string ConfirmPassword { get; set; } = string.Empty;
     }
 }

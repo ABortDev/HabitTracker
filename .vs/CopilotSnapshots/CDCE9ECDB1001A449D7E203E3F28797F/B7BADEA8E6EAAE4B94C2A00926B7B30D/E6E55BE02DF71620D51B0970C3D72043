@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Home"><value>Home</value></data>
+  <data name="Dashboard"><value>Dashboard</value></data>
+  <data name="Achievements"><value>Achievements</value></data>
+  <data name="Statistics"><value>Statistics</value></data>
+  <data name="Profile"><value>Profile</value></data>
+  <data name="Admin Panel"><value>Admin Panel</value></data>
+  <data name="Moderator inbox"><value>Moderator inbox</value></data>
+  <data name="Help"><value>Help</value></data>
+  <data name="Privacy"><value>Privacy</value></data>
+  <data name="Notifications"><value>Notifications</value></data>
+  <data name="Loading notifications..."><value>Loading notifications...</value></data>
+  <data name="View all notifications"><value>View all notifications</value></data>
+  <data name="Logout"><value>Logout</value></data>
+  <data name="Login"><value>Login</value></data>
+  <data name="Log In"><value>Log In</value></data>
+  <data name="Log in"><value>Log in</value></data>
+  <data name="Create account"><value>Create account</value></data>
+  <data name="Welcome back"><value>Welcome back</value></data>
+  <data name="Log in to continue building better habits."><value>Log in to continue building better habits.</value></data>
+  <data name="Don't have an account?"><value>Don't have an account?</value></data>
+  <data name="Create your account"><value>Create your account</value></data>
+  <data name="Start building routines that work for you."><value>Start building routines that work for you.</value></data>
+  <data name="Already have an account?"><value>Already have an account?</value></data>
+  <data name="Email"><value>Email</value></data>
+  <data name="Password"><value>Password</value></data>
+  <data name="Remember me"><value>Remember me</value></data>
+  <data name="Full name"><value>Full name</value></data>
+  <data name="Confirm password"><value>Confirm password</value></data>
+  <data name="Phone"><value>Phone</value></data>
+  <data name="Habit title"><value>Habit title</value></data>
+  <data name="Description"><value>Description</value></data>
+  <data name="Category"><value>Category</value></data>
+  <data name="Frequency"><value>Frequency</value></data>
+  <data name="Difficulty"><value>Difficulty</value></data>
+  <data name="Target value"><value>Target value</value></data>
+  <data name="Unit"><value>Unit</value></data>
+  <data name="Target date"><value>Target date</value></data>
+  <data name="Reminder time"><value>Reminder time</value></data>
+  <data name="Save"><value>Save</value></data>
+  <data name="Cancel"><value>Cancel</value></data>
+  <data name="Required"><value>Required</value></data>
+  <data name="Select a category."><value>Select a category.</value></data>
+  <data name="Start with a capital letter. Letters, spaces and hyphen only."><value>Start with a capital letter. Letters, spaces and hyphen only.</value></data>
+  <data name="Passwords do not match."><value>Passwords do not match.</value></data>
+  <data name="The {0} field is required."><value>The {0} field is required.</value></data>
+  <data name="The field {0} must be a string with a minimum length of {2} and a maximum length of {1}."><value>The field {0} must be a string with a minimum length of {2} and a maximum length of {1}.</value></data>
+  <data name="The field {0} must be a string with a maximum length of {1}."><value>The field {0} must be a string with a maximum length of {1}.</value></data>
+  <data name="The {0} field is not a valid e-mail address."><value>The {0} field is not a valid e-mail address.</value></data>
+  <data name="The field {0} must be between {1} and {2}."><value>The field {0} must be between {1} and {2}.</value></data>
+  <data name="The field {0} must be a number."><value>The field {0} must be a number.</value></data>
+  <data name="The field {0} and {1} do not match."><value>The field {0} and {1} do not match.</value></data>
+  <data name="Your account has been blocked by an administrator."><value>Your account has been blocked by an administrator.</value></data>
+  <data name="Habit created successfully!"><value>Habit created successfully!</value></data>
+  <data name="Habit updated!"><value>Habit updated!</value></data>
+  <data name="Habit deleted."><value>Habit deleted.</value></data>
+  <data name="Please enter a valid email and password."><value>Please enter a valid email and password.</value></data>
+  <data name="This account does not exist. Please register."><value>This account does not exist. Please register.</value></data>
+  <data name="Invalid email or password."><value>Invalid email or password.</value></data>
+  <data name="This email is already registered."><value>This email is already registered.</value></data>
+</root>

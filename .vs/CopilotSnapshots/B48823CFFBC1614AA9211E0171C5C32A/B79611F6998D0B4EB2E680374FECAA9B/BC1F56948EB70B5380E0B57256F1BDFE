@@ -1,0 +1,64 @@
+﻿@model Habit_Tracker_Project.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = SharedLocalizer["Login"];
+    Layout = null;
+    var error = ViewBag.Error as string ?? TempData["Error"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Habit Tracker</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="ht-auth-page">
+    <main class="ht-auth-shell">
+        <form method="post" asp-controller="Home" asp-action="SetLanguage" class="ht-language-switcher">
+            <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+            <button type="submit" name="culture" value="en" class="btn btn-sm btn-outline-light">EN</button>
+            <button type="submit" name="culture" value="uk" class="btn btn-sm btn-outline-light">UK</button>
+        </form>
+        <section class="ht-auth-card ht-card">
+            <a asp-controller="Home" asp-action="Index" class="ht-auth-brand">Habit Tracker</a>
+            <h1 class="ht-auth-title">@SharedLocalizer["Welcome back"]</h1>
+            <p class="ht-auth-subtitle">@SharedLocalizer["Log in to continue building better habits."]</p>
+
+            @if (!string.IsNullOrWhiteSpace(error))
+            {
+                <div class="ht-alert ht-alert-error" role="alert">@error</div>
+            }
+
+            <form method="post" asp-controller="Auth" asp-action="Login" class="ht-auth-form">
+                <div class="ht-form-group">
+                    <label asp-for="Email" class="ht-form-label"></label>
+                    <input asp-for="Email" class="form-control ht-form-control" placeholder="@SharedLocalizer["Email"]" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="ht-form-group">
+                    <label asp-for="Password" class="ht-form-label"></label>
+                    <input asp-for="Password" class="form-control ht-form-control" placeholder="@SharedLocalizer["Password"]" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <label class="ht-check-row">
+                    <input asp-for="RememberMe" />
+                    <span>@SharedLocalizer["Remember me"]</span>
+                </label>
+
+                <button type="submit" class="btn ht-btn-primary ht-auth-submit">@SharedLocalizer["Log in"]</button>
+            </form>
+
+            <p class="ht-auth-footer">
+                @SharedLocalizer["Don't have an account?"]
+                <a asp-controller="Auth" asp-action="Register">@SharedLocalizer["Create account"]</a>
+            </p>
+        </section>
+    </main>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>

@@ -1,23 +1,23 @@
 ﻿@model List<Habit_Tracker_Project.Models.ChatMessage>
 @{
-    ViewData["Title"] = "Moderator inbox";
+    ViewData["Title"] = SharedLocalizer["Moderator inbox"];
     var unreadCounts = ViewBag.UnreadCounts as Dictionary<string, int> ?? new Dictionary<string, int>();
 }
 
 <div class="ht-admin-page">
     <div class="ht-page-heading">
         <div>
-            <span class="ht-eyebrow">Moderator</span>
-            <h1>Chat inbox</h1>
+            <span class="ht-eyebrow">@SharedLocalizer["Moderator"]</span>
+            <h1>@SharedLocalizer["Chat inbox"]</h1>
         </div>
-        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">Back to dashboard</a>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
     </div>
 
     <section class="ht-admin-table-card ht-card">
         <div class="ht-table-wrapper">
             <table class="ht-admin-table">
                 <thead>
-                        <tr><th>User</th><th>Latest message</th><th>Date</th><th>Unread</th><th></th></tr>
+                        <tr><th>@SharedLocalizer["User"]</th><th>@SharedLocalizer["Latest message"]</th><th>@SharedLocalizer["Date"]</th><th>@SharedLocalizer["Unread"]</th><th></th></tr>
                 </thead>
                 <tbody>
                     @if (Model.Any())
@@ -26,12 +26,12 @@
                         {
                             var unreadCount = unreadCounts.TryGetValue(message.UserId, out var count) ? count : 0;
                             <tr>
-                                <td data-label="User">@(string.IsNullOrWhiteSpace(message.User?.FullName) ? message.User?.Email : message.User.FullName)</td>
-                                <td data-label="Latest message">
-                                    <strong>@(message.SenderId == message.UserId ? "User:" : "You:")</strong> @message.Text
+                                 <td data-label="@SharedLocalizer["User"]">@(string.IsNullOrWhiteSpace(message.User?.FullName) ? message.User?.Email : message.User.FullName)</td>
+                                 <td data-label="@SharedLocalizer["Latest message"]">
+                                     <strong>@(message.SenderId == message.UserId ? SharedLocalizer["User:"] : SharedLocalizer["You:"])</strong> @message.Text
                                 </td>
-                                <td data-label="Date">@message.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</td>
-                                <td data-label="Unread">
+                                 <td data-label="@SharedLocalizer["Date"]">@message.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</td>
+                                 <td data-label="@SharedLocalizer["Unread"]">
                                     @if (unreadCount > 0)
                                     {
                                         <span class="ht-status-badge ht-status-blocked">@unreadCount</span>
@@ -43,14 +43,14 @@
                                 </td>
                                 <td>
                                     <a asp-controller="Chat" asp-action="Thread" asp-route-userId="@message.UserId"
-                                       class="btn ht-btn-primary btn-sm">Open conversation</a>
+                                        class="btn ht-btn-primary btn-sm">@SharedLocalizer["Open conversation"]</a>
                                 </td>
                             </tr>
                         }
                     }
                     else
                     {
-                        <tr><td colspan="5" class="ht-table-empty">There are no conversations yet. User messages will appear here.</td></tr>
+                        <tr><td colspan="5" class="ht-table-empty">@SharedLocalizer["There are no conversations yet. User messages will appear here."]</td></tr>
                     }
                 </tbody>
             </table>

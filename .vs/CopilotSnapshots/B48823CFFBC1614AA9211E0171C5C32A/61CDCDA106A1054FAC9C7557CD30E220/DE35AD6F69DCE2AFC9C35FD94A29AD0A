@@ -1,0 +1,21 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Habit_Tracker_Project.Models.ViewModels
+{
+    public class ProfileViewModel
+    {
+        [Required(ErrorMessage = LocalizationKeys.Validation.Required)]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "The field {0} must be a string with a minimum length of {2} and a maximum length of {1}.")]
+        [RegularExpression(@"^[A-ZА-ЯІЇЄҐ][A-Za-zА-Яа-яІіЇїЄєҐґ'\- ]+$",
+            ErrorMessage = "Start with a capital letter. Letters, spaces and hyphen only.")]
+        [Display(Name = "Full name")]
+        public string FullName { get; set; } = string.Empty;
+
+        public string? Email { get; set; }
+        public string? Role { get; set; }
+        public int TotalPoints { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool IsBlocked { get; set; }
+        public long? TelegramChatId { get; set; }
+    }
+}

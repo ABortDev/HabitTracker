@@ -1,0 +1,288 @@
+﻿@model Habit_Tracker_Project.Models.Habit
+@using Habit_Tracker_Project.Models.Enums
+@using System.Globalization
+@{
+    ViewData["Title"] = Model.Title;
+
+    var reminder = Model.Reminders?.FirstOrDefault();
+    var completedToday = (bool)ViewBag.CompletedToday;
+    DateOnly? lastCompleted = ViewBag.LastCompleted as DateOnly?;
+
+    int points = Model.Difficulty switch
+    {
+        DifficultyLevel.Easy => 10,
+        DifficultyLevel.Hard => 30,
+        _ => 20
+    };
+
+    string schedule = Model.Frequency switch
+    {
+        HabitFrequency.Onetime => SharedLocalizer["One-time task"].Value,
+        HabitFrequency.Daily => SharedLocalizer["Every day"].Value,
+        HabitFrequency.Weekly => string.Format(SharedLocalizer["Every week on {0}"].Value, SharedLocalizer[Model.CreatedAt.DayOfWeek.ToString()].Value),
+        HabitFrequency.Monthly => string.Format(SharedLocalizer["Every month on day {0}"].Value, Model.CreatedAt.Day),
+        HabitFrequency.Yearly => string.Format(SharedLocalizer["Every year on {0}"].Value, Model.CreatedAt.ToString("MMMM d", CultureInfo.InvariantCulture)),
+        _ => Model.Frequency.ToString()
+    };
+}
+
+<main class="ht-dashboard-container">
+    <div class="ht-page-heading">
+        <div>
+            <span class="ht-eyebrow">@(Model.Category?.Name ?? SharedLocalizer["General"].Value)</span>
+            <h1>@Model.Title</h1>
+        </div>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn ht-btn-secondary">@SharedLocalizer["Back to dashboard"]</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="ht-dashboard-alert ht-dashboard-alert-success" role="status">✓ @TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="ht-dashboard-alert ht-dashboard-alert-error" role="alert">@TempData["Error"]</div>
+    }
+
+    <div class="ht-dashboard-grid">
+        <section class="ht-dashboard-card ht-card">
+            <div class="ht-section-heading">
+                <div>
+                        <h2>@SharedLocalizer["Habit details"]</h2>
+                    <p>@(string.IsNullOrEmpty(Model.Description) ? SharedLocalizer["No description"] : Model.Description)</p>
+                </div>
+            </div>
+
+            <div class="ht-habit-meta">
+                <span>@schedule</span>
+                <span>@SharedLocalizer[Model.Difficulty.ToString()] · @points @SharedLocalizer["pts"]</span>
+            </div>
+
+            <ul class="list-unstyled mt-3">
+                <li><strong>@SharedLocalizer["Created"]:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                <li><strong>@SharedLocalizer["Reminder"]:</strong> @(reminder != null ? reminder.ReminderTime.ToString("HH:mm") : SharedLocalizer["not set"])</li>
+                @if (Model.EndDate.HasValue)
+                {
+                    <li><strong>@(Model.Frequency == HabitFrequency.Onetime ? SharedLocalizer["Due date"] : SharedLocalizer["Ends"]):</strong> @Model.EndDate.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                }
+                <li><strong>@SharedLocalizer["Completions"]:</strong> @ViewBag.TotalCompletions</li>
+                @if (lastCompleted.HasValue)
+                {
+                    <li><strong>@SharedLocalizer["Last completed"]:</strong> @lastCompleted.Value.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</li>
+                }
+                @if (Model.Frequency == HabitFrequency.Daily)
+                {
+                    <li><strong>@SharedLocalizer["Current streak"]:</strong> @ViewBag.Streak @SharedLocalizer["days"]</li>
+                }
+            </ul>
+
+            @if (!completedToday)
+            {
+                <form method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@Model.Id">
+                    @if (Model.TargetValue is > 0)
+                    {
+                        var todayLog = Model.Logs?.FirstOrDefault(log => log.Date == DateOnly.FromDateTime(DateTime.UtcNow));
+                        <div class="ht-form-group mb-3">
+                            <label for="habitActualValue" class="ht-form-label">
+                                @SharedLocalizer["Progress"]: @(todayLog?.ActualValue ?? 0) / @Model.TargetValue @(Model.Unit ?? "")
+                            </label>
+                            <input id="habitActualValue" type="number" name="actualValue" min="0.01" step="any"
+                                   class="form-control ht-form-control" placeholder="@SharedLocalizer["Amount completed"]" required />
+                        </div>
+                    }
+                    <button type="submit" class="btn ht-btn-primary">@SharedLocalizer["Mark as done"] (+@points @SharedLocalizer["pts"])</button>
+                </form>
+            }
+            else
+            {
+                <div class="ht-empty-state">@SharedLocalizer["Completed today ✓"]</div>
+            }
+        </section>
+
+        <section class="ht-dashboard-card ht-card">
+            <div class="ht-section-heading">
+                <div>
+                    <h2>@SharedLocalizer["Schedule"]</h2>
+                    <p>@SharedLocalizer["Mark past days complete or plan upcoming days."]</p>
+                </div>
+            </div>
+            <div class="ht-cal" id="habitCalendar">
+                <div class="ht-cal-head">
+                    <strong id="calendarMonth"></strong>
+                    <div class="ht-cal-nav">
+                         <button type="button" id="calendarPrevious" aria-label="@SharedLocalizer["Previous month"]">‹</button>
+                         <button type="button" id="calendarNext" aria-label="@SharedLocalizer["Next month"]">›</button>
+                    </div>
+                </div>
+                <div class="ht-cal-weekdays" aria-hidden="true">
+                    <span>@SharedLocalizer["Sun"]</span><span>@SharedLocalizer["Mon"]</span><span>@SharedLocalizer["Tue"]</span><span>@SharedLocalizer["Wed"]</span>
+                    <span>@SharedLocalizer["Thu"]</span><span>@SharedLocalizer["Fri"]</span><span>@SharedLocalizer["Sat"]</span>
+                </div>
+                <div class="ht-cal-days" id="calendarDays"></div>
+                <div class="ht-cal-legend">
+                    <span><i class="ht-cal-key ht-cal-key-completed"></i>@SharedLocalizer["Completed"]</span>
+                    <span><i class="ht-cal-key ht-cal-key-partial"></i>@SharedLocalizer["Partial"]</span>
+                    <span><i class="ht-cal-key ht-cal-key-planned"></i>@SharedLocalizer["Planned"]</span>
+                </div>
+            </div>
+            <form id="completeDateForm" method="post" asp-controller="Dashboard" asp-action="CompleteHabit" asp-route-id="@Model.Id" class="ht-hidden-field">
+                <input type="hidden" name="date" />
+                <input type="hidden" name="actualValue" />
+                @Html.AntiForgeryToken()
+            </form>
+            <form id="toggleScheduleForm" method="post" asp-controller="Dashboard" asp-action="ToggleScheduleDate" asp-route-id="@Model.Id" class="ht-hidden-field">
+                <input type="hidden" name="date" />
+                @Html.AntiForgeryToken()
+            </form>
+        </section>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        (() => {
+            const completedDates = new Set(@Html.Raw(ViewBag.CompletedJson ?? "[]"));
+            const partialDates = new Set(@Html.Raw(ViewBag.PartialJson ?? "[]"));
+            const plannedDates = new Set(@Html.Raw(ViewBag.PlannedJson ?? "[]"));
+            const now = new Date();
+            const todayString = [
+                now.getFullYear(),
+                String(now.getMonth() + 1).padStart(2, "0"),
+                String(now.getDate()).padStart(2, "0")
+            ].join("-");
+            const endDate = "@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")";
+            const monthLabel = document.getElementById("calendarMonth");
+            const daysElement = document.getElementById("calendarDays");
+            const completeForm = document.getElementById("completeDateForm");
+            const toggleForm = document.getElementById("toggleScheduleForm");
+            const requiresActualValue = @((Model.TargetValue is > 0).ToString().ToLowerInvariant());
+             const calendarText = {
+                 completed: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["completed"].Value)),
+                 partial: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["partial progress"].Value)),
+                 planned: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["planned"].Value)),
+                 alreadyCompleted: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["Already completed"].Value)),
+                 afterEndDate: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["This date is after the habit end date"].Value)),
+                 unplan: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["Click to unplan this date"].Value)),
+                 record: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["Click to record progress"].Value)),
+                 plan: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(SharedLocalizer["Click to plan this date"].Value))
+             };
+            let displayedMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            const dateString = date => [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, "0"),
+                String(date.getDate()).padStart(2, "0")
+            ].join("-");
+
+            function renderCalendar() {
+                const year = displayedMonth.getFullYear();
+                const month = displayedMonth.getMonth();
+                const firstWeekday = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                monthLabel.textContent = displayedMonth.toLocaleDateString(undefined, {
+                    month: "long",
+                    year: "numeric"
+                });
+                daysElement.replaceChildren();
+
+                for (let blank = 0; blank < firstWeekday; blank++) {
+                    const spacer = document.createElement("span");
+                    spacer.setAttribute("aria-hidden", "true");
+                    daysElement.appendChild(spacer);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(year, month, day);
+                    const value = dateString(date);
+                    const isCompleted = completedDates.has(value);
+                    const isPartial = partialDates.has(value);
+                    const isPlanned = plannedDates.has(value);
+                    const isAfterEndDate = endDate !== "" && value > endDate;
+                    const statusClass = isCompleted
+                        ? "ht-cal-completed"
+                        : isPartial ? "ht-cal-partial" : isPlanned ? "ht-cal-planned" : "";
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = `ht-cal-day ${statusClass} ${statusClass ? "ht-cal-sel" : ""} ${value === todayString ? "ht-cal-today" : ""} ${value < todayString ? "ht-cal-past" : ""}`.trim();
+                    const number = document.createElement("span");
+                    number.className = "ht-cal-num";
+                    number.textContent = day;
+                    button.appendChild(number);
+                    button.dataset.date = value;
+                     button.setAttribute("aria-label", `${value}${isCompleted ? ", " + calendarText.completed : isPartial ? ", " + calendarText.partial : isPlanned ? ", " + calendarText.planned : ""}`);
+                    button.disabled = isCompleted || isAfterEndDate;
+                    if (isCompleted) {
+                         button.title = calendarText.alreadyCompleted;
+                    } else if (isAfterEndDate) {
+                         button.title = calendarText.afterEndDate;
+                    } else if (isPlanned) {
+                         button.title = calendarText.unplan;
+                    } else {
+                         button.title = value <= todayString ? calendarText.record : calendarText.plan;
+                    }
+                    daysElement.appendChild(button);
+                }
+
+                while (daysElement.children.length % 7 !== 0) {
+                    const spacer = document.createElement("span");
+                    spacer.setAttribute("aria-hidden", "true");
+                    daysElement.appendChild(spacer);
+                }
+            }
+
+            document.getElementById("calendarPrevious").addEventListener("click", () => {
+                displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() - 1, 1);
+                renderCalendar();
+            });
+            document.getElementById("calendarNext").addEventListener("click", () => {
+                displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + 1, 1);
+                renderCalendar();
+            });
+
+            daysElement.addEventListener("click", event => {
+                const button = event.target.closest("button[data-date]");
+                if (!button || button.disabled) return;
+
+                if (button.dataset.date <= todayString) {
+                    completeForm.elements.date.value = button.dataset.date;
+                    if (requiresActualValue) {
+                        const amount = window.prompt("How much did you complete?");
+                        if (amount === null || amount.trim() === "") return;
+
+                        const normalizedAmount = amount.trim().replace(",", ".");
+                        if (!/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(normalizedAmount) || Number(normalizedAmount) <= 0) {
+                            window.alert("Enter a number greater than 0.");
+                            return;
+                        }
+                        completeForm.elements.actualValue.value = normalizedAmount;
+                    } else {
+                        completeForm.elements.actualValue.value = "";
+                    }
+                    completeForm.submit();
+                    return;
+                }
+
+                button.disabled = true;
+                toggleForm.elements.date.value = button.dataset.date;
+                fetch(toggleForm.action, {
+                    method: "POST",
+                    body: new URLSearchParams(new FormData(toggleForm))
+                }).then(async response => {
+                    const result = await response.json();
+                    if (!response.ok) {
+                        button.disabled = false;
+                        window.alert(result.error || "The schedule could not be updated.");
+                        return;
+                    }
+                    window.location.reload();
+                }).catch(() => {
+                    button.disabled = false;
+                    window.alert("The schedule could not be updated. Please try again.");
+                });
+            });
+
+            renderCalendar();
+        })();
+    </script>
+}

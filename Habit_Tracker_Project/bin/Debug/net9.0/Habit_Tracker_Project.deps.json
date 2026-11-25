@@ -15,6 +15,11 @@
         },
         "runtime": {
           "Habit_Tracker_Project.dll": {}
+        },
+        "resources": {
+          "uk/Habit_Tracker_Project.resources.dll": {
+            "locale": "uk"
+          }
         }
       },
       "Humanizer/2.14.1": {
